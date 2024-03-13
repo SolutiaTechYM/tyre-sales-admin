@@ -99,6 +99,14 @@ const App: React.FC = () => {
                 },
               },
               {
+                name: "suppliers",
+                list: "/suppliers",
+                meta: {
+                  label: "Suppliers",
+                  icon: <ShopOutlined />,
+                },
+              },
+              {
                 name: "users",
                 list: "/customers",
                 show: "/customers/:id",
@@ -198,6 +206,12 @@ const App: React.FC = () => {
 
                 <Route path="/stores">
                   <Route index element={<StoreList />} />
+                  <Route path="new" element={<StoreCreate />} />
+                  <Route path=":id/edit" element={<StoreEdit />} />
+                </Route>
+
+                <Route path="/suppliers">
+                  <Route index element={<h1>sup</h1>} />
                   <Route path="new" element={<StoreCreate />} />
                   <Route path=":id/edit" element={<StoreEdit />} />
                 </Route>
