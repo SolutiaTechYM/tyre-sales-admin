@@ -46,6 +46,7 @@ import { ConfigProvider } from "./context";
 import { useAutoLoginForDemo } from "./hooks";
 
 import "@refinedev/antd/dist/reset.css";
+import { SupplierCreate, SupplierEdit, SupplierList } from "./pages/suppliers";
 
 const App: React.FC = () => {
   // This hook is used to automatically login the user.
@@ -211,9 +212,9 @@ const App: React.FC = () => {
                 </Route>
 
                 <Route path="/suppliers">
-                  <Route index element={<h1>sup</h1>} />
-                  <Route path="new" element={<StoreCreate />} />
-                  <Route path=":id/edit" element={<StoreEdit />} />
+                  <Route index element={<SupplierList/>} />
+                  <Route path="new" element={<SupplierCreate/>} />
+                  <Route path=":id/edit" element={<SupplierEdit/>} />
                 </Route>
 
                 <Route path="/categories" element={<CategoryList />} />
