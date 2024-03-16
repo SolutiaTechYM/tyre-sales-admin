@@ -111,7 +111,19 @@ export interface IOrder {
   orderNumber: number;
   amount: number;
 }
-
+export interface ICustomer {
+  id: number;
+  name: string;
+  isActive: boolean;
+  description: string;
+  images: (IFile & { thumbnailUrl?: string })[];
+  createdAt: string;
+  price: number;
+  category: {
+    id: number;
+  };
+  stock: number;
+}
 export interface IProduct {
   id: number;
   name: string;

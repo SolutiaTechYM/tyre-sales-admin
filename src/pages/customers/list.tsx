@@ -13,6 +13,7 @@ import {
   FilterDropdown,
   getDefaultSortOrder,
   ExportButton,
+  CreateButton
 } from "@refinedev/antd";
 import {
   Table,
@@ -37,8 +38,10 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
   const { showUrl } = useNavigation();
   const t = useTranslate();
   const { token } = theme.useToken();
+  const { createUrl } = useNavigation();
 
-  const { tableProps, filters, sorters } = useTable<
+
+  const {   tableProps, filters, sorters } = useTable<
     IUser,
     HttpError,
     IUserFilterVariables
@@ -82,9 +85,27 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
   return (
     <List
       breadcrumb={false}
-      headerProps={{
-        extra: <ExportButton onClick={triggerExport} loading={isLoading} />,
-      }}
+      headerButtons={(props) => [
+        <CreateButton
+          {...props.createButtonProps}
+          key="create"
+          size="large"
+          onClick={() => {
+            return go({
+              to: `${createUrl("users")}`,
+              query: {
+                to: pathname,
+              },
+              options: {
+                keepQuery: true,
+              },
+              type: "replace",
+            });
+          }}
+        >
+          Add New Customers
+        </CreateButton>,
+      ]}
     >
       <Table
         {...tableProps}
@@ -100,6 +121,8 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
         <Table.Column
           key="id"
           dataIndex="id"
+          sorter
+
           title="ID #"
           render={(value) => (
             <Typography.Text
@@ -135,24 +158,42 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
           title={t("users.fields.avatar.label")}
           render={(value) => <Avatar src={value[0].url} />}
         />
-        <Table.Column
-          key="fullName"
+
+<Table.Column
+        key="fullName"
           dataIndex="fullName"
+          sorter
+
           title={t("users.fields.name")}
-          defaultFilteredValue={getDefaultFilter(
-            "fullName",
-            filters,
-            "contains",
-          )}
-          filterDropdown={(props) => (
-            <FilterDropdown {...props}>
-              <Input
-                style={{ width: "100%" }}
-                placeholder={t("users.filter.name.placeholder")}
-              />
-            </FilterDropdown>
-          )}
-        />
+        filterIcon={(filtered) => (
+          <SearchOutlined
+            style={{
+              color: filtered ? token.colorPrimary : undefined,
+            }}
+          />
+        )}
+        defaultFilteredValue={getDefaultFilter( "fullName",
+        filters,
+        "contains",)}
+        filterDropdown={(props) => (
+          <FilterDropdown {...props}>
+            <Input style={{ width: "100%" }}
+                placeholder={t("users.filter.name.placeholder")} />
+          </FilterDropdown>
+        )}
+        render={(value: string) => {
+          return (
+            <Typography.Text
+              style={{
+                whiteSpace: "nowrap",
+              }}
+            >
+              {value}
+            </Typography.Text>
+          );
+        }}
+      />
+
         <Table.Column
           key="gsm"
           dataIndex="gsm"
