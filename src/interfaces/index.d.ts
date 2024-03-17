@@ -115,6 +115,8 @@ export interface IOrder {
 export interface IProduct {
   id: number;
   name: string;
+  code: string;
+
   isActive: boolean;
   description: string;
   images: (IFile & { thumbnailUrl?: string })[];

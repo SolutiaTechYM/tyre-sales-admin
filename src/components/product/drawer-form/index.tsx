@@ -86,7 +86,7 @@ export const ProductDrawerForm = (props: Props) => {
   const image = images?.[0] || null;
   const previewImageURL = image?.url || image?.response?.url;
   const title = props.action === "edit" ? null : t("products.actions.add");
-
+  // const drawerWidth = props.action === "edit" ? (breakpoint.sm ? "378px" : "100%") : (breakpoint.sm ? "378px" : "100%");
   return (
     <Drawer
       {...drawerProps}
@@ -159,6 +159,21 @@ export const ProductDrawerForm = (props: Props) => {
             </Upload.Dragger>
           </Form.Item>
           <Flex vertical>
+
+            
+          <Form.Item
+              label={t("Code")}
+              name="code"
+              className={styles.formItem}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+
             <Form.Item
               label={t("products.fields.name")}
               name="name"
@@ -171,7 +186,10 @@ export const ProductDrawerForm = (props: Props) => {
             >
               <Input />
             </Form.Item>
-            <Form.Item
+
+
+
+            {/* <Form.Item
               label={t("products.fields.description")}
               name="description"
               className={styles.formItem}
@@ -182,19 +200,9 @@ export const ProductDrawerForm = (props: Props) => {
               ]}
             >
               <Input.TextArea rows={6} />
-            </Form.Item>
-            <Form.Item
-              label={t("products.fields.price")}
-              name="price"
-              className={styles.formItem}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <InputNumber prefix={"$"} style={{ width: "150px" }} />
-            </Form.Item>
+            </Form.Item> */}
+
+
             <Form.Item
               label={t("products.fields.category")}
               name={["category", "id"]}
@@ -207,27 +215,31 @@ export const ProductDrawerForm = (props: Props) => {
             >
               <Select {...categorySelectProps} />
             </Form.Item>
+
             <Form.Item
-              label={t("products.fields.isActive.label")}
-              name="isActive"
+              label={t("products.fields.price")}
+              name="price"
               className={styles.formItem}
-              initialValue={true}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
             >
-              <Segmented
-                block
-                size="large"
-                options={[
-                  {
-                    label: t("products.fields.isActive.true"),
-                    value: true,
-                  },
-                  {
-                    label: t("products.fields.isActive.false"),
-                    value: false,
-                  },
-                ]}
-              />
+              <InputNumber prefix={"LKR"} style={{ width: "150px" }} type="number" />
             </Form.Item>
+
+            <Form.Item
+              label={t("Quantity")}
+              name="quantity"
+              className={styles.formItem}
+             
+            >
+          <InputNumber style={{ width: "150px" }} defaultValue={0} readOnly />
+            </Form.Item>
+
+
+    
             <Flex
               align="center"
               justify="space-between"
