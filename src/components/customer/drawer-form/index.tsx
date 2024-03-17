@@ -6,6 +6,8 @@ import {
   useGo,
   useTranslate,
 } from "@refinedev/core";
+import InputMask from "react-input-mask";
+
 import { getValueFromEvent, useSelect } from "@refinedev/antd";
 import { useForm } from "antd/lib/form/Form";
 import {
@@ -55,7 +57,7 @@ export const CustomerDrawerForm = (props: Props) => {
         console.log("Form data:", form.getFieldsValue());
         props.onMutationSuccess?.();
       },
-      form,
+      // form,
     });
 
   const { selectProps: categorySelectProps } = useSelect<IUser>({
@@ -87,10 +89,14 @@ export const CustomerDrawerForm = (props: Props) => {
     });
   };
 
-  const images = Form.useWatch("images", formProps.form);
+  const images = Form.useWatch("avatar", formProps.form);
+  console.log(formProps.form);
+  console.log(images);
+  
   const image = images?.[0] || null;
   const previewImageURL = image?.url || image?.response?.url;
-  const title = props.action === "edit" ? null : t("Add new Customers");
+  
+  const title = props.action === "edit" ? null : t("products.actions.add");
 
   return (
     <Drawer
@@ -104,7 +110,7 @@ export const CustomerDrawerForm = (props: Props) => {
       <Spin spinning={formLoading}>
         <Form {...formProps} layout="vertical">
           <Form.Item
-            name="images"
+            name="avatar"
             valuePropName="fileList"
             getValueFromEvent={getValueFromEvent}
             style={{
@@ -174,11 +180,11 @@ export const CustomerDrawerForm = (props: Props) => {
                 },
               ]}
             >
-              <Input />
+              <Input placeholder="please enter name "/>
             </Form.Item>
             <Form.Item
-              label={t("gsm")}
-              name="gsm"
+              label={t("Contact")}
+              name="gContactsm"
               className={styles.formItem}
               rules={[
                 {
@@ -186,9 +192,46 @@ export const CustomerDrawerForm = (props: Props) => {
                 },
               ]}
             >
-              <Input.TextArea rows={6} />
+           <InputMask mask="(999) 999 99 99">
+            {/* 
+                                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                    // @ts-ignore */}
+            {(props: InputProps) => (
+              <Input
+                {...props}
+                placeholder="please enter Phone number"
+              />
+            )}
+          </InputMask>
+
             </Form.Item>
+
             <Form.Item
+              label={t("Address")}
+              name="address"
+              className={styles.formItem}
+             
+            >
+            <Input.TextArea
+              rows={2}
+              placeholder="please enter address"
+            />
+            </Form.Item>
+
+            <Form.Item
+              label={t("Company")}
+              name="Company"
+              className={styles.formItem}
+             
+            >
+            <Input
+   
+              placeholder="optional"
+            />
+            </Form.Item>
+
+
+            {/* <Form.Item
               label={t("createdAt")}
               name="createdAt"
               className={styles.formItem}
@@ -199,7 +242,7 @@ export const CustomerDrawerForm = (props: Props) => {
               ]}
             >
              <DatePicker style={{ width: "100%" }} />
-            </Form.Item>
+            </Form.Item> */}
 
             {/* <Form.Item
               label={t("products.fields.category")}
@@ -213,28 +256,7 @@ export const CustomerDrawerForm = (props: Props) => {
             >
               <Select {...categorySelectProps} />
             </Form.Item> */}
-            <Form.Item
-              label={t("products.fields.isActive.label")}
-              name="isActive"
-              className={styles.formItem}
-              initialValue={true}
-            >
-              <Segmented
-                block
-                size="large"
-                options={[
-                  {
-                    label: t("products.fields.isActive.true"),
-                    value: true,
-                  },
-                  {
-                    label: t("products.fields.isActive.false"),
-                    value: false,
-                  },
-                ]}
-              />
-            </Form.Item>
-
+         
             <Flex
               align="center"
               justify="space-between"

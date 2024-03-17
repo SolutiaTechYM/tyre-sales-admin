@@ -7,11 +7,17 @@ import {
   RightCircleOutlined,
   UserOutlined,
   CalendarOutlined,
+  EyeOutlined
 } from "@ant-design/icons";
 import { List, Typography, Space, theme, Card } from "antd";
 import dayjs from "dayjs";
 import { UserStatus } from "../userStatus";
 import { useTranslate } from "@refinedev/core";
+import {
+  CreateButton,
+  EditButton,
+
+} from "@refinedev/antd";
 
 type Props = {
   customer?: IUser;
@@ -108,6 +114,12 @@ export const CustomerInfoList = ({ customer }: Props) => {
           );
         }}
       />
+      
+      <EditButton
+                  icon={<EyeOutlined />}
+                  hideText
+                  recordItemId={customer?.id}
+                />
     </Card>
   );
 };

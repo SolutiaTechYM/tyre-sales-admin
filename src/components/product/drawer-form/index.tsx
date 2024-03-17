@@ -83,10 +83,14 @@ export const ProductDrawerForm = (props: Props) => {
   };
 
   const images = Form.useWatch("images", formProps.form);
+  console.log(formProps.form);
+  
+  console.log(images);
+
   const image = images?.[0] || null;
   const previewImageURL = image?.url || image?.response?.url;
   const title = props.action === "edit" ? null : t("products.actions.add");
-
+  // console.log(title);
   return (
     <Drawer
       {...drawerProps}

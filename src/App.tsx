@@ -49,6 +49,7 @@ import { useAutoLoginForDemo } from "./hooks";
 
 import "@refinedev/antd/dist/reset.css";
 import { CustomerCreate } from "./pages/customers/create";
+import { CustomerEdit } from "./pages/customers/edit";
 
 const App: React.FC = () => {
   // This hook is used to automatically login the user.
@@ -113,6 +114,8 @@ const App: React.FC = () => {
                 name: "users",
                 list: "/customers",
                 create: "/customers/new",
+                edit: "/customers/:id/edit",
+
                 show: "/customers/:id",
                 meta: {
                   label: "newcustomers",
@@ -195,6 +198,8 @@ const App: React.FC = () => {
                 >
                   <Route path=":id" element={<CustomerShow />} />
                   <Route path="new" element={<CustomerCreate />} />
+                  <Route path=":id/edit" element={<CustomerEdit />} />
+
 
                 </Route>
 

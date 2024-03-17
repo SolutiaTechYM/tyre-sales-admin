@@ -123,14 +123,14 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
           dataIndex="id"
           sorter
 
-          title="ID #"
+          title="ID"
           render={(value) => (
             <Typography.Text
               style={{
                 whiteSpace: "nowrap",
               }}
             >
-              #{value}
+              {value}
             </Typography.Text>
           )}
           filterIcon={(filtered) => (
@@ -195,27 +195,41 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
       />
 
         <Table.Column
-          key="gsm"
-          dataIndex="gsm"
-          title={t("users.fields.gsm")}
-          defaultFilteredValue={getDefaultFilter("gsm", filters, "eq")}
+          key="Contact"
+          dataIndex="contact"
+          title={t("Contact")}
+          defaultFilteredValue={getDefaultFilter("Contact", filters, "eq")}
           filterDropdown={(props) => (
             <FilterDropdown {...props}>
               <Input
                 style={{ width: "100%" }}
-                placeholder={t("users.filter.gsm.placeholder")}
+                placeholder="search contact"
               />
             </FilterDropdown>
           )}
         />
         <Table.Column
-          key="createdAt"
-          dataIndex="createdAt"
-          title={t("users.fields.createdAt")}
-          render={(value) => <DateField value={value} format="LLL" />}
+          key="address"
+          dataIndex="address"
+          title="Address"
+          
           sorter
         />
-        <Table.Column
+
+<Table.Column
+          key="company"
+          dataIndex="company"
+          title="Company"
+          
+          sorter
+        />
+
+<Table.Column
+          key="balance"
+          dataIndex="balance"
+          title="Balance"
+        />
+        {/* <Table.Column
           key="isActive"
           dataIndex="isActive"
           title={t("users.fields.isActive.label")}
@@ -239,7 +253,7 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
               </Select>
             </FilterDropdown>
           )}
-        />
+        /> */}
         <Table.Column<IUser>
           fixed="right"
           title={t("table.actions")}
