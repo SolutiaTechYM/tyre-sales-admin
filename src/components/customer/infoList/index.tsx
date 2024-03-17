@@ -40,60 +40,27 @@ export const CustomerInfoList = ({ customer }: Props) => {
         itemLayout="horizontal"
         dataSource={[
           {
-            title: t("users.fields.gsm"),
+            title: t("Contact"),
             icon: <PhoneOutlined />,
-            value: <Typography.Text>{customer?.gsm}</Typography.Text>,
+            value: <Typography.Text>{customer?.contact}</Typography.Text>,
           },
           {
-            title: t("users.fields.addresses"),
+            title: t("Address"),
             icon: <EnvironmentOutlined />,
-            value: (
-              <Space direction="vertical">
-                {customer?.addresses.map((address, index) => {
-                  const isFirst = index === 0;
-
-                  return (
-                    <Space key={index}>
-                      {isFirst ? (
-                        <CheckCircleOutlined
-                          style={{
-                            color: token.colorSuccess,
-                          }}
-                        />
-                      ) : (
-                        <RightCircleOutlined
-                          style={{
-                            color: token.colorTextTertiary,
-                          }}
-                        />
-                      )}
-                      <Typography.Text
-                        key={index}
-                        style={{
-                          color: isFirst
-                            ? token.colorText
-                            : token.colorTextTertiary,
-                        }}
-                      >
-                        {address.text}
-                      </Typography.Text>
-                    </Space>
-                  );
-                })}
-              </Space>
+            value:(
+              <Typography.Text>
+               {customer?.address}
+              </Typography.Text>
             ),
           },
+         
           {
-            title: t("users.fields.isActive.label"),
+            title: t("Company"),
             icon: <UserOutlined />,
-            value: <UserStatus value={!!customer?.isActive} />,
-          },
-          {
-            title: t("users.fields.createdAt"),
-            icon: <CalendarOutlined />,
+
             value: (
               <Typography.Text>
-                {dayjs(customer?.createdAt).format("MMMM, YYYY HH:mm A")}
+               {customer?.contact}
               </Typography.Text>
             ),
           },
@@ -114,12 +81,11 @@ export const CustomerInfoList = ({ customer }: Props) => {
           );
         }}
       />
-      
+       <div style={{ display:"flex",justifyContent:"right"}}>
       <EditButton
-                  icon={<EyeOutlined />}
-                  hideText
                   recordItemId={customer?.id}
                 />
+                </div>
     </Card>
   );
 };

@@ -31,9 +31,9 @@ export interface IUser {
   firstName: string;
   lastName: string;
   fullName: string;
-  gender: string;
-  gsm: string;
-  createdAt: string;
+  company: string;
+  contact: string;
+  address: string;
   isActive: boolean;
   avatar: IFile[];
   addresses: IAddress[];
