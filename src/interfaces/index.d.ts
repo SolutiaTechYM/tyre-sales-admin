@@ -126,6 +126,17 @@ export interface IProduct {
   stock: number;
 }
 
+export interface ISupplier{
+  id: number;
+  avatar: IFile & { thumbnailUrl?: string };
+  name: string;
+  phone: string;
+  address: string;
+  dueAmount: number;
+  lastOrderDate: string;
+  createdAt: string;
+}
+
 export interface ICategory {
   id: number;
   title: string;
