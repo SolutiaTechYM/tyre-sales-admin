@@ -20,9 +20,8 @@ import {
 } from "antd";
 import { useSearchParams } from "react-router-dom";
 import { Drawer } from "../../drawer";
-import { ICategory, IProduct } from "../../../interfaces";
+import { ISupplier } from "../../../interfaces";
 import { DeleteButton, NumberField } from "@refinedev/antd";
-import { ProductStatus } from "../status";
 import { EditOutlined } from "@ant-design/icons";
 
 type Props = {
@@ -31,7 +30,7 @@ type Props = {
   onEdit?: () => void;
 };
 
-export const ProductDrawerShow = (props: Props) => {
+export const SupplierDrawerShow = (props: Props) => {
   const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
   const go = useGo();
@@ -40,20 +39,11 @@ export const ProductDrawerShow = (props: Props) => {
   const { token } = theme.useToken();
   const breakpoint = Grid.useBreakpoint();
 
-  const { queryResult } = useShow<IProduct, HttpError>({
-    resource: "products",
+  const { queryResult } = useShow<ISupplier, HttpError>({
+    resource: "suppliers",
     id: props?.id, // when undefined, id will be read from the URL.
   });
-  const product = queryResult.data?.data;
-
-  const { data: categoryData } = useOne<ICategory, HttpError>({
-    resource: "categories",
-    id: product?.category?.id,
-    queryOptions: {
-      enabled: !!product?.category?.id,
-    },
-  });
-  const category = categoryData?.data;
+  const supplier = queryResult.data?.data;
 
   const handleDrawerClose = () => {
     if (props?.onClose) {
@@ -96,8 +86,8 @@ export const ProductDrawerShow = (props: Props) => {
             margin: "16px auto",
             borderRadius: "8px",
           }}
-          src={product?.images?.[0].url}
-          alt={product?.images?.[0].name}
+          src={supplier?.avatar?.url}
+          alt={supplier?.avatar?.name}
         />
       </Flex>
       <Flex
@@ -112,9 +102,9 @@ export const ProductDrawerShow = (props: Props) => {
             padding: "16px",
           }}
         >
-          <Typography.Title level={5}>{product?.name}</Typography.Title>
+          <Typography.Title level={5}>{supplier?.name}</Typography.Title>
           <Typography.Text type="secondary">
-            {product?.description}
+            {supplier?.phone}
           </Typography.Text>
         </Flex>
         <Divider
@@ -128,35 +118,27 @@ export const ProductDrawerShow = (props: Props) => {
             {
               label: (
                 <Typography.Text type="secondary">
-                  {t("products.fields.price")}
+                  {t("suppliers.fields.address")}
+                </Typography.Text>
+              ),
+              value: <Typography.Text>{supplier?.address}</Typography.Text>,
+            },
+            {
+              label: (
+                <Typography.Text type="secondary">
+                  {t("suppliers.fields.dueAmount")}
                 </Typography.Text>
               ),
               value: (
                 <NumberField
-                  value={product?.price || 0}
+                  value={supplier?.dueAmount || 0}
                   options={{
                     style: "currency",
-                    currency: "USD",
+                    currency: "LKR",
                   }}
                 />
               ),
-            },
-            {
-              label: (
-                <Typography.Text type="secondary">
-                  {t("products.fields.category")}
-                </Typography.Text>
-              ),
-              value: <Typography.Text>{category?.title}</Typography.Text>,
-            },
-            {
-              label: (
-                <Typography.Text type="secondary">
-                  {t("products.fields.isActive.label")}
-                </Typography.Text>
-              ),
-              value: <ProductStatus value={!!product?.isActive} />,
-            },
+            }
           ]}
           renderItem={(item) => {
             return (
@@ -182,8 +164,8 @@ export const ProductDrawerShow = (props: Props) => {
       >
         <DeleteButton
           type="text"
-          recordItemId={product?.id}
-          resource="products"
+          recordItemId={supplier?.id}
+          resource="suppliers"
           onSuccess={() => {
             handleDrawerClose();
           }}
@@ -196,9 +178,9 @@ export const ProductDrawerShow = (props: Props) => {
             }
 
             return go({
-              to: `${editUrl("products", product?.id || "")}`,
+              to: `${editUrl("suppliers", supplier?.id || "")}`,
               query: {
-                to: "/products",
+                to: "/suppliers",
               },
               options: {
                 keepQuery: true,
