@@ -102,6 +102,9 @@ const App: React.FC = () => {
               {
                 name: "suppliers",
                 list: "/suppliers",
+                show: "/suppliers/:id",
+                create: "/suppliers/new",
+                edit: "/suppliers/:id/edit",
                 meta: {
                   label: "Suppliers",
                   icon: <ShopOutlined />,
