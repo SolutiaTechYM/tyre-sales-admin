@@ -20,6 +20,7 @@ import {
 import { PaginationTotal } from "../../paginationTotal";
 import { SearchOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
+import { SupplierDrawerShow } from "../drawer-show";
 
 export const SupplierListTable = () => {
   const { token } = theme.useToken();
@@ -57,6 +58,8 @@ export const SupplierListTable = () => {
 
 
   return (
+    <>
+    <SupplierDrawerShow />
     <Table
       {...tableProps}
       rowKey="id"
@@ -268,5 +271,6 @@ export const SupplierListTable = () => {
         }}
       />
     </Table>
+    </>
   );
 };
