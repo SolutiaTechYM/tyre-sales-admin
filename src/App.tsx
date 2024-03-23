@@ -119,6 +119,9 @@ const App: React.FC = () => {
               {
                 name: "categories",
                 list: "/categories",
+                create: "/categories/new",
+                edit: "/categories/:id/edit",
+                show: "/categories/:id",
                 meta: {
                   icon: <TagsOutlined />,
                 },

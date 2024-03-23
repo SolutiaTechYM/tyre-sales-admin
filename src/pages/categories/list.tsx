@@ -1,62 +1,80 @@
-import {
-  useTranslate,
-  IResourceComponentsProps,
-  HttpError,
-} from "@refinedev/core";
-import { List, useTable } from "@refinedev/antd";
-import { Table } from "antd";
-import { ICategory } from "../../interfaces";
-import {
-  PaginationTotal,
-  CategoryStatus,
-  TableCategoryProductColumn,
-} from "../../components";
+import { useGo, useNavigation, useTranslate } from "@refinedev/core";
+import { CreateButton, List } from "@refinedev/antd";
+import { ProductListCard, ProductListTable } from "../../components";
+import { PropsWithChildren, useState } from "react";
+import { AppstoreOutlined, UnorderedListOutlined } from "@ant-design/icons";
+import { Segmented } from "antd";
+import { useLocation } from "react-router-dom";
 
-export const CategoryList: React.FC<IResourceComponentsProps> = () => {
-  const { tableProps } = useTable<ICategory, HttpError>();
+type View = "table" | "card";
+
+export const ProductList = ({ children }: PropsWithChildren) => {
+  const go = useGo();
+  const { replace } = useNavigation();
+  const { pathname } = useLocation();
+  const { createUrl } = useNavigation();
+
+  const [view, setView] = useState<View>(
+    (localStorage.getItem("product-view") as View) || "table",
+  );
+
+  const handleViewChange = (value: View) => {
+    // remove query params (pagination, filters, etc.) when changing view
+    replace("");
+
+    setView(value);
+    localStorage.setItem("product-view", value);
+  };
 
   const t = useTranslate();
 
   return (
-    <List>
-      <Table
-        {...tableProps}
-        rowKey="id"
-        scroll={{
-          x: true,
-        }}
-        pagination={{
-          ...tableProps.pagination,
-          hideOnSinglePage: true,
-          showTotal: (total) => (
-            <PaginationTotal total={total} entityName="categories" />
-          ),
-        }}
-      >
-        <Table.Column
-          key="title"
-          dataIndex="title"
-          width={224}
-          title={t("categories.fields.title")}
-        />
-        <Table.Column<ICategory>
-          key="id"
-          dataIndex="id"
-          width={576}
-          title={t("categories.fields.products")}
-          render={(_, record) => {
-            return <TableCategoryProductColumn category={record} />;
+    <List
+      breadcrumb={false}
+      headerButtons={(props) => [
+        <Segmented<View>
+          key="view"
+          size="large"
+          value={view}
+          style={{ marginRight: 24 }}
+          options={[
+            {
+              label: "",
+              value: "table",
+              icon: <UnorderedListOutlined />,
+            },
+            {
+              label: "",
+              value: "card",
+              icon: <AppstoreOutlined />,
+            },
+          ]}
+          onChange={handleViewChange}
+        />,
+        <CreateButton
+          {...props.createButtonProps}
+          key="create"
+          size="large"
+          onClick={() => {
+            return go({
+              to: `${createUrl("products")}`,
+              query: {
+                to: pathname,
+              },
+              options: {
+                keepQuery: true,
+              },
+              type: "replace",
+            });
           }}
-        />
-        <Table.Column<ICategory>
-          key="isActive"
-          dataIndex="isActive"
-          title={t("categories.fields.isActive.label")}
-          render={(_, record) => {
-            return <CategoryStatus value={record.isActive} />;
-          }}
-        />
-      </Table>
+        >
+          {t("products.actions.add")}
+        </CreateButton>,
+      ]}
+    >
+      {view === "table" && <ProductListTable />}
+      {view === "card" && <ProductListCard />}
+      {children}
     </List>
   );
 };
