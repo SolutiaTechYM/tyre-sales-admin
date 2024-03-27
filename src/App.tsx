@@ -36,9 +36,10 @@ import {
   ProductCreate,
   ProductEdit,
   ProductShow,
+
 } from "./pages/products";
 import { StoreCreate, StoreEdit, StoreList } from "./pages/stores";
-import { CategoryCreate, CategoryEdit, CategoryList } from "./pages/categories";
+import { CategoryCreate, CategoryEdit, CategoryList, CategoryShow } from "./pages/categories";
 import { useTranslation } from "react-i18next";
 import { Header, Title } from "./components";
 import { BikeWhiteIcon } from "./components/icons";
@@ -216,7 +217,7 @@ const App: React.FC = () => {
                   }
                 >
                   <Route path="new" element={<CategoryCreate />} />
-                  {/* <Route path=":id" element={<CategoryShow />} /> */}
+                  <Route path=":id" element={<CategoryShow />} />
                   <Route path=":id/edit" element={<CategoryEdit />} />
                 </Route>
 

@@ -2,20 +2,28 @@ import {
   useTranslate,
   IResourceComponentsProps,
   HttpError,
+  useGo,
+  useNavigation
 } from "@refinedev/core";
 import { List, useTable } from "@refinedev/antd";
-import { Table } from "antd";
+import { Button, Table, theme } from "antd";
 // import { ICategory } from "../../interfaces";
 
 import { ICategory } from "../../../interfaces";
 import { PaginationTotal } from "../../paginationTotal";
 import { CategoryStatus } from "../status";
 import { TableCategoryProductColumn } from "../tableColumnProducts";
+import { EyeOutlined } from "@ant-design/icons";
+import { useLocation } from "react-router-dom";
 
 export const CategoryTable: React.FC<IResourceComponentsProps> = () => {
   const { tableProps } = useTable<ICategory, HttpError>();
-
+  const go = useGo();
+  const { pathname } = useLocation();
+  const { showUrl } = useNavigation();
   const t = useTranslate();
+  const { token } = theme.useToken();
+
 
   return (
 
@@ -54,7 +62,29 @@ export const CategoryTable: React.FC<IResourceComponentsProps> = () => {
           title={t("quantity")}
           
         />
+          <Table.Column<ICategory>
+          fixed="right"
+          title={t("table.actions")}
+          render={(_, record) => (
+            <Button
+              icon={<EyeOutlined />}
+              onClick={() => {
+                return go({
+                  to: `${showUrl("categories", record.id)}`,
+                  query: {
+                    to: pathname,
+                  },
+                  options: {
+                    keepQuery: true,
+                  },
+                  type: "replace",
+                });
+              }}
+            />
+          )}
+        />
       </Table>
+
   
   );
 };

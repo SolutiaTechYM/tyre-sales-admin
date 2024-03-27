@@ -80,9 +80,7 @@ export const CategoryDrawerForm = (props: Props) => {
     });
   };
 
-  const images = Form.useWatch("images", formProps.form);
-  const image = images?.[0] || null;
-  const previewImageURL = image?.url || image?.response?.url;
+
   const title = props.action === "edit" ? null : t("products.actions.add");
 
   return (
@@ -103,63 +101,14 @@ export const CategoryDrawerForm = (props: Props) => {
             style={{
               margin: 0,
             }}
-            rules={[
-              {
-                required: true,
-              },
-            ]}
+       
           >
-            <Upload.Dragger
-              name="file"
-              action={`${apiUrl}/media/upload`}
-              maxCount={1}
-              accept=".png,.jpg,.jpeg"
-              className={styles.uploadDragger}
-              showUploadList={false}
-            >
-              <Flex
-                vertical
-                align="center"
-                justify="center"
-                style={{
-                  position: "relative",
-                  height: "100%",
-                }}
-              >
-                <Avatar
-                  shape="square"
-                  style={{
-                    aspectRatio: 1,
-                    objectFit: "contain",
-                    width: previewImageURL ? "100%" : "48px",
-                    height: previewImageURL ? "100%" : "48px",
-                    marginTop: previewImageURL ? undefined : "auto",
-                    transform: previewImageURL ? undefined : "translateY(50%)",
-                  }}
-                  src={previewImageURL || "/images/product-default-img.png"}
-                  alt="Product Image"
-                />
-                <Button
-                  icon={<UploadOutlined />}
-                  style={{
-                    marginTop: "auto",
-                    marginBottom: "16px",
-                    backgroundColor: theme.colorBgContainer,
-                    ...(!!previewImageURL && {
-                      position: "absolute",
-                      bottom: 0,
-                    }),
-                  }}
-                >
-                  {t("products.fields.images.description")}
-                </Button>
-              </Flex>
-            </Upload.Dragger>
+  
           </Form.Item>
           <Flex vertical>
             <Form.Item
-              label={t("Name")}
-              name="name"
+              label={t("Title")}
+              name="title"
               className={styles.formItem}
               rules={[
                 {
