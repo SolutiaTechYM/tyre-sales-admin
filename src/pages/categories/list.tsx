@@ -5,10 +5,11 @@ import { PropsWithChildren, useState } from "react";
 import { AppstoreOutlined, UnorderedListOutlined } from "@ant-design/icons";
 import { Segmented } from "antd";
 import { useLocation } from "react-router-dom";
+import { CategoryTable } from "../../components/categories/list-table";
 
 type View = "table" | "card";
 
-export const ProductList = ({ children }: PropsWithChildren) => {
+export const CategoryList = ({ children }: PropsWithChildren) => {
   const go = useGo();
   const { replace } = useNavigation();
   const { pathname } = useLocation();
@@ -32,32 +33,13 @@ export const ProductList = ({ children }: PropsWithChildren) => {
     <List
       breadcrumb={false}
       headerButtons={(props) => [
-        <Segmented<View>
-          key="view"
-          size="large"
-          value={view}
-          style={{ marginRight: 24 }}
-          options={[
-            {
-              label: "",
-              value: "table",
-              icon: <UnorderedListOutlined />,
-            },
-            {
-              label: "",
-              value: "card",
-              icon: <AppstoreOutlined />,
-            },
-          ]}
-          onChange={handleViewChange}
-        />,
         <CreateButton
           {...props.createButtonProps}
           key="create"
           size="large"
           onClick={() => {
             return go({
-              to: `${createUrl("products")}`,
+              to: `${createUrl("categories")}`,
               query: {
                 to: pathname,
               },
@@ -68,12 +50,11 @@ export const ProductList = ({ children }: PropsWithChildren) => {
             });
           }}
         >
-          {t("products.actions.add")}
+          {t("Add new Category")}
         </CreateButton>,
       ]}
     >
-      {view === "table" && <ProductListTable />}
-      {view === "card" && <ProductListCard />}
+     <CategoryTable />
       {children}
     </List>
   );
