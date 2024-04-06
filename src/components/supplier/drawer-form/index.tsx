@@ -33,7 +33,7 @@ type Props = {
   onMutationSuccess?: () => void;
 };
 
-export const ProductDrawerForm = (props: Props) => {
+export const SupplierDrawerForm = (props: Props) => {
   const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
   const go = useGo();
@@ -85,7 +85,7 @@ export const ProductDrawerForm = (props: Props) => {
   const images = Form.useWatch("images", formProps.form);
   const image = images?.[0] || null;
   const previewImageURL = image?.url || image?.response?.url;
-  const title = props.action === "edit" ? null : t("products.actions.add");
+  const title = props.action === "edit" ? null : t("suppliers.actions.add");
 
   return (
     <Drawer
@@ -99,7 +99,7 @@ export const ProductDrawerForm = (props: Props) => {
       <Spin spinning={formLoading}>
         <Form {...formProps} layout="vertical">
           <Form.Item
-            name="images"
+            name="avatar"
             valuePropName="fileList"
             getValueFromEvent={getValueFromEvent}
             style={{
@@ -107,7 +107,7 @@ export const ProductDrawerForm = (props: Props) => {
             }}
             rules={[
               {
-                required: true,
+                required: false,
               },
             ]}
           >
@@ -160,7 +160,7 @@ export const ProductDrawerForm = (props: Props) => {
           </Form.Item>
           <Flex vertical>
             <Form.Item
-              label={t("products.fields.name")}
+              label={t("suppliers.fields.name")}
               name="name"
               className={styles.formItem}
               rules={[
@@ -172,8 +172,21 @@ export const ProductDrawerForm = (props: Props) => {
               <Input />
             </Form.Item>
             <Form.Item
-              label={t("products.fields.description")}
-              name="description"
+              label={t("suppliers.fields.phone")}
+              name="phone"
+              className={styles.formItem}
+              rules={[
+                {
+                  len: 10,
+                  required: true,
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label={t("suppliers.fields.address")}
+              name="address"
               className={styles.formItem}
               rules={[
                 {
@@ -181,52 +194,7 @@ export const ProductDrawerForm = (props: Props) => {
                 },
               ]}
             >
-              <Input.TextArea rows={6} />
-            </Form.Item>
-            <Form.Item
-              label={t("products.fields.price")}
-              name="price"
-              className={styles.formItem}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <InputNumber prefix={"$"} style={{ width: "150px" }} />
-            </Form.Item>
-            <Form.Item
-              label={t("products.fields.category")}
-              name={["category", "id"]}
-              className={styles.formItem}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Select {...categorySelectProps} />
-            </Form.Item>
-            <Form.Item
-              label={t("products.fields.isActive.label")}
-              name="isActive"
-              className={styles.formItem}
-              initialValue={true}
-            >
-              <Segmented
-                block
-                size="large"
-                options={[
-                  {
-                    label: t("products.fields.isActive.true"),
-                    value: true,
-                  },
-                  {
-                    label: t("products.fields.isActive.false"),
-                    value: false,
-                  },
-                ]}
-              />
+              <Input.TextArea rows={4} />
             </Form.Item>
             <Flex
               align="center"
