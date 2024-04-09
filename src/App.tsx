@@ -49,8 +49,12 @@ import { ConfigProvider } from "./context";
 import { useAutoLoginForDemo } from "./hooks";
 
 import "@refinedev/antd/dist/reset.css";
+
+import { SupplierCreate, SupplierEdit, SupplierList } from "./pages/suppliers";
+
 import { CustomerCreate } from "./pages/customers/create";
 import { CustomerEdit } from "./pages/customers/edit";
+
 
 const App: React.FC = () => {
   // This hook is used to automatically login the user.
@@ -111,6 +115,17 @@ const App: React.FC = () => {
               //     icon: <UserOutlined />,
               //   },
               // },
+              {
+                name: "suppliers",
+                list: "/suppliers",
+                show: "/suppliers/:id",
+                create: "/suppliers/new",
+                edit: "/suppliers/:id/edit",
+                meta: {
+                  label: "Suppliers",
+                  icon: <ShopOutlined />,
+                },
+              },
               {
                 name: "users",
                 list: "/customers",
@@ -240,6 +255,14 @@ const App: React.FC = () => {
                   <Route path=":id/edit" element={<StoreEdit />} />
                 </Route>
 
+
+                <Route path="/suppliers">
+                  <Route index element={<SupplierList/>} />
+                  <Route path="new" element={<SupplierCreate/>} />
+                  <Route path=":id/edit" element={<SupplierEdit/>} />
+                </Route>
+
+
                 {/* <Route path="/categories" element={<CategoryList />} /> */}
 
                 <Route
@@ -254,6 +277,7 @@ const App: React.FC = () => {
                   <Route path=":id" element={<CategoryShow />} />
                   <Route path=":id/edit" element={<CategoryEdit />} />
                 </Route>
+
 
                 <Route path="/couriers">
                   <Route

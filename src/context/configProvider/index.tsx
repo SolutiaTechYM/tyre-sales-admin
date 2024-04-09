@@ -21,7 +21,7 @@ export const ConfigProviderContext = createContext<
   ConfigProviderContext | undefined
 >(undefined);
 
-const defaultMode: Mode = (localStorage.getItem("theme") as Mode) || "light";
+const defaultMode: Mode = (localStorage.getItem("theme") as Mode) || "dark";
 
 type ConfigProviderProps = {
   theme?: ThemeConfig;
