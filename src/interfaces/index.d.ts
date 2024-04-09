@@ -128,6 +128,8 @@ export interface IOrder {
 export interface ICustomer {
   id: number;
   name: string;
+  code: string;
+
   isActive: boolean;
   description: string;
   images: (IFile & { thumbnailUrl?: string })[];
