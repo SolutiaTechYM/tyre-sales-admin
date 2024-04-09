@@ -47,6 +47,7 @@ import { ConfigProvider } from "./context";
 import { useAutoLoginForDemo } from "./hooks";
 
 import "@refinedev/antd/dist/reset.css";
+import { AccountList } from "./pages/accounts";
 
 const App: React.FC = () => {
   // This hook is used to automatically login the user.
@@ -214,7 +215,7 @@ const App: React.FC = () => {
 
 
                 <Route path="/accounts">
-                  {/* <Route index element={<AccountList />} /> */}
+                  <Route index element={<AccountList />} />
                   <Route path="new" element={<StoreCreate />} />
                   <Route path=":id/edit" element={<StoreEdit />} />
                 </Route>
