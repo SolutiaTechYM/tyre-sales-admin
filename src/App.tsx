@@ -20,6 +20,7 @@ import {
   UserOutlined,
   UnorderedListOutlined,
   TagsOutlined,
+  DollarOutlined,
 } from "@ant-design/icons";
 import jsonServerDataProvider from "@refinedev/simple-rest";
 import { authProvider } from "./authProvider";
@@ -130,6 +131,15 @@ const App: React.FC = () => {
                 edit: "/stores/:id/edit",
                 meta: {
                   icon: <ShopOutlined />,
+                },
+              },
+              {
+                name: "Accounts",
+                list: "/accounts",
+                create: "/accounts/new",
+                edit: "/accounts/:id/edit",
+                meta: {
+                  icon: <DollarOutlined />,
                 },
               },
               {
