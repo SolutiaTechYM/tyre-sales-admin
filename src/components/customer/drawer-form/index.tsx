@@ -6,7 +6,10 @@ import {
   useGo,
   useTranslate,
 } from "@refinedev/core";
+import InputMask from "react-input-mask";
+
 import { getValueFromEvent, useSelect } from "@refinedev/antd";
+import { useForm } from "antd/lib/form/Form";
 import {
   Form,
   Input,
@@ -19,8 +22,9 @@ import {
   Avatar,
   Segmented,
   Spin,
+  DatePicker,
 } from "antd";
-import { IProduct, ICategory } from "../../../interfaces";
+import { IProduct, ICategory, ICustomer, IUser } from "../../../interfaces";
 import { useSearchParams } from "react-router-dom";
 import { Drawer } from "../../drawer";
 import { UploadOutlined } from "@ant-design/icons";
@@ -33,7 +37,7 @@ type Props = {
   onMutationSuccess?: () => void;
 };
 
-export const ProductDrawerForm = (props: Props) => {
+export const CustomerDrawerForm = (props: Props) => {
   const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
   const go = useGo();
@@ -42,19 +46,22 @@ export const ProductDrawerForm = (props: Props) => {
   const breakpoint = Grid.useBreakpoint();
   const { styles, theme } = useStyles();
 
+  const [form] = useForm();
   const { drawerProps, formProps, close, saveButtonProps, formLoading } =
-    useDrawerForm<IProduct>({
-      resource: "products",
+    useDrawerForm<IUser>({
+      resource: "users",
       id: props?.id, // when undefined, id will be read from the URL.
       action: props.action,
       redirect: false,
       onMutationSuccess: () => {
+        console.log("Form data:", form.getFieldsValue());
         props.onMutationSuccess?.();
       },
+      // form,
     });
 
-  const { selectProps: categorySelectProps } = useSelect<ICategory>({
-    resource: "categories",
+  const { selectProps: categorySelectProps } = useSelect<IUser>({
+    resource: "users",
   });
 
   const onDrawerCLose = () => {
@@ -82,15 +89,15 @@ export const ProductDrawerForm = (props: Props) => {
     });
   };
 
-  const images = Form.useWatch("images", formProps.form);
+  const images = Form.useWatch("avatar", formProps.form);
   console.log(formProps.form);
-  
   console.log(images);
-
+  
   const image = images?.[0] || null;
   const previewImageURL = image?.url || image?.response?.url;
+  
   const title = props.action === "edit" ? null : t("products.actions.add");
-  // console.log(title);
+
   return (
     <Drawer
       {...drawerProps}
@@ -103,7 +110,7 @@ export const ProductDrawerForm = (props: Props) => {
       <Spin spinning={formLoading}>
         <Form {...formProps} layout="vertical">
           <Form.Item
-            name="images"
+            name="avatar"
             valuePropName="fileList"
             getValueFromEvent={getValueFromEvent}
             style={{
@@ -165,7 +172,7 @@ export const ProductDrawerForm = (props: Props) => {
           <Flex vertical>
             <Form.Item
               label={t("products.fields.name")}
-              name="name"
+              name="fullName"
               className={styles.formItem}
               rules={[
                 {
@@ -173,11 +180,11 @@ export const ProductDrawerForm = (props: Props) => {
                 },
               ]}
             >
-              <Input />
+              <Input placeholder="please enter name "/>
             </Form.Item>
             <Form.Item
-              label={t("products.fields.description")}
-              name="description"
+              label={t("Contact")}
+              name="gContactsm"
               className={styles.formItem}
               rules={[
                 {
@@ -185,11 +192,48 @@ export const ProductDrawerForm = (props: Props) => {
                 },
               ]}
             >
-              <Input.TextArea rows={6} />
+           <InputMask mask="(999) 999 99 99">
+            {/* 
+                                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                    // @ts-ignore */}
+            {(props: InputProps) => (
+              <Input
+                {...props}
+                placeholder="please enter Phone number"
+              />
+            )}
+          </InputMask>
+
             </Form.Item>
+
             <Form.Item
-              label={t("products.fields.price")}
-              name="price"
+              label={t("Address")}
+              name="address"
+              className={styles.formItem}
+             
+            >
+            <Input.TextArea
+              rows={2}
+              placeholder="please enter address"
+            />
+            </Form.Item>
+
+            <Form.Item
+              label={t("Company")}
+              name="Company"
+              className={styles.formItem}
+             
+            >
+            <Input
+   
+              placeholder="optional"
+            />
+            </Form.Item>
+
+
+            {/* <Form.Item
+              label={t("createdAt")}
+              name="createdAt"
               className={styles.formItem}
               rules={[
                 {
@@ -197,9 +241,10 @@ export const ProductDrawerForm = (props: Props) => {
                 },
               ]}
             >
-              <InputNumber prefix={"$"} style={{ width: "150px" }} />
-            </Form.Item>
-            <Form.Item
+             <DatePicker style={{ width: "100%" }} />
+            </Form.Item> */}
+
+            {/* <Form.Item
               label={t("products.fields.category")}
               name={["category", "id"]}
               className={styles.formItem}
@@ -210,28 +255,8 @@ export const ProductDrawerForm = (props: Props) => {
               ]}
             >
               <Select {...categorySelectProps} />
-            </Form.Item>
-            <Form.Item
-              label={t("products.fields.isActive.label")}
-              name="isActive"
-              className={styles.formItem}
-              initialValue={true}
-            >
-              <Segmented
-                block
-                size="large"
-                options={[
-                  {
-                    label: t("products.fields.isActive.true"),
-                    value: true,
-                  },
-                  {
-                    label: t("products.fields.isActive.false"),
-                    value: false,
-                  },
-                ]}
-              />
-            </Form.Item>
+            </Form.Item> */}
+         
             <Flex
               align="center"
               justify="space-between"

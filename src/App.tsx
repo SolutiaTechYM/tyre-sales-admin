@@ -38,6 +38,8 @@ import {
   ProductShow,
 
 } from "./pages/products";
+
+// import { CustomerListss,CustomerShowss } from "./pages/customersss";
 import { StoreCreate, StoreEdit, StoreList } from "./pages/stores";
 import { CategoryCreate, CategoryEdit, CategoryList, CategoryShow } from "./pages/categories";
 import { useTranslation } from "react-i18next";
@@ -47,6 +49,8 @@ import { ConfigProvider } from "./context";
 import { useAutoLoginForDemo } from "./hooks";
 
 import "@refinedev/antd/dist/reset.css";
+import { CustomerCreate } from "./pages/customers/create";
+import { CustomerEdit } from "./pages/customers/edit";
 
 const App: React.FC = () => {
   // This hook is used to automatically login the user.
@@ -99,11 +103,23 @@ const App: React.FC = () => {
                   icon: <ShoppingOutlined />,
                 },
               },
+              // {
+              //   name: "users",
+              //   list: "/customers",
+              //   show: "/customers/:id",
+              //   meta: {
+              //     icon: <UserOutlined />,
+              //   },
+              // },
               {
                 name: "users",
                 list: "/customers",
+                create: "/customers/new",
+                edit: "/customers/:id/edit",
+
                 show: "/customers/:id",
                 meta: {
+                  label: "newcustomers",
                   icon: <UserOutlined />,
                 },
               },
@@ -185,7 +201,25 @@ const App: React.FC = () => {
                   }
                 >
                   <Route path=":id" element={<CustomerShow />} />
+                  <Route path="new" element={<CustomerCreate />} />
+                  <Route path=":id/edit" element={<CustomerEdit />} />
+
+
                 </Route>
+
+                {/* my */}
+                {/* <Route
+                  path="/newcustomers"
+                  element={
+                    <CustomerListss>
+                      <Outlet />
+                    </CustomerListss>
+                  }
+                >
+                  <Route path=":id" element={<CustomerShowss />} />
+                </Route> */}
+
+                {/* xx */}
 
                 <Route
                   path="/products"
