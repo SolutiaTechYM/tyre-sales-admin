@@ -13,6 +13,7 @@ import {
   FilterDropdown,
   getDefaultSortOrder,
   ExportButton,
+  CreateButton
 } from "@refinedev/antd";
 import {
   Table,
@@ -37,8 +38,10 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
   const { showUrl } = useNavigation();
   const t = useTranslate();
   const { token } = theme.useToken();
+  const { createUrl } = useNavigation();
 
-  const { tableProps, filters, sorters } = useTable<
+
+  const {   tableProps, filters, sorters } = useTable<
     IUser,
     HttpError,
     IUserFilterVariables
@@ -82,9 +85,27 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
   return (
     <List
       breadcrumb={false}
-      headerProps={{
-        extra: <ExportButton onClick={triggerExport} loading={isLoading} />,
-      }}
+      headerButtons={(props) => [
+        <CreateButton
+          {...props.createButtonProps}
+          key="create"
+          size="large"
+          onClick={() => {
+            return go({
+              to: `${createUrl("users")}`,
+              query: {
+                to: pathname,
+              },
+              options: {
+                keepQuery: true,
+              },
+              type: "replace",
+            });
+          }}
+        >
+          Add New Customers
+        </CreateButton>,
+      ]}
     >
       <Table
         {...tableProps}
@@ -100,14 +121,16 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
         <Table.Column
           key="id"
           dataIndex="id"
-          title="ID #"
+          sorter
+
+          title="ID"
           render={(value) => (
             <Typography.Text
               style={{
                 whiteSpace: "nowrap",
               }}
             >
-              #{value}
+              {value}
             </Typography.Text>
           )}
           filterIcon={(filtered) => (
@@ -135,46 +158,78 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
           title={t("users.fields.avatar.label")}
           render={(value) => <Avatar src={value[0].url} />}
         />
-        <Table.Column
-          key="fullName"
+
+<Table.Column
+        key="fullName"
           dataIndex="fullName"
+          sorter
+
           title={t("users.fields.name")}
-          defaultFilteredValue={getDefaultFilter(
-            "fullName",
-            filters,
-            "contains",
-          )}
+        filterIcon={(filtered) => (
+          <SearchOutlined
+            style={{
+              color: filtered ? token.colorPrimary : undefined,
+            }}
+          />
+        )}
+        defaultFilteredValue={getDefaultFilter( "fullName",
+        filters,
+        "contains",)}
+        filterDropdown={(props) => (
+          <FilterDropdown {...props}>
+            <Input style={{ width: "100%" }}
+                placeholder={t("users.filter.name.placeholder")} />
+          </FilterDropdown>
+        )}
+        render={(value: string) => {
+          return (
+            <Typography.Text
+              style={{
+                whiteSpace: "nowrap",
+              }}
+            >
+              {value}
+            </Typography.Text>
+          );
+        }}
+      />
+
+        <Table.Column
+          key="Contact"
+          dataIndex="contact"
+          title={t("Contact")}
+          defaultFilteredValue={getDefaultFilter("Contact", filters, "eq")}
           filterDropdown={(props) => (
             <FilterDropdown {...props}>
               <Input
                 style={{ width: "100%" }}
-                placeholder={t("users.filter.name.placeholder")}
+                placeholder="search contact"
               />
             </FilterDropdown>
           )}
         />
         <Table.Column
-          key="gsm"
-          dataIndex="gsm"
-          title={t("users.fields.gsm")}
-          defaultFilteredValue={getDefaultFilter("gsm", filters, "eq")}
-          filterDropdown={(props) => (
-            <FilterDropdown {...props}>
-              <Input
-                style={{ width: "100%" }}
-                placeholder={t("users.filter.gsm.placeholder")}
-              />
-            </FilterDropdown>
-          )}
-        />
-        <Table.Column
-          key="createdAt"
-          dataIndex="createdAt"
-          title={t("users.fields.createdAt")}
-          render={(value) => <DateField value={value} format="LLL" />}
+          key="address"
+          dataIndex="address"
+          title="Address"
+          
           sorter
         />
-        <Table.Column
+
+<Table.Column
+          key="company"
+          dataIndex="company"
+          title="Company"
+          
+          sorter
+        />
+
+<Table.Column
+          key="balance"
+          dataIndex="balance"
+          title="Balance"
+        />
+        {/* <Table.Column
           key="isActive"
           dataIndex="isActive"
           title={t("users.fields.isActive.label")}
@@ -198,7 +253,7 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
               </Select>
             </FilterDropdown>
           )}
-        />
+        /> */}
         <Table.Column<IUser>
           fixed="right"
           title={t("table.actions")}

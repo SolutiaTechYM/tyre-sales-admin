@@ -36,9 +36,12 @@ import {
   ProductCreate,
   ProductEdit,
   ProductShow,
+
 } from "./pages/products";
+
+// import { CustomerListss,CustomerShowss } from "./pages/customersss";
 import { StoreCreate, StoreEdit, StoreList } from "./pages/stores";
-import { CategoryList } from "./pages/categories";
+import { CategoryCreate, CategoryEdit, CategoryList, CategoryShow } from "./pages/categories";
 import { useTranslation } from "react-i18next";
 import { Header, Title } from "./components";
 import { BikeWhiteIcon } from "./components/icons";
@@ -46,7 +49,12 @@ import { ConfigProvider } from "./context";
 import { useAutoLoginForDemo } from "./hooks";
 
 import "@refinedev/antd/dist/reset.css";
+
 import { SupplierCreate, SupplierEdit, SupplierList } from "./pages/suppliers";
+
+import { CustomerCreate } from "./pages/customers/create";
+import { CustomerEdit } from "./pages/customers/edit";
+
 
 const App: React.FC = () => {
   // This hook is used to automatically login the user.
@@ -99,6 +107,14 @@ const App: React.FC = () => {
                   icon: <ShoppingOutlined />,
                 },
               },
+              // {
+              //   name: "users",
+              //   list: "/customers",
+              //   show: "/customers/:id",
+              //   meta: {
+              //     icon: <UserOutlined />,
+              //   },
+              // },
               {
                 name: "suppliers",
                 list: "/suppliers",
@@ -113,8 +129,12 @@ const App: React.FC = () => {
               {
                 name: "users",
                 list: "/customers",
+                create: "/customers/new",
+                edit: "/customers/:id/edit",
+
                 show: "/customers/:id",
                 meta: {
+                  label: "newcustomers",
                   icon: <UserOutlined />,
                 },
               },
@@ -131,6 +151,9 @@ const App: React.FC = () => {
               {
                 name: "categories",
                 list: "/categories",
+                create: "/categories/new",
+                edit: "/categories/:id/edit",
+                show: "/categories/:id",
                 meta: {
                   icon: <TagsOutlined />,
                 },
@@ -193,7 +216,25 @@ const App: React.FC = () => {
                   }
                 >
                   <Route path=":id" element={<CustomerShow />} />
+                  <Route path="new" element={<CustomerCreate />} />
+                  <Route path=":id/edit" element={<CustomerEdit />} />
+
+
                 </Route>
+
+                {/* my */}
+                {/* <Route
+                  path="/newcustomers"
+                  element={
+                    <CustomerListss>
+                      <Outlet />
+                    </CustomerListss>
+                  }
+                >
+                  <Route path=":id" element={<CustomerShowss />} />
+                </Route> */}
+
+                {/* xx */}
 
                 <Route
                   path="/products"
@@ -214,13 +255,29 @@ const App: React.FC = () => {
                   <Route path=":id/edit" element={<StoreEdit />} />
                 </Route>
 
+
                 <Route path="/suppliers">
                   <Route index element={<SupplierList/>} />
                   <Route path="new" element={<SupplierCreate/>} />
                   <Route path=":id/edit" element={<SupplierEdit/>} />
                 </Route>
 
-                <Route path="/categories" element={<CategoryList />} />
+
+                {/* <Route path="/categories" element={<CategoryList />} /> */}
+
+                <Route
+                  path="/categories"
+                  element={
+                    <CategoryList>
+                      <Outlet />
+                    </CategoryList>
+                  }
+                >
+                  <Route path="new" element={<CategoryCreate />} />
+                  <Route path=":id" element={<CategoryShow />} />
+                  <Route path=":id/edit" element={<CategoryEdit />} />
+                </Route>
+
 
                 <Route path="/couriers">
                   <Route

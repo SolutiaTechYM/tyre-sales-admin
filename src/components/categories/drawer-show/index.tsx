@@ -13,6 +13,7 @@ import {
   Button,
   Divider,
   Flex,
+  Form,
   Grid,
   List,
   Typography,
@@ -22,18 +23,16 @@ import { useSearchParams } from "react-router-dom";
 import { Drawer } from "../../drawer";
 import { ICategory, IProduct } from "../../../interfaces";
 import { DeleteButton, NumberField } from "@refinedev/antd";
-import { ProductStatus } from "../status";
+// import { ProductStatus } from "../status";
 import { EditOutlined } from "@ant-design/icons";
-import { ProductStock } from "../stock";
 
 type Props = {
   id?: BaseKey;
   onClose?: () => void;
   onEdit?: () => void;
-  product?: IProduct;
 };
 
-export const ProductDrawerShow = (props: Props) => {
+export const CategoryDrawerShow = (props: Props) => {
   const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
   const go = useGo();
@@ -41,21 +40,15 @@ export const ProductDrawerShow = (props: Props) => {
   const t = useTranslate();
   const { token } = theme.useToken();
   const breakpoint = Grid.useBreakpoint();
-const currentQuanitity=10
-  const { queryResult } = useShow<IProduct, HttpError>({
-    resource: "products",
+
+  const { queryResult } = useShow<ICategory, HttpError>({
+    resource: "categories",
     id: props?.id, // when undefined, id will be read from the URL.
   });
-  const product = queryResult.data?.data;
+  const category = queryResult.data?.data;
 
-  const { data: categoryData } = useOne<ICategory, HttpError>({
-    resource: "categories",
-    id: product?.category?.id,
-    queryOptions: {
-      enabled: !!product?.category?.id,
-    },
-  });
-  const category = categoryData?.data;
+ 
+
 
   const handleDrawerClose = () => {
     if (props?.onClose) {
@@ -83,25 +76,22 @@ const currentQuanitity=10
   return (
     <Drawer
       open={true}
-      width={breakpoint.sm ? "700px" : "100%"}
+      width={breakpoint.sm ? "378px" : "100%"}
       zIndex={1001}
       onClose={handleDrawerClose}
     >
-      <Flex vertical align="center" justify="center">
-        <Avatar
-          shape="square"
-          style={{
-            aspectRatio: 1,
-            objectFit: "contain",
-            width: "240px",
-            height: "240px",
-            margin: "16px auto",
-            borderRadius: "8px",
-          }}
-          src={product?.images?.[0].url}
-          alt={product?.images?.[0].name}
-        />
-      </Flex>
+                <Form.Item
+            name="images"
+            valuePropName="fileList"
+            // getValueFromEvent={getValueFromEvent}
+            style={{
+              margin: 0,
+            }}
+
+          >
+  
+          </Form.Item>
+
       <Flex
         vertical
         style={{
@@ -114,9 +104,9 @@ const currentQuanitity=10
             padding: "16px",
           }}
         >
-          <Typography.Title level={5}>{product?.name}</Typography.Title>
+          <Typography.Title level={5}>{category?.title}</Typography.Title>
           <Typography.Text type="secondary">
-            {product?.code}
+            {/* {category?.description} */}
           </Typography.Text>
         </Flex>
         <Divider
@@ -127,38 +117,22 @@ const currentQuanitity=10
         />
         <List
           dataSource={[
+           
             {
               label: (
                 <Typography.Text type="secondary">
-                  {t("products.fields.price")}
-                </Typography.Text>
-              ),
-              value: (
-                <NumberField
-                  value={product?.price || 0}
-                  options={{
-                    style: "currency",
-                    currency: "LKR",
-                  }}
-                />
-              ),
-            },
-            {
-              label: (
-                <Typography.Text type="secondary">
-                  {t("products.fields.category")}
+                  {t("Title")}
                 </Typography.Text>
               ),
               value: <Typography.Text>{category?.title}</Typography.Text>,
             },
             {
               label: (
-                <Typography.Text type="secondary">
-                  {t("Quantity")}
-                </Typography.Text>
+                <Typography.Paragraph type="secondary">
+                  {t("Description")}
+                </Typography.Paragraph>
               ),
-              value: <Typography.Text>{currentQuanitity}</Typography.Text>,
-
+              value: <Typography.Text>{category?.description}</Typography.Text>,
             },
           ]}
           renderItem={(item) => {
@@ -185,8 +159,8 @@ const currentQuanitity=10
       >
         <DeleteButton
           type="text"
-          recordItemId={product?.id}
-          resource="products"
+          recordItemId={category?.id}
+          resource="categories"
           onSuccess={() => {
             handleDrawerClose();
           }}
@@ -199,9 +173,9 @@ const currentQuanitity=10
             }
 
             return go({
-              to: `${editUrl("products", product?.id || "")}`,
+              to: `${editUrl("categories", category?.id || "")}`,
               query: {
-                to: "/products",
+                to: "/categories",
               },
               options: {
                 keepQuery: true,
@@ -213,17 +187,6 @@ const currentQuanitity=10
           {t("actions.edit")}
         </Button>
       </Flex>
-      <Flex vertical
-        gap={32}
-        style={{
-          padding: "32px",
-        }}>
-
-      <ProductStock product={product} />
-      </Flex>
-
     </Drawer>
   );
 };
-
-
