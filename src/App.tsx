@@ -30,7 +30,7 @@ import "dayjs/locale/de";
 import { DashboardPage } from "./pages/dashboard";
 import { OrderList, OrderShow } from "./pages/orders";
 import { AuthPage } from "./pages/auth";
-import { CustomerShow, AccountsList } from "./pages/customers";
+import { CustomerShow, AccountsList } from "./pages/accounts";
 import { CourierList, CourierCreate, CourierEdit } from "./pages/couriers";
 import {
   ProductList,
@@ -49,8 +49,8 @@ import { ConfigProvider } from "./context";
 import { useAutoLoginForDemo } from "./hooks";
 
 import "@refinedev/antd/dist/reset.css";
-import { AccountsCreate } from "./pages/customers/create";
-import { CustomerEdit } from "./pages/customers/edit";
+import { AccountsCreate } from "./pages/accounts/create";
+import { CustomerEdit } from "./pages/accounts/edit";
 
 const App: React.FC = () => {
   // This hook is used to automatically login the user.
