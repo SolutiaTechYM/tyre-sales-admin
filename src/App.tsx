@@ -20,6 +20,7 @@ import {
   UserOutlined,
   UnorderedListOutlined,
   TagsOutlined,
+  DollarOutlined,
 } from "@ant-design/icons";
 import jsonServerDataProvider from "@refinedev/simple-rest";
 import { authProvider } from "./authProvider";
@@ -29,7 +30,7 @@ import "dayjs/locale/de";
 import { DashboardPage } from "./pages/dashboard";
 import { OrderList, OrderShow } from "./pages/orders";
 import { AuthPage } from "./pages/auth";
-import { CustomerShow, CustomerList } from "./pages/customers";
+import { CustomerShow, AccountsList } from "./pages/customers";
 import { CourierList, CourierCreate, CourierEdit } from "./pages/couriers";
 import {
   ProductList,
@@ -37,6 +38,8 @@ import {
   ProductEdit,
   ProductShow,
 } from "./pages/products";
+
+// import { CustomerListss,CustomerShowss } from "./pages/customersss";
 import { StoreCreate, StoreEdit, StoreList } from "./pages/stores";
 import { CategoryList } from "./pages/categories";
 import { useTranslation } from "react-i18next";
@@ -46,6 +49,8 @@ import { ConfigProvider } from "./context";
 import { useAutoLoginForDemo } from "./hooks";
 
 import "@refinedev/antd/dist/reset.css";
+import { AccountsCreate } from "./pages/customers/create";
+import { CustomerEdit } from "./pages/customers/edit";
 
 const App: React.FC = () => {
   // This hook is used to automatically login the user.
@@ -98,12 +103,24 @@ const App: React.FC = () => {
                   icon: <ShoppingOutlined />,
                 },
               },
+              // {
+              //   name: "users",
+              //   list: "/customers",
+              //   show: "/customers/:id",
+              //   meta: {
+              //     icon: <UserOutlined />,
+              //   },
+              // },
               {
-                name: "users",
-                list: "/customers",
-                show: "/customers/:id",
+                name: "accounts",
+                list: "/accounts",
+                create: "/accounts/new",
+                edit: "/accounts/:id/edit",
+
+                show: "/accounts/:id",
                 meta: {
-                  icon: <UserOutlined />,
+                  label: "Accounts",
+                  icon: <DollarOutlined />,
                 },
               },
               {
@@ -173,15 +190,33 @@ const App: React.FC = () => {
                 </Route>
 
                 <Route
-                  path="/customers"
+                  path="/accounts"
                   element={
-                    <CustomerList>
+                    <AccountsList>
                       <Outlet />
-                    </CustomerList>
+                    </AccountsList>
                   }
                 >
-                  <Route path=":id" element={<CustomerShow />} />
+                  {/* <Route path=":id" element={<CustomerShow />} /> */}
+                  <Route path="new" element={<AccountsCreate />} />
+                  {/* <Route path=":id/edit" element={<CustomerEdit />} /> */}
+
+
                 </Route>
+
+                {/* my */}
+                {/* <Route
+                  path="/newcustomers"
+                  element={
+                    <CustomerListss>
+                      <Outlet />
+                    </CustomerListss>
+                  }
+                >
+                  <Route path=":id" element={<CustomerShowss />} />
+                </Route> */}
+
+                {/* xx */}
 
                 <Route
                   path="/products"

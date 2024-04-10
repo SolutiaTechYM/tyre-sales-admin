@@ -13,6 +13,7 @@ import {
   FilterDropdown,
   getDefaultSortOrder,
   ExportButton,
+  CreateButton
 } from "@refinedev/antd";
 import {
   Table,
@@ -25,20 +26,23 @@ import {
   Button,
 } from "antd";
 
-import { IUser, IUserFilterVariables } from "../../interfaces";
+import { IAccount, IUser, IUserFilterVariables } from "../../interfaces";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { PaginationTotal, UserStatus } from "../../components";
 import { PropsWithChildren } from "react";
 import { useLocation } from "react-router-dom";
 
-export const CustomerList = ({ children }: PropsWithChildren) => {
+export const AccountsList = ({ children }: PropsWithChildren) => {
   const go = useGo();
   const { pathname } = useLocation();
   const { showUrl } = useNavigation();
   const t = useTranslate();
   const { token } = theme.useToken();
+  const { createUrl } = useNavigation();
 
-  const { tableProps, filters, sorters } = useTable<
+  const transactionTypes = ["capital", "purchase", "sell"];
+
+  const {   tableProps, filters, sorters } = useTable<
     IUser,
     HttpError,
     IUserFilterVariables
@@ -63,18 +67,15 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
     syncWithLocation: true,
   });
 
-  const { isLoading, triggerExport } = useExport<IUser>({
+  const { isLoading, triggerExport } = useExport<IAccount>({
+    //print all
     sorters,
     filters,
-    pageSize: 50,
-    maxItemCount: 50,
+
     mapData: (item) => {
       return {
         id: item.id,
-        fullName: item.fullName,
-        gsm: item.gsm,
-        isActive: item.isActive,
-        createdAt: item.createdAt,
+      
       };
     },
   });
@@ -82,9 +83,28 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
   return (
     <List
       breadcrumb={false}
-      headerProps={{
-        extra: <ExportButton onClick={triggerExport} loading={isLoading} />,
-      }}
+      headerButtons={(props) => [
+        <CreateButton
+          {...props.createButtonProps}
+          key="create"
+          size="large"
+          onClick={() => {
+            return go({
+              to: `${createUrl("accounts")}`,
+              query: {
+                to: pathname,
+              },
+              options: {
+                keepQuery: true,
+              },
+              type: "replace",
+            });
+          }}
+        >
+          Add Capital
+        </CreateButton>,
+        <ExportButton onClick={triggerExport} loading={isLoading} />
+      ]}
     >
       <Table
         {...tableProps}
@@ -100,14 +120,16 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
         <Table.Column
           key="id"
           dataIndex="id"
-          title="ID #"
+          sorter
+
+          title="ID"
           render={(value) => (
             <Typography.Text
               style={{
                 whiteSpace: "nowrap",
               }}
             >
-              #{value}
+              {value}
             </Typography.Text>
           )}
           filterIcon={(filtered) => (
@@ -128,53 +150,94 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
             </FilterDropdown>
           )}
         />
-        <Table.Column
-          align="center"
-          key="avatar"
-          dataIndex={["avatar"]}
-          title={t("users.fields.avatar.label")}
-          render={(value) => <Avatar src={value[0].url} />}
-        />
-        <Table.Column
-          key="fullName"
-          dataIndex="fullName"
-          title={t("users.fields.name")}
-          defaultFilteredValue={getDefaultFilter(
-            "fullName",
-            filters,
-            "contains",
-          )}
-          filterDropdown={(props) => (
-            <FilterDropdown {...props}>
-              <Input
-                style={{ width: "100%" }}
-                placeholder={t("users.filter.name.placeholder")}
-              />
-            </FilterDropdown>
-          )}
-        />
-        <Table.Column
-          key="gsm"
-          dataIndex="gsm"
-          title={t("users.fields.gsm")}
-          defaultFilteredValue={getDefaultFilter("gsm", filters, "eq")}
-          filterDropdown={(props) => (
-            <FilterDropdown {...props}>
-              <Input
-                style={{ width: "100%" }}
-                placeholder={t("users.filter.gsm.placeholder")}
-              />
-            </FilterDropdown>
-          )}
-        />
-        <Table.Column
-          key="createdAt"
-          dataIndex="createdAt"
-          title={t("users.fields.createdAt")}
-          render={(value) => <DateField value={value} format="LLL" />}
+
+
+<Table.Column
+        key="date"
+          dataIndex="date"
+          sorter
+
+          title={t("Date")}
+
+       
+      />
+
+
+        
+<Table.Column<IAccount>
+  title={t("Type")}
+  dataIndex={["transactionType", "title"]}
+  key="transactionType.id"
+  sorter
+  
+  defaultFilteredValue={getDefaultFilter("transactionType.id", filters, "in")}
+  filterDropdown={(props) => {
+    return (
+      <FilterDropdown
+        {...props}
+        selectedKeys={props.selectedKeys.map((item) => Number(item))}
+      >
+        <Select
+          style={{ width: "200px" }}
+          allowClear
+          mode="multiple"
+          placeholder={t("Search Type")}
+        >
+          {transactionTypes.map((type) => (
+            <Select.Option key={type} value={type}>
+              {type}
+            </Select.Option>
+          ))}
+        </Select>
+      </FilterDropdown>
+    );
+  }}
+  render={(_, record) => {
+    const transactionType = transactionTypes.find(
+      (type) => type === record.transactionType?.title
+    );
+
+    return (
+      <Typography.Text
+        style={{
+          whiteSpace: "nowrap",
+        }}
+      >
+        {transactionType || "-"}
+      </Typography.Text>
+    );
+  }}
+/>
+        
+
+<Table.Column
+          key="p/sID"
+          dataIndex="p/sID"
+          title="P/S ID"
+          
           sorter
         />
         <Table.Column
+          key="value"
+          dataIndex="value"
+          title="Value"
+          
+          sorter
+        />
+        <Table.Column
+          key="dueamount"
+          dataIndex="dueamount"
+          title="Due Amount"
+          
+          sorter
+        />
+{/* 
+<Table.Column
+          key="balance"
+          dataIndex="balance"
+          title="Balance"
+        /> */}
+        {/* <Table.Column
           key="isActive"
           dataIndex="isActive"
           title={t("users.fields.isActive.label")}
@@ -198,8 +261,8 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
               </Select>
             </FilterDropdown>
           )}
-        />
-        <Table.Column<IUser>
+        /> */}
+        {/* <Table.Column<IUser>
           fixed="right"
           title={t("table.actions")}
           render={(_, record) => (
@@ -219,7 +282,7 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
               }}
             />
           )}
-        />
+        /> */}
       </Table>
       {children}
     </List>
