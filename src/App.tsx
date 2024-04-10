@@ -48,6 +48,8 @@ import { useAutoLoginForDemo } from "./hooks";
 
 import "@refinedev/antd/dist/reset.css";
 import { AccountList } from "./pages/accounts";
+import { AccountCreate } from "./pages/accounts/create";
+import { AccountEdit } from "./pages/accounts/edit";
 
 const App: React.FC = () => {
   // This hook is used to automatically login the user.
@@ -100,24 +102,24 @@ const App: React.FC = () => {
                   icon: <ShoppingOutlined />,
                 },
               },
-              {
-                name: "users",
-                list: "/customers",
-                show: "/customers/:id",
-                meta: {
-                  icon: <UserOutlined />,
-                },
-              },
-              {
-                name: "products",
-                list: "/products",
-                create: "/products/new",
-                edit: "/products/:id/edit",
-                show: "/products/:id",
-                meta: {
-                  icon: <UnorderedListOutlined />,
-                },
-              },
+              // {
+              //   name: "users",
+              //   list: "/customers",
+              //   show: "/customers/:id",
+              //   meta: {
+              //     icon: <UserOutlined />,
+              //   },
+              // },
+              // {
+              //   name: "products",
+              //   list: "/products",
+              //   create: "/products/new",
+              //   edit: "/products/:id/edit",
+              //   show: "/products/:id",
+              //   meta: {
+              //     icon: <UnorderedListOutlined />,
+              //   },
+              // },
               {
                 name: "categories",
                 list: "/categories",
@@ -135,7 +137,7 @@ const App: React.FC = () => {
                 },
               },
               {
-                name: "Accounts",
+                name: "users",
                 list: "/accounts",
                 create: "/accounts/new",
                 edit: "/accounts/:id/edit",
@@ -216,8 +218,10 @@ const App: React.FC = () => {
 
                 <Route path="/accounts">
                   <Route index element={<AccountList />} />
-                  <Route path="new" element={<StoreCreate />} />
-                  <Route path=":id/edit" element={<StoreEdit />} />
+                  <Route path="new" element={<AccountCreate />} />
+                  <Route path=":id" element={<ProductShow />} />
+
+                  <Route path=":id/edit" element={<AccountEdit />} />
                 </Route>
 
                 <Route path="/categories" element={<CategoryList />} />

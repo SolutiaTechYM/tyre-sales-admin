@@ -12,7 +12,7 @@ import {
   Drawer,
 } from "../../components";
 
-export const CustomerShow: React.FC<IResourceComponentsProps> = () => {
+export const AccountShow: React.FC<IResourceComponentsProps> = () => {
   const { list } = useNavigation();
   const breakpoint = Grid.useBreakpoint();
   const { queryResult } = useShow<IUser>();

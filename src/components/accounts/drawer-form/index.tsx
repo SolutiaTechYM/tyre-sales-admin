@@ -104,71 +104,12 @@ export const AccountDrawerForm = (props: Props) => {
       open={true}
       title={title}
       width={breakpoint.sm ? "378px" : "100%"}
-      zIndex={1001}
+      zIndex={999999}
       onClose={onDrawerCLose}
     >
       <Spin spinning={formLoading}>
         <Form {...formProps} layout="vertical">
-          <Form.Item
-            name="avatar"
-            valuePropName="fileList"
-            getValueFromEvent={getValueFromEvent}
-            style={{
-              margin: 0,
-            }}
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Upload.Dragger
-              name="file"
-              action={`${apiUrl}/media/upload`}
-              maxCount={1}
-              accept=".png,.jpg,.jpeg"
-              className={styles.uploadDragger}
-              showUploadList={false}
-            >
-              <Flex
-                vertical
-                align="center"
-                justify="center"
-                style={{
-                  position: "relative",
-                  height: "100%",
-                }}
-              >
-                <Avatar
-                  shape="square"
-                  style={{
-                    aspectRatio: 1,
-                    objectFit: "contain",
-                    width: previewImageURL ? "100%" : "48px",
-                    height: previewImageURL ? "100%" : "48px",
-                    marginTop: previewImageURL ? undefined : "auto",
-                    transform: previewImageURL ? undefined : "translateY(50%)",
-                  }}
-                  src={previewImageURL || "/images/product-default-img.png"}
-                  alt="Product Image"
-                />
-                <Button
-                  icon={<UploadOutlined />}
-                  style={{
-                    marginTop: "auto",
-                    marginBottom: "16px",
-                    backgroundColor: theme.colorBgContainer,
-                    ...(!!previewImageURL && {
-                      position: "absolute",
-                      bottom: 0,
-                    }),
-                  }}
-                >
-                  {t("products.fields.images.description")}
-                </Button>
-              </Flex>
-            </Upload.Dragger>
-          </Form.Item>
+          
           <Flex vertical>
             <Form.Item
               label={t("products.fields.name")}

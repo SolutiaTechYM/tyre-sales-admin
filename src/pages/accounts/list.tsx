@@ -85,6 +85,7 @@ export const AccountList = ({ children }: PropsWithChildren) => {
   return (
     <List
       breadcrumb={false}
+  
       headerButtons={(props) => [
         <CreateButton
           {...props.createButtonProps}
@@ -103,7 +104,7 @@ export const AccountList = ({ children }: PropsWithChildren) => {
             });
           }}
         >
-          Add New Customers
+          Add CAPITAL
         </CreateButton>,
       ]}
     >
@@ -119,11 +120,11 @@ export const AccountList = ({ children }: PropsWithChildren) => {
         }}
       >
         <Table.Column
-          key="id"
-          dataIndex="id"
+          key="date"
+          dataIndex="date"
           sorter
 
-          title="ID"
+          title="Date"
           render={(value) => (
             <Typography.Text
               style={{
@@ -133,38 +134,16 @@ export const AccountList = ({ children }: PropsWithChildren) => {
               {value}
             </Typography.Text>
           )}
-          filterIcon={(filtered) => (
-            <SearchOutlined
-              style={{
-                color: filtered ? token.colorPrimary : undefined,
-              }}
-            />
-          )}
-          defaultFilteredValue={getDefaultFilter("orderNumber", filters, "eq")}
-          filterDropdown={(props) => (
-            <FilterDropdown {...props}>
-              <InputNumber
-                addonBefore="#"
-                style={{ width: "100%" }}
-                placeholder={t("orders.filter.id.placeholder")}
-              />
-            </FilterDropdown>
-          )}
+    
         />
-        <Table.Column
-          align="center"
-          key="avatar"
-          dataIndex={["avatar"]}
-          title={t("users.fields.avatar.label")}
-          render={(value) => <Avatar src={value[0].url} />}
-        />
+
 
 <Table.Column
-        key="fullName"
-          dataIndex="fullName"
+        key="type"
+          dataIndex="type"
           sorter
 
-          title={t("users.fields.name")}
+          title={t("Type")}
         filterIcon={(filtered) => (
           <SearchOutlined
             style={{
@@ -172,7 +151,7 @@ export const AccountList = ({ children }: PropsWithChildren) => {
             }}
           />
         )}
-        defaultFilteredValue={getDefaultFilter( "fullName",
+        defaultFilteredValue={getDefaultFilter( "type",
         filters,
         "contains",)}
         filterDropdown={(props) => (
@@ -194,41 +173,27 @@ export const AccountList = ({ children }: PropsWithChildren) => {
         }}
       />
 
+
+
         <Table.Column
-          key="Contact"
-          dataIndex="contact"
-          title={t("Contact")}
-          defaultFilteredValue={getDefaultFilter("Contact", filters, "eq")}
+          key="id"
+          dataIndex="id"
+          sorter
+          title={t("P/S ID")}
+          defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
           filterDropdown={(props) => (
             <FilterDropdown {...props}>
               <Input
                 style={{ width: "100%" }}
-                placeholder="search contact"
+                placeholder="search p/s id"
               />
             </FilterDropdown>
           )}
         />
-        <Table.Column
-          key="address"
-          dataIndex="address"
-          title="Address"
-          
-          sorter
-        />
 
-<Table.Column
-          key="company"
-          dataIndex="company"
-          title="Company"
-          
-          sorter
-        />
 
-<Table.Column
-          key="balance"
-          dataIndex="balance"
-          title="Balance"
-        />
+
+
         {/* <Table.Column
           key="isActive"
           dataIndex="isActive"
@@ -254,7 +219,7 @@ export const AccountList = ({ children }: PropsWithChildren) => {
             </FilterDropdown>
           )}
         /> */}
-        <Table.Column<IUser>
+        {/* <Table.Column<IUser>
           fixed="right"
           title={t("table.actions")}
           render={(_, record) => (
@@ -274,7 +239,7 @@ export const AccountList = ({ children }: PropsWithChildren) => {
               }}
             />
           )}
-        />
+        /> */}
       </Table>
       {children}
     </List>
