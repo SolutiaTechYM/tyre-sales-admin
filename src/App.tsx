@@ -20,6 +20,7 @@ import {
   UserOutlined,
   UnorderedListOutlined,
   TagsOutlined,
+  DollarOutlined,
 } from "@ant-design/icons";
 import jsonServerDataProvider from "@refinedev/simple-rest";
 import { authProvider } from "./authProvider";
@@ -54,6 +55,8 @@ import { SupplierCreate, SupplierEdit, SupplierList } from "./pages/suppliers";
 
 import { CustomerCreate } from "./pages/customers/create";
 import { CustomerEdit } from "./pages/customers/edit";
+import { AccountsList } from "./pages/accounts";
+import { AccountsCreate } from "./pages/accounts/create";
 
 
 const App: React.FC = () => {
@@ -177,6 +180,18 @@ const App: React.FC = () => {
                   icon: <BikeWhiteIcon />,
                 },
               },
+               {
+                name: "accounts",
+                list: "/accounts",
+                create: "/accounts/new",
+                edit: "/accounts/:id/edit",
+
+                show: "/accounts/:id",
+                meta: {
+                  label: "Accounts",
+                  icon: <DollarOutlined />,
+                },
+              },
             ]}
           >
             <Routes>
@@ -248,6 +263,25 @@ const App: React.FC = () => {
                   <Route path=":id" element={<ProductShow />} />
                   <Route path=":id/edit" element={<ProductEdit />} />
                 </Route>
+
+                <Route
+                  path="/accounts"
+                  element={
+                    <AccountsList>
+                      <Outlet />
+                    </AccountsList>
+                  }
+                >
+
+
+                  {/* <Route path=":id" element={<CustomerShow />} /> */}
+                  <Route path="new" element={<AccountsCreate />} />
+                  {/* <Route path=":id/edit" element={<CustomerEdit />} /> */}
+
+
+
+                </Route>
+                
 
                 <Route path="/stores">
                   <Route index element={<StoreList />} />
