@@ -221,7 +221,7 @@ export const Header: React.FC = () => {
         </Col>
         <Col>
           <Space size={screens.md ? 32 : 16} align="center">
-            <Dropdown
+            {/* <Dropdown
               menu={{
                 items: menuItems,
                 selectedKeys: currentLocale ? [currentLocale] : [],
@@ -235,7 +235,7 @@ export const Header: React.FC = () => {
                   <DownOutlined className={styles.languageSwitchIcon} />
                 </Space>
               </Button>
-            </Dropdown>
+            </Dropdown> */}
 
             <Button
               className={styles.themeSwitch}
