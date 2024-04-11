@@ -102,14 +102,14 @@ const App: React.FC = () => {
                   icon: <DashboardOutlined />,
                 },
               },
-              {
-                name: "orders",
-                list: "/orders",
-                show: "/orders/:id",
-                meta: {
-                  icon: <ShoppingOutlined />,
-                },
-              },
+              // {
+              //   name: "orders",
+              //   list: "/orders",
+              //   show: "/orders/:id",
+              //   meta: {
+              //     icon: <ShoppingOutlined />,
+              //   },
+              // },
               // {
               //   name: "users",
               //   list: "/customers",
@@ -137,7 +137,7 @@ const App: React.FC = () => {
 
                 show: "/customers/:id",
                 meta: {
-                  label: "newcustomers",
+                 
                   icon: <UserOutlined />,
                 },
               },
@@ -161,25 +161,25 @@ const App: React.FC = () => {
                   icon: <TagsOutlined />,
                 },
               },
-              {
-                name: "stores",
-                list: "/stores",
-                create: "/stores/new",
-                edit: "/stores/:id/edit",
-                meta: {
-                  icon: <ShopOutlined />,
-                },
-              },
-              {
-                name: "couriers",
-                list: "/couriers",
-                create: "/couriers/new",
-                edit: "/couriers/:id/edit",
-                show: "/couriers/:id",
-                meta: {
-                  icon: <BikeWhiteIcon />,
-                },
-              },
+              // {
+              //   name: "stores",
+              //   list: "/stores",
+              //   create: "/stores/new",
+              //   edit: "/stores/:id/edit",
+              //   meta: {
+              //     icon: <ShopOutlined />,
+              //   },
+              // },
+              // {
+              //   name: "couriers",
+              //   list: "/couriers",
+              //   create: "/couriers/new",
+              //   edit: "/couriers/:id/edit",
+              //   show: "/couriers/:id",
+              //   meta: {
+              //     icon: <BikeWhiteIcon />,
+              //   },
+              // },
                {
                 name: "accounts",
                 list: "/accounts",
