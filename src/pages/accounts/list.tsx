@@ -28,7 +28,7 @@ import {
 
 import { IAccount, IUser, IUserFilterVariables } from "../../interfaces";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
-import { PaginationTotal, UserStatus } from "../../components";
+import { PaginationTotal } from "../../components";
 import { PropsWithChildren } from "react";
 import { useLocation } from "react-router-dom";
 
