@@ -2,7 +2,7 @@ import React from "react";
 import tyreImage from "../../../src/images/icons8-tyre-64.png";
 
 
-export const FinefoodsLogoIcon: React.FC<React.SVGProps<SVGSVGElement>> = (
+export const TyreLogoIcon: React.FC<React.SVGProps<SVGSVGElement>> = (
   props,
 ) => (
   
@@ -21,7 +21,7 @@ export const FinefoodsLogoIcon: React.FC<React.SVGProps<SVGSVGElement>> = (
 
 );
 
-export const FinefoodsLogoText: React.FC<React.SVGProps<SVGSVGElement>> = (
+export const TyreLogoText: React.FC<React.SVGProps<SVGSVGElement>> = (
   props,
 ) => {
   return (
