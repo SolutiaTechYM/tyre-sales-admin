@@ -32,25 +32,25 @@ export const ProductList = ({ children }: PropsWithChildren) => {
     <List
       breadcrumb={false}
       headerButtons={(props) => [
-        <Segmented<View>
-          key="view"
-          size="large"
-          value={view}
-          style={{ marginRight: 24 }}
-          options={[
-            {
-              label: "",
-              value: "table",
-              icon: <UnorderedListOutlined />,
-            },
-            {
-              label: "",
-              value: "card",
-              icon: <AppstoreOutlined />,
-            },
-          ]}
-          onChange={handleViewChange}
-        />,
+        // <Segmented<View>
+        //   key="view"
+        //   size="large"
+        //   value={view}
+        //   style={{ marginRight: 24 }}
+        //   options={[
+        //     {
+        //       label: "",
+        //       value: "table",
+        //       icon: <UnorderedListOutlined />,
+        //     },
+        //     {
+        //       label: "",
+        //       value: "card",
+        //       icon: <AppstoreOutlined />,
+        //     },
+        //   ]}
+        //   onChange={handleViewChange}
+        // />,
         <CreateButton
           {...props.createButtonProps}
           key="create"
@@ -72,8 +72,9 @@ export const ProductList = ({ children }: PropsWithChildren) => {
         </CreateButton>,
       ]}
     >
-      {view === "table" && <ProductListTable />}
-      {view === "card" && <ProductListCard />}
+      {/* {view === "table" && <ProductListTable />} */}
+      {/* {view === "card" && <ProductListCard />} */}
+      <ProductListTable />
       {children}
     </List>
   );

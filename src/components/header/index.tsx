@@ -207,7 +207,7 @@ export const Header: React.FC = () => {
       >
         <Col xs={0} sm={8} md={7}>
           <AutoComplete
-            
+
             options={options}
             filterOption={false}
             onSearch={debounce((value: string) => setValue(value), 300)}
@@ -268,6 +268,7 @@ export const Header: React.FC = () => {
         
        
           <Space size={screens.md ? 32 : 16} align="center">
+            
             {/* <Dropdown
               menu={{
                 items: menuItems,

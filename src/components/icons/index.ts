@@ -8,7 +8,7 @@ export * from "./pizza";
 export * from "./icon-moon";
 export * from "./icon-sun";
 export * from "./fine-foods";
-export * from "./finefoods-logo";
+export * from "./Tyre-logo";
 export * from "./rank-1";
 export * from "./rank-2";
 export * from "./rank-3";

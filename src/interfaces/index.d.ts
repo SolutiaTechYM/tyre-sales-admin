@@ -31,12 +31,26 @@ export interface IUser {
   firstName: string;
   lastName: string;
   fullName: string;
-  gender: string;
-  gsm: string;
-  createdAt: string;
+  company: string;
+  contact: string;
+  address: string;
   isActive: boolean;
   avatar: IFile[];
   addresses: IAddress[];
+}
+
+export interface IProduct {
+  id: number;
+  name: string;
+  isActive: boolean;
+  description: string;
+  images: (IFile & { thumbnailUrl?: string })[];
+  createdAt: string;
+  price: number;
+  category: {
+    id: number;
+  };
+  stock: number;
 }
 
 export interface IIdentity {
@@ -111,10 +125,11 @@ export interface IOrder {
   orderNumber: number;
   amount: number;
 }
-
-export interface IProduct {
+export interface ICustomer {
   id: number;
   name: string;
+  code: string;
+
   isActive: boolean;
   description: string;
   images: (IFile & { thumbnailUrl?: string })[];
@@ -126,10 +141,21 @@ export interface IProduct {
   stock: number;
 }
 
+export interface ISupplier{
+  id: number;
+  avatar: IFile & { thumbnailUrl?: string };
+  name: string;
+  phone: string;
+  address: string;
+  dueAmount: number;
+  lastOrderDate: string;
+  createdAt: string;
+}
+
 export interface ICategory {
   id: number;
   title: string;
-  isActive: boolean;
+  description: string;
 }
 
 export interface IOrderFilterVariables {

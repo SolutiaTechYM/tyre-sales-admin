@@ -1,12 +1,12 @@
 import { AuthPage as AntdAuthPage, AuthProps } from "@refinedev/antd";
 import { Flex } from "antd";
 import { Link } from "react-router-dom";
-import { FinefoodsLogoIcon, FinefoodsLogoText } from "../../components";
+import { TyreLogoIcon, TyreLogoText } from "../../components";
 
 const authWrapperProps = {
   style: {
     background:
-      "radial-gradient(50% 50% at 50% 50%,rgba(255, 255, 255, 0) 0%,rgba(0, 0, 0, 0.5) 100%),url('images/login-bg.png')",
+      "radial-gradient(50% 50% at 50% 50%,rgba(255, 255, 255, 0) 0%,rgba(0, 0, 0, 0.5) 100%),url('images/tyre_login.jpg')",
     backgroundSize: "cover",
   },
 };
@@ -28,14 +28,14 @@ const renderAuthContent = (content: React.ReactNode) => {
             marginBottom: 16,
           }}
         >
-          <FinefoodsLogoIcon
+          <TyreLogoIcon
             style={{
               width: 64,
               height: 64,
               color: "#fff",
             }}
           />
-          <FinefoodsLogoText
+          <TyreLogoText
             style={{
               color: "#fff",
               width: "300px",

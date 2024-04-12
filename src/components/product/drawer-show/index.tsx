@@ -24,11 +24,13 @@ import { ICategory, IProduct } from "../../../interfaces";
 import { DeleteButton, NumberField } from "@refinedev/antd";
 import { ProductStatus } from "../status";
 import { EditOutlined } from "@ant-design/icons";
+import { ProductStock } from "../stock";
 
 type Props = {
   id?: BaseKey;
   onClose?: () => void;
   onEdit?: () => void;
+  product?: IProduct;
 };
 
 export const ProductDrawerShow = (props: Props) => {
@@ -39,7 +41,7 @@ export const ProductDrawerShow = (props: Props) => {
   const t = useTranslate();
   const { token } = theme.useToken();
   const breakpoint = Grid.useBreakpoint();
-
+const currentQuanitity=10
   const { queryResult } = useShow<IProduct, HttpError>({
     resource: "products",
     id: props?.id, // when undefined, id will be read from the URL.
@@ -81,7 +83,7 @@ export const ProductDrawerShow = (props: Props) => {
   return (
     <Drawer
       open={true}
-      width={breakpoint.sm ? "378px" : "100%"}
+      width={breakpoint.sm ? "700px" : "100%"}
       zIndex={1001}
       onClose={handleDrawerClose}
     >
@@ -114,7 +116,7 @@ export const ProductDrawerShow = (props: Props) => {
         >
           <Typography.Title level={5}>{product?.name}</Typography.Title>
           <Typography.Text type="secondary">
-            {product?.description}
+            {product?.code}
           </Typography.Text>
         </Flex>
         <Divider
@@ -136,7 +138,7 @@ export const ProductDrawerShow = (props: Props) => {
                   value={product?.price || 0}
                   options={{
                     style: "currency",
-                    currency: "USD",
+                    currency: "LKR",
                   }}
                 />
               ),
@@ -152,10 +154,11 @@ export const ProductDrawerShow = (props: Props) => {
             {
               label: (
                 <Typography.Text type="secondary">
-                  {t("products.fields.isActive.label")}
+                  {t("Quantity")}
                 </Typography.Text>
               ),
-              value: <ProductStatus value={!!product?.isActive} />,
+              value: <Typography.Text>{currentQuanitity}</Typography.Text>,
+
             },
           ]}
           renderItem={(item) => {
@@ -210,6 +213,17 @@ export const ProductDrawerShow = (props: Props) => {
           {t("actions.edit")}
         </Button>
       </Flex>
+      <Flex vertical
+        gap={32}
+        style={{
+          padding: "32px",
+        }}>
+
+      <ProductStock product={product} />
+      </Flex>
+
     </Drawer>
   );
 };
+
+

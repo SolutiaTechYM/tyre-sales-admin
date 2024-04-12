@@ -22,6 +22,8 @@ import {
 } from "../../components";
 import { useLocation } from "react-router-dom";
 import { PropsWithChildren } from "react";
+import { log } from "console";
+import { Recoverable } from "repl";
 
 export const CourierList = ({ children }: PropsWithChildren) => {
   const go = useGo();
@@ -260,6 +262,7 @@ export const CourierList = ({ children }: PropsWithChildren) => {
             fixed="right"
             align="center"
             render={(_, record: ICourier) => {
+              
               return (
                 <EditButton
                   icon={<EyeOutlined />}
@@ -270,7 +273,9 @@ export const CourierList = ({ children }: PropsWithChildren) => {
             }}
           />
         </Table>
+        
       </List>
+      
       {children}
     </>
   );
