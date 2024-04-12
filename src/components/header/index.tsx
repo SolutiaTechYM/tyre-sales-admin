@@ -204,8 +204,8 @@ export const Header: React.FC = () => {
         <Col xs={0} sm={8} md={12}>
           <AutoComplete
             style={{
-              width: "100%",
-              maxWidth: "550px",
+              width: "30%",
+              maxWidth: "350px",
             }}
             options={options}
             filterOption={false}
@@ -221,6 +221,7 @@ export const Header: React.FC = () => {
         </Col>
         <Col>
           <Space size={screens.md ? 32 : 16} align="center">
+            
             {/* <Dropdown
               menu={{
                 items: menuItems,
