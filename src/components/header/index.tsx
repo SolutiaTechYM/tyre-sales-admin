@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { Divider } from "antd";
+
 import {
   useGetLocale,
   useSetLocale,
@@ -23,6 +25,7 @@ import {
   Button,
   theme,
   MenuProps,
+  Card,
 } from "antd";
 
 import { useTranslation } from "react-i18next";
@@ -86,6 +89,7 @@ export const Header: React.FC = () => {
 
   const [value, setValue] = useState<string>("");
   const [options, setOptions] = useState<IOptions[]>([]);
+  
 
   const { refetch: refetchOrders } = useList<IOrder>({
     resource: "orders",
@@ -201,12 +205,9 @@ export const Header: React.FC = () => {
           justifyContent: screens.sm ? "space-between" : "end",
         }}
       >
-        <Col xs={0} sm={8} md={12}>
+        <Col xs={0} sm={8} md={7}>
           <AutoComplete
-            style={{
-              width: "30%",
-              maxWidth: "350px",
-            }}
+
             options={options}
             filterOption={false}
             onSearch={debounce((value: string) => setValue(value), 300)}
@@ -218,8 +219,54 @@ export const Header: React.FC = () => {
               prefix={<SearchOutlined className={styles.inputPrefix} />}
             />
           </AutoComplete>
+        
         </Col>
+  
+
+        <Space size={screens.md ? 20 : 0} align="center">
+
+          
+         
+        <Card hoverable size="small">
+  <Row align="middle">
+    {screens.md ?  (<div>
+      <Text>Income</Text>
+    <Divider type="vertical" /></div>
+
+    ):null}
+    <Text type="success" style={{ fontSize: screens.sm ? "14px" : "10px" }}>
+      LKR 202222
+    </Text>
+  </Row>
+</Card>
+
+<Card hoverable size="small">
+  <Row align="middle">
+    {screens.md ? (<div>
+      <Text >Expense</Text>
+    
+    <Divider type="vertical" /></div>
+    ):null}
+    <Text type="danger" style={{ fontSize: screens.sm ? "14px" : "10px" }}>
+      LKR 202222
+    </Text>
+  </Row>
+</Card>
+
+</Space>
+
+
+     
+       
+      
+
+      
+
+   
+
         <Col>
+        
+       
           <Space size={screens.md ? 32 : 16} align="center">
             
             {/* <Dropdown
@@ -237,7 +284,8 @@ export const Header: React.FC = () => {
                 </Space>
               </Button>
             </Dropdown> */}
-
+   
+          
             <Button
               className={styles.themeSwitch}
               type="text"
@@ -248,12 +296,13 @@ export const Header: React.FC = () => {
             />
 
             <Space size={screens.md ? 16 : 8} align="center">
-              <Text ellipsis className={styles.userName}>
+              {/* <Text ellipsis className={styles.userName}>
                 {user?.name}
-              </Text>
+              </Text> */}
               <Avatar size="large" src={user?.avatar} alt={user?.name} />
             </Space>
           </Space>
+          
         </Col>
       </Row>
     </AntdHeader>
