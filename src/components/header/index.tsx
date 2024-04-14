@@ -205,7 +205,7 @@ export const Header: React.FC = () => {
           justifyContent: screens.sm ? "space-between" : "end",
         }}
       >
-        <Col xs={0} sm={8} md={7}>
+        {/* <Col xs={0} sm={8} md={7}>
           <AutoComplete
 
             options={options}
@@ -220,7 +220,7 @@ export const Header: React.FC = () => {
             />
           </AutoComplete>
         
-        </Col>
+        </Col> */}
   
 
         <Space size={screens.md ? 20 : 0} align="center">
@@ -248,6 +248,30 @@ export const Header: React.FC = () => {
     <Divider type="vertical" /></div>
     ):null}
     <Text type="danger" style={{ fontSize: screens.sm ? "14px" : "10px" }}>
+      LKR 202222
+    </Text>
+  </Row>
+</Card>
+<Card hoverable size="small">
+  <Row align="middle">
+    {screens.md ? (<div>
+      <Text >Profit</Text>
+    
+    <Divider type="vertical" /></div>
+    ):null}
+    <Text style={{ fontSize: screens.sm ? "14px" : "10px" ,color:"#3c89e8"}}>
+      LKR 202222
+    </Text>
+  </Row>
+</Card>
+<Card hoverable size="small">
+  <Row align="middle">
+    {screens.md ? (<div>
+      <Text >Due Amount</Text>
+    
+    <Divider type="vertical" /></div>
+    ):null}
+    <Text type="warning" style={{ fontSize: screens.sm ? "14px" : "10px" }}>
       LKR 202222
     </Text>
   </Row>
@@ -295,12 +319,14 @@ export const Header: React.FC = () => {
               }}
             />
 
-            <Space size={screens.md ? 16 : 8} align="center">
-              {/* <Text ellipsis className={styles.userName}>
+            {/* <Space size={screens.md ? 16 : 8} align="center">
+              <Text ellipsis className={styles.userName}>
                 {user?.name}
-              </Text> */}
+              </Text>
               <Avatar size="large" src={user?.avatar} alt={user?.name} />
-            </Space>
+            </Space> */}
+
+            
           </Space>
           
         </Col>
