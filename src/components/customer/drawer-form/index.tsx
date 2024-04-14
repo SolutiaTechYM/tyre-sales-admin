@@ -184,7 +184,7 @@ export const CustomerDrawerForm = (props: Props) => {
             </Form.Item>
             <Form.Item
               label={t("Contact")}
-              name="gContactsm"
+              name="contact"
               className={styles.formItem}
               rules={[
                 {

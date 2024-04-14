@@ -35,8 +35,7 @@ export interface IUser {
   contact: string;
   address: string;
   isActive: boolean;
-  avatar: IFile[];
-  addresses: IAddress[];
+ 
 }
 
 export interface IProduct {
@@ -77,6 +76,21 @@ export interface IFile {
 export interface IEvent {
   date: string;
   status: string;
+}
+
+export interface IAccount {
+  transactionType: any;
+  id: number;
+  name: string;
+  isActive: boolean;
+  description: string;
+  images: (IFile & { thumbnailUrl?: string })[];
+  createdAt: string;
+  price: number;
+  category: {
+    id: number;
+  };
+  stock: number;
 }
 
 export interface IStore {
