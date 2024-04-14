@@ -2,35 +2,42 @@ import { AuthProvider } from "@refinedev/core";
 import { notification } from "antd";
 import bcrypt from "bcryptjs";
 import axios from "axios";
+import { enableAutoLogin } from "./hooks";
 
 export const TOKEN_KEY = "refine-auth";
 
 export const authProvider: AuthProvider = {
   login: async ({ email, password }) => {
-    try {
-      const response = await axios.post(`http://localhost:3000/api/login`, { email, password });
+    // try {
+    //   const response = await axios.post(`http://localhost:3000/api/login`, { email, password });
      
-      if (!response.data.token) {
-        throw new Error('Invalid email or password');
-      }
+    //   if (!response.data.token) {
+    //     throw new Error('Invalid email or password');
+    //   }
 
-      localStorage.setItem(TOKEN_KEY, response.data.token);
+    //   localStorage.setItem(TOKEN_KEY, response.data.token);
 
-      return {
-        success: true,
-        redirectTo: "/"
-      };
-    } catch (error) {
-      console.log(error);
+    //   return {
+    //     success: true,
+    //     redirectTo: "/"
+    //   };
+    // } catch (error) {
+    //   console.log(error);
       
-      return {
-        success: false,
-        error: {
-          message: "Login failed",
-          name: "Invalid email or password"
-        }
-      };
-    }
+    //   return {
+    //     success: false,
+    //     error: {
+    //       message: "Login failed",
+    //       name: "Invalid email or password"
+    //     }
+    //   };
+    // }
+    enableAutoLogin();
+    localStorage.setItem(TOKEN_KEY, `${email}-${password}`);
+    return {
+      success: true,
+      redirectTo: "/",
+    };
   },
   register: async ({ email, password }) => {
     try {
@@ -132,38 +139,54 @@ export const authProvider: AuthProvider = {
     return { error };
   },
   check: async () => {
-    try {
-      console.log("yyyyyyyyyyyyyyyyy");
+    // try {
+    //   console.log("yyyyyyyyyyyyyyyyy");
       
-      const response = await axios.post(`http://localhost:3000/api/check`, null, {
-        headers: {
-          'Authorization': `${localStorage.getItem(TOKEN_KEY)}`
-        }
-      });
+    //   const response = await axios.post(`http://localhost:3000/api/check`, null, {
+    //     headers: {
+    //       'Authorization': `${localStorage.getItem(TOKEN_KEY)}`
+    //     }
+    //   });
 
-      console.log("xxxxxxxxxxxxxxx");
+    //   console.log("xxxxxxxxxxxxxxx");
       
-      console.log(response);
+    //   console.log(response);
       
-      if (!response.data.authenticated) {
-        throw new Error('Check failed');
-      }
+    //   if (!response.data.authenticated) {
+    //     throw new Error('Check failed');
+    //   }
 
+    //   return {
+    //     authenticated: true
+    //   };
+    // } catch (error) {
+    //   localStorage.removeItem(TOKEN_KEY);
+
+    //   return {
+    //     authenticated: false,
+    //     error: {
+    //       message: "Check failed",
+    //       name: "Check failed"
+    //     },
+    //     redirectTo: "/login"
+    //   };
+    // }
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (token) {
       return {
-        authenticated: true
-      };
-    } catch (error) {
-      localStorage.removeItem(TOKEN_KEY);
-
-      return {
-        authenticated: false,
-        error: {
-          message: "Check failed",
-          name: "Check failed"
-        },
-        redirectTo: "/login"
+        authenticated: true,
       };
     }
+
+    return {
+      authenticated: false,
+      error: {
+        message: "Check failed",
+        name: "Token not found",
+      },
+      logout: true,
+      redirectTo: "/login",
+    };
   },
   getPermissions: async () => null,
   getIdentity: async () => {
