@@ -81,16 +81,12 @@ export interface IEvent {
 export interface IAccount {
   transactionType: any;
   id: number;
-  name: string;
-  isActive: boolean;
-  description: string;
-  images: (IFile & { thumbnailUrl?: string })[];
-  createdAt: string;
-  price: number;
-  category: {
-    id: number;
-  };
-  stock: number;
+  date: string;
+  p_sID: string;
+  
+  value: number;
+  
+  dueamount: number;
 }
 
 export interface IStore {

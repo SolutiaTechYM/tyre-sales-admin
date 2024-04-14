@@ -211,8 +211,8 @@ export const AccountsList = ({ children }: PropsWithChildren) => {
         
 
 <Table.Column
-          key="p/sID"
-          dataIndex="p/sID"
+          key="p_sID"
+          dataIndex="p_sID"
           title="P/S ID"
           
           sorter
