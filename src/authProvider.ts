@@ -1,98 +1,190 @@
 import { AuthProvider } from "@refinedev/core";
 import { notification } from "antd";
-import { disableAutoLogin, enableAutoLogin } from "./hooks";
+import bcrypt from "bcryptjs";
+import axios from "axios";
 
 export const TOKEN_KEY = "refine-auth";
 
 export const authProvider: AuthProvider = {
   login: async ({ email, password }) => {
-    enableAutoLogin();
-    localStorage.setItem(TOKEN_KEY, `${email}-${password}`);
-    return {
-      success: true,
-      redirectTo: "/",
-    };
+    try {
+      const response = await axios.post(`http://localhost:3000/api/login`, { email, password });
+     
+      if (!response.data.token) {
+        throw new Error('Invalid email or password');
+      }
+
+      localStorage.setItem(TOKEN_KEY, response.data.token);
+
+      return {
+        success: true,
+        redirectTo: "/"
+      };
+    } catch (error) {
+      console.log(error);
+      
+      return {
+        success: false,
+        error: {
+          message: "Login failed",
+          name: "Invalid email or password"
+        }
+      };
+    }
   },
   register: async ({ email, password }) => {
     try {
-      await authProvider.login({ email, password });
+      const hashedPassword = await bcrypt.hash(password, 10);
+      await axios.post(`http://localhost:3000/api/register`, { email, password: hashedPassword });
+
       return {
-        success: true,
+        success: true
       };
     } catch (error) {
       return {
         success: false,
         error: {
           message: "Register failed",
-          name: "Invalid email or password",
-        },
+          name: "Register failed"
+        }
       };
     }
   },
   updatePassword: async () => {
-    notification.success({
-      message: "Updated Password",
-      description: "Password updated successfully",
-    });
-    return {
-      success: true,
-    };
+    try {
+      await axios.post(`http://localhost:3000/api/updatePassword`, null, {
+        headers: {
+          'Authorization': `${localStorage.getItem(TOKEN_KEY)}`
+        }
+      });
+
+      notification.success({
+        message: "Updated Password",
+        description: "Password updated successfully"
+      });
+
+      return {
+        success: true
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: {
+          message: "Update password failed",
+          name: "Update password failed"
+        }
+      };
+    }
   },
   forgotPassword: async ({ email }) => {
-    notification.success({
-      message: "Reset Password",
-      description: `Reset password link sent to "${email}"`,
-    });
-    return {
-      success: true,
-    };
+    try {
+      await axios.post(`http://localhost:3000/api/forgotPassword`, { email });
+
+      notification.success({
+        message: "Reset Password",
+        description: `Reset password link sent to "${email}"`
+      });
+
+      return {
+        success: true
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: {
+          message: "Reset password failed",
+          name: "Reset password failed"
+        }
+      };
+    }
   },
   logout: async () => {
-    disableAutoLogin();
-    localStorage.removeItem(TOKEN_KEY);
-    return {
-      success: true,
-      redirectTo: "/login",
-    };
+    try {
+      await axios.post(`http://localhost:3000/api/logout`, null, {
+        headers: {
+          'Authorization': `${localStorage.getItem(TOKEN_KEY)}`
+        }
+      });
+
+      localStorage.removeItem(TOKEN_KEY);
+
+      return {
+        success: true,
+        redirectTo: "/login"
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: {
+          message: "Logout failed",
+          name: "Logout failed"
+        }
+      };
+    }
   },
   onError: async (error) => {
     if (error.response?.status === 401) {
       return {
-        logout: true,
+        logout: true
       };
     }
 
     return { error };
   },
   check: async () => {
-    const token = localStorage.getItem(TOKEN_KEY);
-    if (token) {
+    try {
+      console.log("yyyyyyyyyyyyyyyyy");
+      
+      const response = await axios.post(`http://localhost:3000/api/check`, null, {
+        headers: {
+          'Authorization': `${localStorage.getItem(TOKEN_KEY)}`
+        }
+      });
+
+      console.log("xxxxxxxxxxxxxxx");
+      
+      console.log(response);
+      
+      if (!response.data.authenticated) {
+        throw new Error('Check failed');
+      }
+
       return {
-        authenticated: true,
+        authenticated: true
+      };
+    } catch (error) {
+      localStorage.removeItem(TOKEN_KEY);
+
+      return {
+        authenticated: false,
+        error: {
+          message: "Check failed",
+          name: "Check failed"
+        },
+        redirectTo: "/login"
       };
     }
-
-    return {
-      authenticated: false,
-      error: {
-        message: "Check failed",
-        name: "Token not found",
-      },
-      logout: true,
-      redirectTo: "/login",
-    };
   },
   getPermissions: async () => null,
   getIdentity: async () => {
-    const token = localStorage.getItem(TOKEN_KEY);
-    if (!token) {
+    try {
+      const response = await axios.get(`http://localhost:3000/api/identity`, {
+        headers: {
+          'Authorization': `${localStorage.getItem(TOKEN_KEY)}`
+        }
+      });
+
+      if (!response.data) {
+        throw new Error('Failed to fetch identity');
+      }
+
+      return {
+        id: response.data.id,
+        name: response.data.name,
+        avatar: response.data.avatar
+      };
+    } catch (error) {
       return null;
     }
-
-    return {
-      id: 1,
-      name: "James Sullivan",
-      avatar: "https://i.pravatar.cc/150",
-    };
-  },
+  }
 };

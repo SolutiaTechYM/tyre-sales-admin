@@ -12,7 +12,7 @@ export const useAutoLoginForDemo = () => {
     try {
       await authProvider.login({
         email: "demo@refine.dev",
-        password: "demodemo",
+        password: "password123",
       });
     } catch (_error) {
     } finally {
