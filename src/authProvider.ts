@@ -54,7 +54,7 @@ export const authProvider: AuthProvider = {
     try {
       await axios.post(`http://localhost:3000/api/updatePassword`, null, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem(TOKEN_KEY)}`
+          'Authorization': `${localStorage.getItem(TOKEN_KEY)}`
         }
       });
 
@@ -102,7 +102,7 @@ export const authProvider: AuthProvider = {
     try {
       await axios.post(`http://localhost:3000/api/logout`, null, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem(TOKEN_KEY)}`
+          'Authorization': `${localStorage.getItem(TOKEN_KEY)}`
         }
       });
 
@@ -133,12 +133,18 @@ export const authProvider: AuthProvider = {
   },
   check: async () => {
     try {
+      console.log("yyyyyyyyyyyyyyyyy");
+      
       const response = await axios.post(`http://localhost:3000/api/check`, null, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem(TOKEN_KEY)}`
+          'Authorization': `${localStorage.getItem(TOKEN_KEY)}`
         }
       });
 
+      console.log("xxxxxxxxxxxxxxx");
+      
+      console.log(response);
+      
       if (!response.data.authenticated) {
         throw new Error('Check failed');
       }
@@ -164,7 +170,7 @@ export const authProvider: AuthProvider = {
     try {
       const response = await axios.get(`http://localhost:3000/api/identity`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem(TOKEN_KEY)}`
+          'Authorization': `${localStorage.getItem(TOKEN_KEY)}`
         }
       });
 
