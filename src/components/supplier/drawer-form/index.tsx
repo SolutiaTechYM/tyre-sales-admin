@@ -20,7 +20,7 @@ import {
   Segmented,
   Spin,
 } from "antd";
-import { IProduct, ICategory } from "../../../interfaces";
+import { IProduct, ICategory, ISupplier } from "../../../interfaces";
 import { useSearchParams } from "react-router-dom";
 import { Drawer } from "../../drawer";
 import { UploadOutlined } from "@ant-design/icons";
@@ -43,8 +43,8 @@ export const SupplierDrawerForm = (props: Props) => {
   const { styles, theme } = useStyles();
 
   const { drawerProps, formProps, close, saveButtonProps, formLoading } =
-    useDrawerForm<IProduct>({
-      resource: "products",
+    useDrawerForm<ISupplier>({
+      resource: "suppliers",
       id: props?.id, // when undefined, id will be read from the URL.
       action: props.action,
       redirect: false,
