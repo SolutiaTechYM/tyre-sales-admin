@@ -41,7 +41,7 @@ export const TyreLogoText: React.FC<React.SVGProps<SVGSVGElement>> = (
         fontSize="25" // Adjust the font size as needed
         fontWeight="bold"
       >
-        S.V.Enterprise
+        A.V.Enterprise
       </text>
     </svg>
   );
