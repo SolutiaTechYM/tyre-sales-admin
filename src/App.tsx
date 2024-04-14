@@ -18,8 +18,8 @@ import {
   ShopOutlined,
   DashboardOutlined,
   UserOutlined,
-  UnorderedListOutlined,
   TagsOutlined,
+  ShoppingCartOutlined,
 } from "@ant-design/icons";
 import jsonServerDataProvider from "@refinedev/simple-rest";
 import { authProvider } from "./authProvider";
@@ -31,12 +31,12 @@ import { OrderList, OrderShow } from "./pages/orders";
 import { AuthPage } from "./pages/auth";
 import { CustomerShow, CustomerList } from "./pages/customers";
 import { CourierList, CourierCreate, CourierEdit } from "./pages/couriers";
-import {
-  ProductList,
-  ProductCreate,
-  ProductEdit,
-  ProductShow,
-} from "./pages/products";
+// import {
+//   ProductList,
+//   ProductCreate,
+//   ProductEdit,
+//   ProductShow,
+// } from "./pages/products";
 import { StoreCreate, StoreEdit, StoreList } from "./pages/stores";
 import { CategoryList } from "./pages/categories";
 import { useTranslation } from "react-i18next";
@@ -46,6 +46,12 @@ import { ConfigProvider } from "./context";
 import { useAutoLoginForDemo } from "./hooks";
 
 import "@refinedev/antd/dist/reset.css";
+import {
+  PurchaseCreate,
+  PurchaseEdit,
+  PurchaseList,
+  PurchaseShow,
+} from "./pages/purchases";
 
 const App: React.FC = () => {
   // This hook is used to automatically login the user.
@@ -106,14 +112,24 @@ const App: React.FC = () => {
                   icon: <UserOutlined />,
                 },
               },
+              // {
+              //   name: "products",
+              //   list: "/products",
+              //   create: "/products/new",
+              //   edit: "/products/:id/edit",
+              //   show: "/products/:id",
+              //   meta: {
+              //     icon: <UnorderedListOutlined />,
+              //   },
+              // },
               {
                 name: "products",
-                list: "/products",
-                create: "/products/new",
-                edit: "/products/:id/edit",
-                show: "/products/:id",
+                list: "/purchases",
+                create: "/purchases/new",
+                edit: "/purchases/:id/edit",
+                show: "/purchases/:id",
                 meta: {
-                  icon: <UnorderedListOutlined />,
+                  icon: <ShoppingCartOutlined />,
                 },
               },
               {
@@ -183,7 +199,7 @@ const App: React.FC = () => {
                   <Route path=":id" element={<CustomerShow />} />
                 </Route>
 
-                <Route
+                {/* <Route
                   path="/products"
                   element={
                     <ProductList>
@@ -194,6 +210,19 @@ const App: React.FC = () => {
                   <Route path="new" element={<ProductCreate />} />
                   <Route path=":id" element={<ProductShow />} />
                   <Route path=":id/edit" element={<ProductEdit />} />
+                </Route> */}
+
+                <Route
+                  path="/purchases"
+                  element={
+                    <PurchaseList>
+                      <Outlet />
+                    </PurchaseList>
+                  }
+                >
+                  <Route path="new" element={<PurchaseCreate />} />
+                  <Route path=":id" element={<PurchaseShow />} />
+                  <Route path=":id/edit" element={<PurchaseEdit />} />
                 </Route>
 
                 <Route path="/stores">

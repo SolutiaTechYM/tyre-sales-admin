@@ -12,7 +12,7 @@ import {
   useSelect,
   useTable,
 } from "@refinedev/antd";
-import { ICategory, IProduct } from "../../../interfaces";
+import { IProduct } from "../../../interfaces";
 import {
   Avatar,
   Button,
@@ -23,13 +23,11 @@ import {
   Typography,
   theme,
 } from "antd";
-import { ProductStatus } from "../status";
 import { PaginationTotal } from "../../paginationTotal";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
 
-export const ProductListTable = () => {
+export const PurchaseListTable = () => {
   const { token } = theme.useToken();
   const t = useTranslate();
   const go = useGo();
@@ -62,20 +60,6 @@ export const ProductListTable = () => {
       ],
     },
   });
-
-  useEffect(() => {
-    console.log(showUrl);
-  }, [showUrl]);
-
-  const { selectProps: categorySelectProps, queryResult } =
-    useSelect<ICategory>({
-      resource: "categories",
-      optionLabel: "title",
-      optionValue: "id",
-      defaultValue: getDefaultFilter("category.id", filters, "in"),
-    });
-
-  const categories = queryResult?.data?.data || [];
 
   return (
     <Table
@@ -130,21 +114,26 @@ export const ProductListTable = () => {
         )}
       />
       <Table.Column
-        title={t("products.fields.images.label")}
-        dataIndex="images"
-        key="images"
-        render={(images: IProduct["images"]) => {
+        title={t("purchases.fields.createdAt")}
+        dataIndex="createdAt"
+        key="createdAt"
+        align="right"
+        sorter
+        // defaultSortOrder={getDefaultSortOrder("price", sorters)}
+        render={(value: string) => {
           return (
-            <Avatar
-              shape="square"
-              src={images?.[0]?.thumbnailUrl || images?.[0]?.url}
-              alt={images?.[0].name}
-            />
+            <Typography.Text
+              style={{
+                whiteSpace: "nowrap",
+              }}
+            >
+              {value.split("T")[0]}
+            </Typography.Text>
           );
         }}
       />
       <Table.Column
-        title={t("products.fields.name")}
+        title={t("purchases.fields.supplier")}
         dataIndex="name"
         key="name"
         filterIcon={(filtered) => (
@@ -157,7 +146,7 @@ export const ProductListTable = () => {
         defaultFilteredValue={getDefaultFilter("name", filters, "contains")}
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
-            <Input placeholder={t("products.filter.name.placeholder")} />
+            <Input placeholder={t("purchases.filter.supplier.placeholder")} />
           </FilterDropdown>
         )}
         render={(value: string) => {
@@ -173,7 +162,7 @@ export const ProductListTable = () => {
         }}
       />
       <Table.Column
-        title={t("products.fields.description")}
+        title={t("purchases.fields.note")}
         dataIndex="description"
         key="description"
         width={432}
@@ -191,7 +180,7 @@ export const ProductListTable = () => {
         )}
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
-            <Input placeholder={t("products.filter.description.placeholder")} />
+            <Input placeholder={t("purchases.filter.note.placeholder")} />
           </FilterDropdown>
         )}
         render={(description: string) => {
@@ -232,70 +221,28 @@ export const ProductListTable = () => {
           );
         }}
       />
-      <Table.Column<IProduct>
-        title={t("products.fields.category")}
-        dataIndex={["category", "title"]}
-        key="category.id"
-        width={128}
-        defaultFilteredValue={getDefaultFilter("category.id", filters, "in")}
-        filterDropdown={(props) => {
+      <Table.Column
+        title={t("purchases.fields.credit")}
+        dataIndex="price"
+        key="price"
+        align="right"
+        sorter
+        //defaultSortOrder={getDefaultSortOrder("price", sorters)}
+        render={(price: number) => {
           return (
-            <FilterDropdown
-              {...props}
-              selectedKeys={props.selectedKeys.map((item) => Number(item))}
-            >
-              <Select
-                {...categorySelectProps}
-                style={{ width: "200px" }}
-                allowClear
-                mode="multiple"
-                placeholder={t("products.filter.category.placeholder")}
-              />
-            </FilterDropdown>
-          );
-        }}
-        render={(_, record) => {
-          const category = categories.find(
-            (category) => category?.id === record.category?.id
-          );
-
-          return (
-            <Typography.Text
+            <NumberField
+              value={price}
               style={{
+                width: "80px",
+                fontVariantNumeric: "tabular-nums",
                 whiteSpace: "nowrap",
               }}
-            >
-              {category?.title || "-"}
-            </Typography.Text>
+              options={{
+                style: "currency",
+                currency: "USD",
+              }}
+            />
           );
-        }}
-      />
-      <Table.Column
-        title={t("products.fields.isActive.label")}
-        dataIndex="isActive"
-        key="isActive"
-        sorter
-        defaultSortOrder={getDefaultSortOrder("isActive", sorters)}
-        defaultFilteredValue={getDefaultFilter("isActive", filters, "in")}
-        filterDropdown={(props) => (
-          <FilterDropdown {...props}>
-            <Select
-              style={{ width: "200px" }}
-              allowClear
-              mode="multiple"
-              placeholder={t("products.filter.isActive.placeholder")}
-            >
-              <Select.Option value="true">
-                {t("products.fields.isActive.true")}
-              </Select.Option>
-              <Select.Option value="false">
-                {t("products.fields.isActive.false")}
-              </Select.Option>
-            </Select>
-          </FilterDropdown>
-        )}
-        render={(isActive: boolean) => {
-          return <ProductStatus value={isActive} />;
         }}
       />
       <Table.Column

@@ -445,6 +445,78 @@
       "edit": "Edit product"
     }
   },
+  "purchases": {
+    "products": "Products",
+    "titles": {
+      "list": "Products",
+      "create": "Create Product",
+      "edit": "Edit Product"
+    },
+    "fields": {
+      "id": "ID",
+      "supplier": "Supplier",
+      "note": "Note",
+      "isActive": {
+        "label": "Status",
+        "true": "Available",
+        "false": "Unavailable"
+      },
+      "price": "Price",
+      "credit":"Credit",
+      "category": "Category",
+      "images": {
+        "label": "Images",
+        "description": "Upload Image",
+        "validation": "must be 1080x1080 px"
+      },
+      "createdAt": "Date",
+      "details":{
+        "qty":"Quantity",
+        "unitPrice":"Unit Price",
+        "total":"Total",
+        "name":"Product Name",
+        "category": "Category"
+      }
+
+    },
+    "filter": {
+      "title": "Filters",
+      "allCategories": {
+        "label": "All Categories",
+        "placeholder": "All Categories"
+      },
+      "id": {
+        "label": "ID",
+        "placeholder": "Search ID"
+      },
+      "supplier": {
+        "label": "Supplier",
+        "placeholder": "Search Supplier"
+      },
+      "note": {
+        "label": "Note",
+        "placeholder": "Search Note"
+      },
+      "category": {
+        "label": "Category",
+        "placeholder": "Search Category"
+      },
+      "createdAt": {
+        "label": "Created At"
+      },
+      "isActive": {
+        "label": "Status",
+        "placeholder": "Select Status",
+        "true": "Available",
+        "false": "Unavailable"
+      }
+    },
+    "actions": {
+      "add": "Add new purchase",
+      "edit": "Edit purchase",
+      "addProduct":"Add Product"
+    }
+  },
   "reviews": {
     "reviews": "Reviews",
     "titles": {
