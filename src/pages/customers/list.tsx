@@ -49,7 +49,7 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
     filters: {
       initial: [
         {
-          field: "fullName",
+          field: "name",
           operator: "contains",
           value: "",
         },
@@ -66,21 +66,21 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
     syncWithLocation: true,
   });
 
-  const { isLoading, triggerExport } = useExport<IUser>({
-    sorters,
-    filters,
-    pageSize: 50,
-    maxItemCount: 50,
-    mapData: (item) => {
-      return {
-        id: item.id,
-        fullName: item.fullName,
-        gsm: item.gsm,
-        isActive: item.isActive,
-        createdAt: item.createdAt,
-      };
-    },
-  });
+  // const { isLoading, triggerExport } = useExport<IUser>({
+  //   sorters,
+  //   filters,
+  //   pageSize: 50,
+  //   maxItemCount: 50,
+  //   mapData: (item) => {
+  //     return {
+  //       id: item.id,
+  //       fullName: item.fullName,
+  //       gsm: item.gsm,
+  //       isActive: item.isActive,
+  //       createdAt: item.createdAt,
+  //     };
+  //   },
+  // });
 
   return (
     <List
@@ -160,8 +160,8 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
         />
 
 <Table.Column
-        key="fullName"
-          dataIndex="fullName"
+        key="name"
+          dataIndex="name"
           sorter
 
           title={t("users.fields.name")}
@@ -172,7 +172,7 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
             }}
           />
         )}
-        defaultFilteredValue={getDefaultFilter( "fullName",
+        defaultFilteredValue={getDefaultFilter( "name",
         filters,
         "contains",)}
         filterDropdown={(props) => (

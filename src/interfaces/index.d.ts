@@ -1,55 +1,63 @@
 import { Dayjs } from "dayjs";
 
-export interface IOrderChart {
-  count: number;
-  status:
-    | "waiting"
-    | "ready"
-    | "on the way"
-    | "delivered"
-    | "could not be delivered";
-}
+// export interface IOrderChart {
+//   count: number;
+//   status:
+//     | "waiting"
+//     | "ready"
+//     | "on the way"
+//     | "delivered"
+//     | "could not be delivered";
+// }
 
-export interface IOrderTotalCount {
-  total: number;
-  totalDelivered: number;
-}
+// export interface IOrderTotalCount {
+//   total: number;
+//   totalDelivered: number;
+// }
 
-export interface ISalesChart {
-  date: string;
-  title?: "Order Count" | "Order Amount";
-  value: number;
-}
+// export interface ISalesChart {
+//   date: string;
+//   title?: "Order Count" | "Order Amount";
+//   value: number;
+// }
 
-export interface IOrderStatus {
-  id: number;
-  text: "Pending" | "Ready" | "On The Way" | "Delivered" | "Cancelled";
-}
+// export interface IOrderStatus {
+//   id: number;
+//   text: "Pending" | "Ready" | "On The Way" | "Delivered" | "Cancelled";
+// }
 
 export interface IUser {
   id: number;
-  firstName: string;
-  lastName: string;
-  fullName: string;
+  name: string;
   company: string;
   contact: string;
   address: string;
-  isActive: boolean;
  
 }
 
+// export interface IUser {
+//   id: number;
+//   firstName: string;
+//   lastName: string;
+//   fullName: string;
+//   company: string;
+//   contact: string;
+//   address: string;
+//   isActive: boolean;
+ 
+// }
+
+
+
 export interface IProduct {
   id: number;
+  code: string;
   name: string;
-  isActive: boolean;
-  description: string;
-  images: (IFile & { thumbnailUrl?: string })[];
-  createdAt: string;
-  price: number;
+  images: IFile & { thumbnailUrl?: string };
+  curr_price: number;
   category: {
     id: number;
   };
-  stock: number;
 }
 
 export interface IIdentity {
@@ -58,10 +66,10 @@ export interface IIdentity {
   avatar: string;
 }
 
-export interface IAddress {
-  text: string;
-  coordinate: [number, number];
-}
+// export interface IAddress {
+//   text: string;
+//   coordinate: [number, number];
+// }
 
 export interface IFile {
   name: string;
@@ -73,16 +81,15 @@ export interface IFile {
   url: string;
 }
 
-export interface IEvent {
-  date: string;
-  status: string;
-}
+// export interface IEvent {
+//   date: string;
+//   status: string;
+// }
 
 export interface IAccount {
   transactionType: any;
   id: number;
   date: string;
-  p_sID: string;
   
   value: number;
   

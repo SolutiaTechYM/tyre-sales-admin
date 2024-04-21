@@ -172,7 +172,7 @@ export const CustomerDrawerForm = (props: Props) => {
           <Flex vertical>
             <Form.Item
               label={t("products.fields.name")}
-              name="fullName"
+              name="name"
               className={styles.formItem}
               rules={[
                 {
