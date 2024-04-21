@@ -175,7 +175,7 @@ export const PurchaseDrawerForm = (props: Props) => {
                   },
                 ]}
               >
-                <Select {...categorySelectProps} disabled />
+                <Select {...categorySelectProps}  />
               </Form.Item>
               <Form.Item
                 label={t("purchases.fields.details.qty")}
