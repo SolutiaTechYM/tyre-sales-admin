@@ -173,6 +173,17 @@ export interface ISupplier{
   createdAt: string;
 }
 
+
+export interface IPurchase{
+  id: number;
+  date: string;
+  supplier: string;
+  description: string;
+  price: string;
+  due_amount:string
+  createdAt: string;
+}
+
 export interface ICategory {
   id: number;
   title: string;

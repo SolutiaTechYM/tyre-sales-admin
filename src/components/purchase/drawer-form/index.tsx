@@ -20,7 +20,7 @@ import {
   Segmented,
   Spin,
 } from "antd";
-import { IProduct, ICategory } from "../../../interfaces";
+import { IProduct, ICategory, IPurchase } from "../../../interfaces";
 import { useSearchParams } from "react-router-dom";
 import { Drawer } from "../../drawer";
 import { UploadOutlined } from "@ant-design/icons";
@@ -44,7 +44,7 @@ export const PurchaseDrawerForm = (props: Props) => {
   const { styles, theme } = useStyles();
 
   const { drawerProps, formProps, close, saveButtonProps, formLoading } =
-    useDrawerForm<IProduct>({
+    useDrawerForm<IPurchase>({
       resource: "purchases",
       id: props?.id, // when undefined, id will be read from the URL.
       action: props.action,
@@ -86,9 +86,9 @@ export const PurchaseDrawerForm = (props: Props) => {
     });
   };
 
-  const images = Form.useWatch("images", formProps.form);
-  const image = images?.[0] || null;
-  const previewImageURL = image?.url || image?.response?.url;
+  // const images = Form.useWatch("images", formProps.form);
+  // const image = images?.[0] || null;
+  // const previewImageURL = image?.url || image?.response?.url;
   const title = props.action === "edit" ? null : t("products.actions.add");
 
   return (
@@ -105,7 +105,7 @@ export const PurchaseDrawerForm = (props: Props) => {
           <Flex vertical>
             <Form.Item
               label={t("purchases.fields.supplier")}
-              name="name"
+              name="supplier"
               className={styles.formItem}
               rules={[
                 {
@@ -128,7 +128,7 @@ export const PurchaseDrawerForm = (props: Props) => {
               <Input.TextArea rows={6} />
             </Form.Item>
             <Form.Item
-              label={t("purchases.fields.price")}
+              label={t("Total Price")}
               name="price"
               className={styles.formItem}
               rules={[
@@ -137,10 +137,10 @@ export const PurchaseDrawerForm = (props: Props) => {
                 },
               ]}
             >
-              <InputNumber prefix={"$"} style={{ width: "150px" }} />
+              <InputNumber prefix={"LKR"} style={{ width: "150px" }} />
             </Form.Item>
             <Form.Item
-              label={t("purchases.fields.credit")}
+              label={t("Due Amount")}
               name="price"
               className={styles.formItem}
               rules={[
@@ -149,7 +149,7 @@ export const PurchaseDrawerForm = (props: Props) => {
                 },
               ]}
             >
-              <InputNumber prefix={"$"} style={{ width: "150px" }} />
+              <InputNumber prefix={"LKR"} style={{ width: "150px" }} />
             </Form.Item>
 
             <Flex style={{ backgroundColor: "#141414" }}>
