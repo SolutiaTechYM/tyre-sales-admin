@@ -290,46 +290,7 @@ export const DashboardPage: React.FC = () => {
             </Col>
           </Row>
         </Col>
-        <Col xl={15} lg={15} md={24} sm={24} xs={24}>
-          <CardWithContent
-            bodyStyles={{
-              height: "432px",
-              overflow: "hidden",
-              padding: 0,
-            }}
-            icon={
-              <ClockCircleOutlined
-                style={{
-                  fontSize: 14,
-                  color: token.colorPrimary,
-                }}
-              />
-            }
-            title={t("dashboard.deliveryMap.title")}
-          >
-            <AllOrdersMap />
-          </CardWithContent>
-        </Col>
-        <Col xl={9} lg={9} md={24} sm={24} xs={24}>
-          <CardWithContent
-            bodyStyles={{
-              height: "430px",
-              overflow: "hidden",
-              padding: 0,
-            }}
-            icon={
-              <ClockCircleOutlined
-                style={{
-                  fontSize: 14,
-                  color: token.colorPrimary,
-                }}
-              />
-            }
-            title={t("dashboard.timeline.title")}
-          >
-            <OrderTimeline height={"432px"} />
-          </CardWithContent>
-        </Col>
+
         <Col xl={15} lg={15} md={24} sm={24} xs={24}>
           <CardWithContent
             bodyStyles={{

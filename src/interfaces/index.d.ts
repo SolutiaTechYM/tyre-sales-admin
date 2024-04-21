@@ -15,11 +15,11 @@ import { Dayjs } from "dayjs";
 //   totalDelivered: number;
 // }
 
-// export interface ISalesChart {
-//   date: string;
-//   title?: "Order Count" | "Order Amount";
-//   value: number;
-// }
+export interface ISalesChart {
+  date: string;
+  title?: "Order Count" | "Order Amount";
+  value: number;
+}
 
 // export interface IOrderStatus {
 //   id: number;
