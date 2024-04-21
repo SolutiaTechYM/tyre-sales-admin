@@ -130,7 +130,7 @@ const App: React.FC = () => {
                 },
               },
               {
-                name: "users",//customers
+                name: "users",
                 list: "/customers",
                 create: "/customers/new",
                 edit: "/customers/:id/edit",

@@ -49,7 +49,7 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
     filters: {
       initial: [
         {
-          field: "name",
+          field: "name", //fullname
           operator: "contains",
           value: "",
         },

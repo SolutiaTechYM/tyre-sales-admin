@@ -24,7 +24,7 @@ import {
   Spin,
   DatePicker,
 } from "antd";
-import { IProduct, ICategory, ICustomer, IUser } from "../../../interfaces";
+import { IProduct, ICategory, IUser } from "../../../interfaces";
 import { useSearchParams } from "react-router-dom";
 import { Drawer } from "../../drawer";
 import { UploadOutlined } from "@ant-design/icons";
