@@ -32,6 +32,9 @@ export interface IUser {
   company: string;
   contact: string;
   address: string;
+  dueAmount: number;
+  lastOrderDate: string;
+  createdAt: string;
  
 }
 
