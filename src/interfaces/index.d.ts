@@ -166,6 +166,7 @@ export interface ISupplier{
   avatar: IFile & { thumbnailUrl?: string };
   name: string;
   phone: string;
+  contact_person: string;
   address: string;
   dueAmount: number;
   lastOrderDate: string;
