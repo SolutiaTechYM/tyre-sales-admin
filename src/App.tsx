@@ -21,6 +21,7 @@ import {
   TagsOutlined,
   DollarOutlined,
   ShoppingCartOutlined,
+  UnorderedListOutlined,
 } from "@ant-design/icons";
 import jsonServerDataProvider from "@refinedev/simple-rest";
 import { authProvider } from "./authProvider";
@@ -147,18 +148,18 @@ const App: React.FC = () => {
                   icon: <UserOutlined />,
                 },
               },
-              // {
-              //   name: "products",
-              //   list: "/products",
-              //   create: "/products/new",
-              //   edit: "/products/:id/edit",
-              //   show: "/products/:id",
-              //   meta: {
-              //     icon: <UnorderedListOutlined />,
-              //   },
-              // },
               {
                 name: "products",
+                list: "/products",
+                create: "/products/new",
+                edit: "/products/:id/edit",
+                show: "/products/:id",
+                meta: {
+                  icon: <UnorderedListOutlined />,
+                },
+              },
+              {
+                name: "purchases",
                 list: "/purchases",
                 create: "/purchases/new",
                 edit: "/purchases/:id/edit",

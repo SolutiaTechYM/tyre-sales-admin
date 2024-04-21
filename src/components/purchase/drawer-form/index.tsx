@@ -45,7 +45,7 @@ export const PurchaseDrawerForm = (props: Props) => {
 
   const { drawerProps, formProps, close, saveButtonProps, formLoading } =
     useDrawerForm<IProduct>({
-      resource: "products",
+      resource: "purchases",
       id: props?.id, // when undefined, id will be read from the URL.
       action: props.action,
       redirect: false,
