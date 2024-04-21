@@ -12,7 +12,7 @@ import {
   useSelect,
   useTable,
 } from "@refinedev/antd";
-import { ICategory, IProduct } from "../../../interfaces";
+import { IProduct } from "../../../interfaces";
 import {
   Avatar,
   Button,
@@ -23,13 +23,11 @@ import {
   Typography,
   theme,
 } from "antd";
-import { ProductStatus } from "../status";
 import { PaginationTotal } from "../../paginationTotal";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
 
-export const ProductListTable = () => {
+export const PurchaseListTable = () => {
   const { token } = theme.useToken();
   const t = useTranslate();
   const go = useGo();
@@ -63,20 +61,6 @@ export const ProductListTable = () => {
     },
   });
 
-  useEffect(() => {
-    console.log(showUrl);
-  }, [showUrl]);
-
-  const { selectProps: categorySelectProps, queryResult } =
-    useSelect<ICategory>({
-      resource: "categories",
-      optionLabel: "title",
-      optionValue: "id",
-      defaultValue: getDefaultFilter("category.id", filters, "in"),
-    });
-
-  const categories = queryResult?.data?.data || [];
-
   return (
     <Table
       {...tableProps}
@@ -96,20 +80,19 @@ export const ProductListTable = () => {
               whiteSpace: "nowrap",
             }}
           >
-            ID
+            ID #
           </Typography.Text>
         }
         dataIndex="id"
         key="id"
         width={80}
-        sorter
         render={(value) => (
           <Typography.Text
             style={{
               whiteSpace: "nowrap",
             }}
           >
-            {value}
+            #{value}
           </Typography.Text>
         )}
         filterIcon={(filtered) => (
@@ -123,32 +106,20 @@ export const ProductListTable = () => {
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
             <InputNumber
+              addonBefore="#"
               style={{ width: "100%" }}
               placeholder={t("products.filter.id.placeholder")}
             />
           </FilterDropdown>
         )}
       />
-
       <Table.Column
-        title={t("Code")}
-        dataIndex="code"
-        key="code"
+        title={t("purchases.fields.createdAt")}
+        dataIndex="createdAt"
+        key="createdAt"
+        align="right"
         sorter
-
-        filterIcon={(filtered) => (
-          <SearchOutlined
-            style={{
-              color: filtered ? token.colorPrimary : undefined,
-            }}
-          />
-        )}
-        defaultFilteredValue={getDefaultFilter("code", filters, "contains")}
-        filterDropdown={(props) => (
-          <FilterDropdown {...props}>
-            <Input placeholder={t("search code")} />
-          </FilterDropdown>
-        )}
+        // defaultSortOrder={getDefaultSortOrder("price", sorters)}
         render={(value: string) => {
           return (
             <Typography.Text
@@ -156,13 +127,13 @@ export const ProductListTable = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              {value}
+              {value.split("T")[0]}
             </Typography.Text>
           );
         }}
       />
-            <Table.Column
-        title={t("products.fields.name")}
+      <Table.Column
+        title={t("purchases.fields.supplier")}
         dataIndex="name"
         key="name"
         filterIcon={(filtered) => (
@@ -175,7 +146,7 @@ export const ProductListTable = () => {
         defaultFilteredValue={getDefaultFilter("name", filters, "contains")}
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
-            <Input placeholder={t("products.filter.name.placeholder")} />
+            <Input placeholder={t("purchases.filter.supplier.placeholder")} />
           </FilterDropdown>
         )}
         render={(value: string) => {
@@ -190,24 +161,8 @@ export const ProductListTable = () => {
           );
         }}
       />
-            <Table.Column
-        title={t("products.fields.images.label")}
-        dataIndex="images"
-        key="images"
-        align="center"
-
-        render={(images: IProduct["images"]) => {
-          return (
-            <Avatar
-              shape="square"
-              src={images?.url}
-              alt={images?.name}
-            />
-          );
-        }}
-      />
-      {/* <Table.Column
-        title={t("products.fields.description")}
+      <Table.Column
+        title={t("purchases.fields.note")}
         dataIndex="description"
         key="description"
         width={432}
@@ -225,7 +180,7 @@ export const ProductListTable = () => {
         )}
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
-            <Input placeholder={t("products.filter.description.placeholder")} />
+            <Input placeholder={t("purchases.filter.note.placeholder")} />
           </FilterDropdown>
         )}
         render={(description: string) => {
@@ -241,48 +196,8 @@ export const ProductListTable = () => {
             </Typography.Paragraph>
           );
         }}
-      /> */}
-
-      <Table.Column<IProduct>
-        title={t("products.fields.category")}
-        dataIndex={["category", "title"]}
-        key="category.id"
-        width={128}
-        defaultFilteredValue={getDefaultFilter("category.id", filters, "in")}
-        filterDropdown={(props) => {
-          return (
-            <FilterDropdown
-              {...props}
-              selectedKeys={props.selectedKeys.map((item) => Number(item))}
-            >
-              <Select
-                {...categorySelectProps}
-                style={{ width: "200px" }}
-                allowClear
-                mode="multiple"
-                placeholder={t("products.filter.category.placeholder")}
-              />
-            </FilterDropdown>
-          );
-        }}
-        render={(_, record) => {
-          const category = categories.find(
-            (category) => category?.id === record.category?.id
-          );
-
-          return (
-            <Typography.Text
-              style={{
-                whiteSpace: "nowrap",
-              }}
-            >
-              {category?.title || "-"}
-            </Typography.Text>
-          );
-        }}
       />
-
-<Table.Column
+      <Table.Column
         title={t("products.fields.price")}
         dataIndex="price"
         key="price"
@@ -300,61 +215,36 @@ export const ProductListTable = () => {
               }}
               options={{
                 style: "currency",
-                currency: "LKR",
+                currency: "USD",
               }}
             />
           );
         }}
       />
-      {/* <Table.Column
-        title={t("products.fields.isActive.label")}
-        dataIndex="isActive"
-        key="isActive"
-        sorter
-        defaultSortOrder={getDefaultSortOrder("isActive", sorters)}
-        defaultFilteredValue={getDefaultFilter("isActive", filters, "in")}
-        filterDropdown={(props) => (
-          <FilterDropdown {...props}>
-            <Select
-              style={{ width: "200px" }}
-              allowClear
-              mode="multiple"
-              placeholder={t("products.filter.isActive.placeholder")}
-            >
-              <Select.Option value="true">
-                {t("products.fields.isActive.true")}
-              </Select.Option>
-              <Select.Option value="false">
-                {t("products.fields.isActive.false")}
-              </Select.Option>
-            </Select>
-          </FilterDropdown>
-        )}
-        render={(isActive: boolean) => {
-          return <ProductStatus value={isActive} />;
-        }}
-      /> */}
-
-
-<Table.Column
-        title={"Quantity"}
-        dataIndex="quantity"
-        key="quantity"
-        sorter
+      <Table.Column
+        title={t("purchases.fields.credit")}
+        dataIndex="price"
+        key="price"
         align="right"
-
-        render={(value: string) => {
+        sorter
+        //defaultSortOrder={getDefaultSortOrder("price", sorters)}
+        render={(price: number) => {
           return (
-            <Typography.Text
+            <NumberField
+              value={price}
               style={{
+                width: "80px",
+                fontVariantNumeric: "tabular-nums",
                 whiteSpace: "nowrap",
               }}
-            >
-            </Typography.Text>
+              options={{
+                style: "currency",
+                currency: "USD",
+              }}
+            />
           );
         }}
       />
-
       <Table.Column
         title={t("table.actions")}
         key="actions"

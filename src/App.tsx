@@ -18,9 +18,10 @@ import {
   ShopOutlined,
   DashboardOutlined,
   UserOutlined,
-  UnorderedListOutlined,
   TagsOutlined,
   DollarOutlined,
+  ShoppingCartOutlined,
+  UnorderedListOutlined,
 } from "@ant-design/icons";
 import jsonServerDataProvider from "@refinedev/simple-rest";
 import { authProvider } from "./authProvider";
@@ -50,6 +51,12 @@ import { ConfigProvider } from "./context";
 import { useAutoLoginForDemo } from "./hooks";
 
 import "@refinedev/antd/dist/reset.css";
+import {
+  PurchaseCreate,
+  PurchaseEdit,
+  PurchaseList,
+  PurchaseShow,
+} from "./pages/purchases";
 
 import { SupplierCreate, SupplierEdit, SupplierList } from "./pages/suppliers";
 
@@ -149,6 +156,16 @@ const App: React.FC = () => {
                 show: "/products/:id",
                 meta: {
                   icon: <UnorderedListOutlined />,
+                },
+              },
+              {
+                name: "purchases",
+                list: "/purchases",
+                create: "/purchases/new",
+                edit: "/purchases/:id/edit",
+                show: "/purchases/:id",
+                meta: {
+                  icon: <ShoppingCartOutlined />,
                 },
               },
               {
@@ -263,6 +280,19 @@ const App: React.FC = () => {
                   <Route path="new" element={<ProductCreate />} />
                   <Route path=":id" element={<ProductShow />} />
                   <Route path=":id/edit" element={<ProductEdit />} />
+                </Route> 
+
+                <Route
+                  path="/purchases"
+                  element={
+                    <PurchaseList>
+                      <Outlet />
+                    </PurchaseList>
+                  }
+                >
+                  <Route path="new" element={<PurchaseCreate />} />
+                  <Route path=":id" element={<PurchaseShow />} />
+                  <Route path=":id/edit" element={<PurchaseEdit />} />
                 </Route>
 
                 <Route
