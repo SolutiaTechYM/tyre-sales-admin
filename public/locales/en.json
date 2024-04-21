@@ -445,6 +445,56 @@
       "edit": "Edit product"
     }
   },
+  "suppliers": {
+    "suppliers": "Suppliers",
+    "titles": {
+      "list": "Suppliers",
+      "create": "Create Supplier",
+      "edit": "Edit Supplier"
+    },
+    "fields": {
+      "id": "ID",
+      "name": "Name",
+      "address": "Address",
+      "phone":"Phone",
+      "avatar": "Avatar",
+      "lastOrderDate":"Last Order Date",
+      "createdAt": "CreatedAt",
+      "dueAmount":"Due Amount"
+    },
+    "filter": {
+      "title": "Filters",
+      "id": {
+        "label": "ID",
+        "placeholder": "Search ID"
+      },
+      "name": {
+        "label": "Name",
+        "placeholder": "Search Name"
+      },
+      "address": {
+        "label": "Address",
+        "placeholder": "Search Address"
+      },
+      "phone": {
+        "label": "Phone",
+        "placeholder": "Search Phone"
+      },
+      "createdAt": {
+        "label": "Created At"
+      },
+      "isActive": {
+        "label": "Status",
+        "placeholder": "Select Status",
+        "true": "Available",
+        "false": "Unavailable"
+      }
+    },
+    "actions": {
+      "add": "Add new supplier",
+      "edit": "Edit supplier"
+    }
+  },
   "purchases": {
     "products": "Products",
     "titles": {
