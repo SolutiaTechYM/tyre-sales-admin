@@ -11,6 +11,7 @@ export * from "./customer/userStatus";
 export * from "./customer";
 export * from "./"
 export * from "./product";
+export * from "./purchase";
 export * from "./drawer";
 export * from "./categories";
 export * from "./store";
