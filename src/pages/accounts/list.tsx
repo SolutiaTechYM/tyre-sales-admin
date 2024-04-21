@@ -26,7 +26,7 @@ import {
   Button,
 } from "antd";
 
-import { IAccount, IUser, IUserFilterVariables } from "../../interfaces";
+import { ITransaction, IUser, IUserFilterVariables } from "../../interfaces";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { PaginationTotal } from "../../components";
 import { PropsWithChildren } from "react";
@@ -67,7 +67,7 @@ export const AccountsList = ({ children }: PropsWithChildren) => {
     syncWithLocation: true,
   });
 
-  const { isLoading, triggerExport } = useExport<IAccount>({
+  const { isLoading, triggerExport } = useExport<ITransaction>({
     //print all
     sorters,
     filters,
@@ -84,6 +84,8 @@ export const AccountsList = ({ children }: PropsWithChildren) => {
     <List
       breadcrumb={false}
       headerButtons={(props) => [
+        <ExportButton onClick={triggerExport} loading={isLoading} />
+,
         <CreateButton
           {...props.createButtonProps}
           key="create"
@@ -102,8 +104,7 @@ export const AccountsList = ({ children }: PropsWithChildren) => {
           }}
         >
           Add Capital
-        </CreateButton>,
-        <ExportButton onClick={triggerExport} loading={isLoading} />
+        </CreateButton>
       ]}
     >
       <Table
@@ -164,7 +165,7 @@ export const AccountsList = ({ children }: PropsWithChildren) => {
 
 
         
-<Table.Column<IAccount>
+<Table.Column<ITransaction>
   title={t("Type")}
   dataIndex={["transactionType", "title"]}
   key="transactionType.id"
@@ -194,7 +195,7 @@ export const AccountsList = ({ children }: PropsWithChildren) => {
   }}
   render={(_, record) => {
     const transactionType = transactionTypes.find(
-      (type) => type === record.transactionType?.title
+      (type) => type === record.type?.title
     );
 
     return (
@@ -210,13 +211,8 @@ export const AccountsList = ({ children }: PropsWithChildren) => {
 />
         
 
-<Table.Column
-          key="p_sID"
-          dataIndex="p_sID"
-          title="P/S ID"
-          
-          sorter
-        />
+
+
         <Table.Column
           key="value"
           dataIndex="value"

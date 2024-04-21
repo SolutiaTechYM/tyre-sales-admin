@@ -86,8 +86,8 @@ export interface IFile {
 //   status: string;
 // }
 
-export interface IAccount {
-  transactionType: any;
+export interface ITransaction {
+  type: any;
   id: number;
   date: string;
   
