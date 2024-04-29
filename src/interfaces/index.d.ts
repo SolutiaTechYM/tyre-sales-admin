@@ -99,52 +99,52 @@ export interface ITransaction {
   dueamount: number;
 }
 
-// export interface IStore {
-//   id: number;
-//   title: string;
-//   isActive: boolean;
-//   createdAt: string;
-//   gsm: string;
-//   email: string;
-//   address: IAddress;
-//   products: IProduct[];
-// }
+export interface IStore {
+  id: number;
+  title: string;
+  isActive: boolean;
+  createdAt: string;
+  gsm: string;
+  email: string;
+  address: IAddress;
+  products: IProduct[];
+}
 
 // export interface ICourierStatus {
 //   id: number;
 //   text: "Available" | "Offline" | "On delivery";
 // }
 
-// export interface ICourier {
-//   id: number;
-//   name: string;
-//   surname: string;
-//   email: string;
-//   gender: string;
-//   gsm: string;
-//   createdAt: string;
-//   accountNumber: string;
-//   licensePlate: string;
-//   address: string;
-//   avatar: IFile[];
-//   store: IStore;
-//   status: ICourierStatus;
-//   vehicle: IVehicle;
-// }
+export interface ICourier {
+  id: number;
+  name: string;
+  surname: string;
+  email: string;
+  gender: string;
+  gsm: string;
+  createdAt: string;
+  accountNumber: string;
+  licensePlate: string;
+  address: string;
+  avatar: IFile[];
+  store: IStore;
+  status: ICourierStatus;
+  vehicle: IVehicle;
+}
 
-// export interface IOrder {
-//   id: number;
-//   user: IUser;
-//   createdAt: string;
-//   products: IProduct[];
-//   status: IOrderStatus;
-//   adress: IAddress;
-//   store: IStore;
-//   courier: ICourier;
-//   events: IEvent[];
-//   orderNumber: number;
-//   amount: number;
-// }
+export interface IOrder {
+  id: number;
+  user: IUser;
+  createdAt: string;
+  products: IProduct[];
+  status: IOrderStatus;
+  adress: IAddress;
+  store: IStore;
+  courier: ICourier;
+  events: IEvent[];
+  orderNumber: number;
+  amount: number;
+}
 // export interface ICustomer {
 //   id: number;
 //   name: string;

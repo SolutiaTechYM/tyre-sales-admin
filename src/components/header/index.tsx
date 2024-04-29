@@ -28,6 +28,8 @@ import {
   Card,
 } from "antd";
 
+import { HttpError } from "@refinedev/core";
+
 import { useTranslation } from "react-i18next";
 import debounce from "lodash/debounce";
 
@@ -102,7 +104,7 @@ export const Header: React.FC = () => {
         const orderOptionGroup = data.data.map((item) =>
           renderItem(
             `${item.store.title} / #${item.orderNumber}`,
-            item?.products?.[0].images?.[0]?.url ||
+            item?.products?.[0].images?.url ||
               "/images/default-order-img.png",
             `/orders/show/${item.id}`,
           ),
