@@ -12,7 +12,7 @@ import {
   useSelect,
   useTable,
 } from "@refinedev/antd";
-import { IProduct } from "../../../interfaces";
+import { IProduct, IPurchase } from "../../../interfaces";
 import {
   Avatar,
   Button,
@@ -34,7 +34,7 @@ export const PurchaseListTable = () => {
   const { pathname } = useLocation();
   const { showUrl } = useNavigation();
 
-  const { tableProps, sorters, filters } = useTable<IProduct, HttpError>({
+  const { tableProps, sorters, filters } = useTable<IPurchase, HttpError>({
     filters: {
       initial: [
         {
@@ -48,15 +48,11 @@ export const PurchaseListTable = () => {
           value: "",
         },
         {
-          field: "category.id",
+          field: "id",
           operator: "in",
           value: [],
         },
-        {
-          field: "isActive",
-          operator: "in",
-          value: [],
-        },
+        
       ],
     },
   });
@@ -223,15 +219,15 @@ export const PurchaseListTable = () => {
       />
       <Table.Column
         title={t("purchases.fields.credit")}
-        dataIndex="price"
-        key="price"
+        dataIndex="credit"
+        key="credit"
         align="right"
         sorter
         //defaultSortOrder={getDefaultSortOrder("price", sorters)}
-        render={(price: number) => {
+        render={(credit: number) => {
           return (
             <NumberField
-              value={price}
+              value={credit}
               style={{
                 width: "80px",
                 fontVariantNumeric: "tabular-nums",

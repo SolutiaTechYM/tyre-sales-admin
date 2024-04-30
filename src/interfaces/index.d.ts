@@ -63,6 +63,17 @@ export interface IProduct {
   };
 }
 
+
+export interface IPurchase {
+  id: number;
+  createdAt: string;
+  name: string;
+  price: number;
+  credit: number;
+  description:description;
+}
+
+
 export interface IIdentity {
   id: number;
   name: string;

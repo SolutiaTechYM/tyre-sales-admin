@@ -3,7 +3,7 @@ import { CreateButton, ExportButton, List } from "@refinedev/antd";
 import { PurchaseListTable } from "../../components";
 import { PropsWithChildren } from "react";
 import { useLocation } from "react-router-dom";
-import { IProduct } from "../../interfaces";
+import { IProduct, IPurchase } from "../../interfaces";
 
 export const PurchaseList = ({ children }: PropsWithChildren) => {
   const go = useGo();
@@ -13,11 +13,11 @@ export const PurchaseList = ({ children }: PropsWithChildren) => {
 
   const t = useTranslate();
 
-  const { isLoading, triggerExport } = useExport<IProduct>({
+  const { isLoading, triggerExport } = useExport<IPurchase>({
     // sorters,
     // filters,
-    pageSize: 50,
-    maxItemCount: 50,
+    // pageSize: 50,
+    // maxItemCount: 50,
     mapData: (item) => {
       return {
         id: item.id,
