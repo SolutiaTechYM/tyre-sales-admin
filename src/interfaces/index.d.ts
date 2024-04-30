@@ -38,6 +38,8 @@ export interface IUser {
  
 }
 
+
+
 // export interface IUser {
 //   id: number;
 //   firstName: string;
@@ -61,6 +63,14 @@ export interface IProduct {
   category: {
     id: number;
   };
+}
+
+
+export interface Iiepd {
+  income:number;
+  expense:number;
+  profit:number;
+  dueamount:number
 }
 
 export interface IIdentity {

@@ -7,7 +7,11 @@ import {
   useGetIdentity,
   useTranslate,
   useList,
+  useOne,
 } from "@refinedev/core";
+
+import { useApiUrl, useCustom } from "@refinedev/core";
+
 import { Link } from "react-router-dom";
 import { SearchOutlined, DownOutlined } from "@ant-design/icons";
 
@@ -35,8 +39,9 @@ import debounce from "lodash/debounce";
 
 import { useConfigProvider } from "../../context";
 import { IconMoon, IconSun } from "../../components/icons";
-import { IOrder, IStore, ICourier, IIdentity } from "../../interfaces";
+import { IOrder, IStore, ICourier, IIdentity, Iiepd } from "../../interfaces";
 import { useStyles } from "./styled";
+import { head } from "lodash";
 
 const { Header: AntdHeader } = AntdLayout;
 const { useToken } = theme;
@@ -62,6 +67,7 @@ export const Header: React.FC = () => {
   const changeLanguage = useSetLocale();
   const { data: user } = useGetIdentity<IIdentity>();
   const screens = useBreakpoint();
+  const API_URL = useApiUrl();
   const t = useTranslate();
 
   const currentLocale = locale();
@@ -174,6 +180,19 @@ export const Header: React.FC = () => {
     },
   });
 
+
+
+  const { data: iepdData } = useCustom<{
+    data: Iiepd;
+
+  }>({
+    url: `${API_URL}/headerdata`,
+    method: "get",
+    
+  });
+
+  const headerdata=iepdData?.data?.data;
+
   useEffect(() => {
     setOptions([]);
     refetchOrders();
@@ -237,7 +256,7 @@ export const Header: React.FC = () => {
 
     ):null}
     <Text type="success" style={{ fontSize: screens.sm ? "14px" : "10px" }}>
-      LKR 202222
+      LKR {headerdata?.income}
     </Text>
   </Row>
 </Card>
@@ -250,7 +269,7 @@ export const Header: React.FC = () => {
     <Divider type="vertical" /></div>
     ):null}
     <Text type="danger" style={{ fontSize: screens.sm ? "14px" : "10px" }}>
-      LKR 202222
+      LKR {headerdata?.expense}
     </Text>
   </Row>
 </Card>
@@ -262,7 +281,7 @@ export const Header: React.FC = () => {
     <Divider type="vertical" /></div>
     ):null}
     <Text style={{ fontSize: screens.sm ? "14px" : "10px" ,color:"#3c89e8"}}>
-      LKR 202222
+      LKR {headerdata?.profit}
     </Text>
   </Row>
 </Card>
@@ -274,7 +293,7 @@ export const Header: React.FC = () => {
     <Divider type="vertical" /></div>
     ):null}
     <Text type="warning" style={{ fontSize: screens.sm ? "14px" : "10px" }}>
-      LKR 202222
+      LKR {headerdata?.dueamount}
     </Text>
   </Row>
 </Card>
