@@ -186,12 +186,12 @@ export const Header: React.FC = () => {
     data: Iiepd;
 
   }>({
-    url: `${API_URL}/headerdata`,
+    url: `${API_URL}/misc/headerdata`,
     method: "get",
     
   });
 
-  const headerdata=iepdData?.data?.data;
+  const headerdata=iepdData?.data;
 
   useEffect(() => {
     setOptions([]);
