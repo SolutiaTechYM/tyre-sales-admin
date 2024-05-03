@@ -6,6 +6,7 @@ import {
   useGo,
   useTranslate,
 } from "@refinedev/core";
+import { useEffect } from 'react';
 import { getValueFromEvent, useSelect } from "@refinedev/antd";
 import {
   Form,
@@ -53,12 +54,21 @@ export const PurchaseDrawerForm = (props: Props) => {
         props.onMutationSuccess?.();
       },
     });
+    const quantity = Form.useWatch('quantity', formProps.form);
+const unitPrice = Form.useWatch('unitprice', formProps.form);
+
+useEffect(() => {
+  const totalPrice = quantity * unitPrice || 0;
+  formProps.form.setFieldsValue({ totalprice: totalPrice });
+}, [quantity, unitPrice, formProps.form]);
+
 
   const { selectProps: categorySelectProps } = useSelect<ICategory>({
     resource: "categories",
   });
   const { selectProps: productSelectProps } = useSelect<IProduct>({
     resource: "products",
+    optionLabel: "name", // Add this line
   });
 
   const onDrawerCLose = () => {
@@ -116,44 +126,6 @@ export const PurchaseDrawerForm = (props: Props) => {
               <Input />
             </Form.Item>
             <Form.Item
-              label={t("purchases.fields.note")}
-              name="description"
-              className={styles.formItem}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input.TextArea rows={6} />
-            </Form.Item>
-            <Form.Item
-              label={t("purchases.fields.price")}
-              name="price"
-              className={styles.formItem}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <InputNumber prefix={"$"} style={{ width: "150px" }} />
-            </Form.Item>
-            <Form.Item
-              label={t("purchases.fields.credit")}
-              name="price"
-              className={styles.formItem}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <InputNumber prefix={"$"} style={{ width: "150px" }} />
-            </Form.Item>
-
-            <Flex style={{ backgroundColor: "#141414" }}>
-              <Form.Item
                 label={t("purchases.fields.details.name")}
                 name={["category", "id"]}
                 className={styles.formItem}
@@ -165,21 +137,22 @@ export const PurchaseDrawerForm = (props: Props) => {
               >
                 <Select {...productSelectProps} />
               </Form.Item>
-              <Form.Item
-                label={t("purchases.fields.details.category")}
-                name={["category", "id"]}
-                className={styles.formItem}
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-              >
-                <Select {...categorySelectProps} disabled />
-              </Form.Item>
-              <Form.Item
+            <Form.Item
+              label={t("purchases.fields.note")}
+              name="description"
+              className={styles.formItem}
+              
+            >
+              <Input.TextArea rows={2} />
+            </Form.Item>
+            <Flex style={{ backgroundColor: "#141414" }}>
+            
+            
+            
+            
+            <Form.Item
                 label={t("purchases.fields.details.qty")}
-                name="price"
+                name="quantity"
                 className={styles.formItem}
                 rules={[
                   {
@@ -191,7 +164,7 @@ export const PurchaseDrawerForm = (props: Props) => {
               </Form.Item>
               <Form.Item
                 label={t("purchases.fields.details.unitPrice")}
-                name="price"
+                name="unitprice"
                 className={styles.formItem}
                 rules={[
                   {
@@ -199,17 +172,63 @@ export const PurchaseDrawerForm = (props: Props) => {
                   },
                 ]}
               >
-                <InputNumber prefix={"$"} style={{ width: "150px" }} />
+                <InputNumber type='number' prefix={"LKR"} style={{ width: "150px" }} />
               </Form.Item>
-              <Form.Item
+             
+
+            
+            
+            
+            
+            
+                        </Flex>
+      
+            <Flex style={{ backgroundColor: "#141414" }}>
+              
+              {/* <Form.Item
+                label={t("purchases.fields.details.category")}
+                name={["category", "id"]}
+                className={styles.formItem}
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+              >
+                <Select {...categorySelectProps} disabled />
+              </Form.Item> */}
+<Form.Item
+  label={t("Total Price")}
+  name="totalprice"
+  className={styles.formItem}
+  rules={[
+    {
+      required: true,
+    },
+  ]}
+>
+  <InputNumber  prefix={"LKR"} style={{ width: "150px",color:'red' }} disabled />
+</Form.Item>
+            <Form.Item
+              label={t("purchases.fields.credit")}
+              name="credit"
+              className={styles.formItem}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <InputNumber prefix={"LKR"} style={{ width: "150px" }} />
+            </Form.Item>
+            </Flex>
+            <Form.Item
                 label={t("purchases.actions.addProduct")}
                 name="add"
                 className={styles.formItem}
               >
                 <Button>Add</Button>
               </Form.Item>
-            </Flex>
-
             <Flex
               vertical
               gap={32}
