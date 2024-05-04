@@ -6,7 +6,8 @@ import {
   useGo,
   useTranslate,
 } from "@refinedev/core";
-import { useEffect } from 'react';
+import { useEffect,useState } from 'react';
+import { AutoComplete } from "antd";
 import { getValueFromEvent, useSelect } from "@refinedev/antd";
 import {
   Form,
@@ -21,16 +22,17 @@ import {
   Segmented,
   Spin,
 } from "antd";
-import { IProduct, ICategory } from "../../../interfaces";
+import { IProduct, ICategory, RowData, IPurchase } from "../../../interfaces";
 import { useSearchParams } from "react-router-dom";
 import { Drawer } from "../../drawer";
 import { UploadOutlined } from "@ant-design/icons";
 import { useStyles } from "./styled";
 import { PurchaseDetailsEditableTable } from "../details-table copy";
 
+
 type Props = {
   id?: BaseKey;
-  action: "create" | "edit";
+  action: "create";
   onClose?: () => void;
   onMutationSuccess?: () => void;
 };
@@ -45,7 +47,7 @@ export const PurchaseDrawerForm = (props: Props) => {
   const { styles, theme } = useStyles();
 
   const { drawerProps, formProps, close, saveButtonProps, formLoading } =
-    useDrawerForm<IProduct>({
+    useDrawerForm<IPurchase>({
       resource: "purchases",
       id: props?.id, // when undefined, id will be read from the URL.
       action: props.action,
@@ -57,6 +59,23 @@ export const PurchaseDrawerForm = (props: Props) => {
     const quantity = Form.useWatch('quantity', formProps.form);
 const unitPrice = Form.useWatch('unitprice', formProps.form);
 
+
+
+const [tableRef, setTableRef] = useState<{ getTableData: () => RowData[] } | null>(null);
+
+// const handleSave = async () => {
+//   try {
+//     // Create or update the main purchase record
+//     await formProps.form.validateFields();
+//     const purchaseId = props.id || (await saveButtonProps?.mutationPromise?.mutate(purchaseData));
+
+//     onDrawerCLose();
+//   } catch (error) {
+//     console.error("Error saving purchase data:", error);
+//   }
+// };
+
+
 useEffect(() => {
   const totalPrice = quantity * unitPrice || 0;
   formProps.form.setFieldsValue({ totalprice: totalPrice });
@@ -65,11 +84,15 @@ useEffect(() => {
 
   const { selectProps: categorySelectProps } = useSelect<ICategory>({
     resource: "categories",
+    optionLabel: "title", // Add this line
+
   });
   const { selectProps: productSelectProps } = useSelect<IProduct>({
     resource: "products",
     optionLabel: "name", // Add this line
   });
+
+  const [tableData, setTableData] = useState<RowData[]>([]);
 
   const onDrawerCLose = () => {
     close();
@@ -99,7 +122,7 @@ useEffect(() => {
   const images = Form.useWatch("images", formProps.form);
   const image = images?.[0] || null;
   const previewImageURL = image?.url || image?.response?.url;
-  const title = props.action === "edit" ? null : t("products.actions.add");
+  const title = "edit" 
 
   return (
     <Drawer
@@ -123,11 +146,12 @@ useEffect(() => {
                 },
               ]}
             >
-              <Input />
+                             <Select {...categorySelectProps} />
+
             </Form.Item>
             <Form.Item
                 label={t("purchases.fields.details.name")}
-                name={["category", "id"]}
+                name="proname"
                 className={styles.formItem}
                 rules={[
                   {
@@ -227,7 +251,28 @@ useEffect(() => {
                 name="add"
                 className={styles.formItem}
               >
-                <Button>Add</Button>
+                  <Button
+    onClick={() => {
+      const selectedCategory = (categorySelectProps.options || []).find(
+        (option) => option.value === formProps.form.getFieldValue("name")
+      );
+      const selectedProduct = (productSelectProps.options || []).find(
+        (option) => option.value === formProps.form.getFieldValue("proname")
+      );
+    
+
+  const newRow = {
+    name: selectedCategory?.label?.toString() || "", 
+    product: selectedProduct?.label?.toString() || "", 
+        description: formProps.form.getFieldValue("description"),
+        quantity: formProps.form.getFieldValue("quantity"),
+        unitprice: formProps.form.getFieldValue("unitprice"),
+        totalprice: formProps.form.getFieldValue("totalprice"),
+        credit: formProps.form.getFieldValue("credit"),
+      };
+      setTableData([...tableData, newRow]);
+    }}
+  >Add</Button>
               </Form.Item>
             <Flex
               vertical
@@ -236,7 +281,11 @@ useEffect(() => {
                 padding: "32px",
               }}
             >
-              <PurchaseDetailsEditableTable />
+              <PurchaseDetailsEditableTable
+  data={tableData}
+  setData={setTableData}
+  setTableRef={setTableRef}
+/>
             </Flex>
 
             <Flex
@@ -251,6 +300,7 @@ useEffect(() => {
                 {...saveButtonProps}
                 htmlType="submit"
                 type="primary"
+                // onClick={handleSave}
                 icon={null}
               >
                 Save

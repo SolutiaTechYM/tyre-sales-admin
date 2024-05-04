@@ -51,6 +51,29 @@ export interface IUser {
 // }
 
 
+// export interface IPurchase {
+//   id: number;
+//   createdAt: string;
+//   name: string;
+//   price: number;
+//   credit: number;
+//   description:description;
+// }
+export interface IPurchase {
+  id: number;
+  createdAt: string;
+  rowdata:RowData[];
+}
+interface RowData {
+  name: string | number;
+  product: string | number;
+  description: string;
+  quantity: number;
+  unitprice: number;
+  totalprice: number;
+  credit: number;
+}
+
 
 export interface IProduct {
   id: number;
@@ -64,14 +87,7 @@ export interface IProduct {
 }
 
 
-export interface IPurchase {
-  id: number;
-  createdAt: string;
-  name: string;
-  price: number;
-  credit: number;
-  description:description;
-}
+
 
 
 export interface IIdentity {
