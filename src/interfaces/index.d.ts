@@ -65,7 +65,7 @@ export interface IPurchase {
   rowdata:RowData[];
 }
 interface RowData {
-  name: string | number;
+  suppliername: string | number;
   product: string | number;
   description: string;
   quantity: number;

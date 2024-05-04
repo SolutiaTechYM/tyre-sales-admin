@@ -44,6 +44,7 @@
     "react-infinite-scroll-component": "^6.1.0",
     "react-input-mask": "^2.0.4",
     "react-router-dom": "^6.8.1",
+    "sweetalert2": "^11.10.8",
     "tslib": "^2.3.1",
     "usehooks-ts": "^2.14.0"
   },

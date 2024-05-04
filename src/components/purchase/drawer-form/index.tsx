@@ -1,4 +1,6 @@
 import { SaveButton, useDrawerForm } from "@refinedev/antd";
+import Swal from 'sweetalert2';
+import { Alert } from 'antd';
 import {
   BaseKey,
   useApiUrl,
@@ -6,6 +8,7 @@ import {
   useGo,
   useTranslate,
 } from "@refinedev/core";
+import { notification } from 'antd';
 import { useEffect,useState } from 'react';
 import { AutoComplete } from "antd";
 import { getValueFromEvent, useSelect } from "@refinedev/antd";
@@ -32,7 +35,7 @@ import { PurchaseDetailsEditableTable } from "../details-table copy";
 
 type Props = {
   id?: BaseKey;
-  action: "create";
+  action: "create" | "edit";
   onClose?: () => void;
   onMutationSuccess?: () => void;
 };
@@ -45,6 +48,7 @@ export const PurchaseDrawerForm = (props: Props) => {
   const apiUrl = useApiUrl();
   const breakpoint = Grid.useBreakpoint();
   const { styles, theme } = useStyles();
+  const [tableData, setTableData] = useState<RowData[]>([]);
 
   const { drawerProps, formProps, close, saveButtonProps, formLoading } =
     useDrawerForm<IPurchase>({
@@ -52,29 +56,12 @@ export const PurchaseDrawerForm = (props: Props) => {
       id: props?.id, // when undefined, id will be read from the URL.
       action: props.action,
       redirect: false,
-      onMutationSuccess: () => {
-        props.onMutationSuccess?.();
-      },
+      // onMutationSuccess: () => {
+      //   props.onMutationSuccess?.();
+      // },
     });
     const quantity = Form.useWatch('quantity', formProps.form);
 const unitPrice = Form.useWatch('unitprice', formProps.form);
-
-
-
-const [tableRef, setTableRef] = useState<{ getTableData: () => RowData[] } | null>(null);
-
-// const handleSave = async () => {
-//   try {
-//     // Create or update the main purchase record
-//     await formProps.form.validateFields();
-//     const purchaseId = props.id || (await saveButtonProps?.mutationPromise?.mutate(purchaseData));
-
-//     onDrawerCLose();
-//   } catch (error) {
-//     console.error("Error saving purchase data:", error);
-//   }
-// };
-
 
 useEffect(() => {
   const totalPrice = quantity * unitPrice || 0;
@@ -92,7 +79,6 @@ useEffect(() => {
     optionLabel: "name", // Add this line
   });
 
-  const [tableData, setTableData] = useState<RowData[]>([]);
 
   const onDrawerCLose = () => {
     close();
@@ -119,10 +105,33 @@ useEffect(() => {
     });
   };
 
+  const showErrorNotification = () => {
+    notification.error({
+      message: 'Error',
+      description: 'Please fill in all required fields.',
+      duration: 3,
+      style: {
+        zIndex: 1000, 
+      },
+    });
+  };
+
+  const showErrorNotificationEmptyTable = () => {
+    notification.error({
+      message: 'Error',
+      description: 'Empty Table.',
+      duration: 3,
+      style: {
+        zIndex: 1000, 
+      },
+    });
+  };
+
+  
   const images = Form.useWatch("images", formProps.form);
   const image = images?.[0] || null;
   const previewImageURL = image?.url || image?.response?.url;
-  const title = "edit" 
+  const title = props.action === "edit" ? null : t("products.actions.add");
 
   return (
     <Drawer
@@ -138,7 +147,7 @@ useEffect(() => {
           <Flex vertical>
             <Form.Item
               label={t("purchases.fields.supplier")}
-              name="name"
+              name="suppliername"
               className={styles.formItem}
               rules={[
                 {
@@ -252,18 +261,29 @@ useEffect(() => {
                 className={styles.formItem}
               >
                   <Button
-    onClick={() => {
+                // {...saveButtonProps}
+
+  // htmlType="submit"
+  onClick={() => {
+    // Check if all fields are not empty
+    if (
+      formProps.form.getFieldValue("suppliername") &&
+      formProps.form.getFieldValue("proname") &&
+      formProps.form.getFieldValue("quantity") &&
+      formProps.form.getFieldValue("unitprice") &&
+      formProps.form.getFieldValue("totalprice") &&
+      formProps.form.getFieldValue("credit")
+    ) {
       const selectedCategory = (categorySelectProps.options || []).find(
-        (option) => option.value === formProps.form.getFieldValue("name")
+        (option) => option.value === formProps.form.getFieldValue("suppliername")
       );
       const selectedProduct = (productSelectProps.options || []).find(
         (option) => option.value === formProps.form.getFieldValue("proname")
       );
-    
 
-  const newRow = {
-    name: selectedCategory?.label?.toString() || "", 
-    product: selectedProduct?.label?.toString() || "", 
+      const newRow = {
+        suppliername: selectedCategory?.label?.toString() || "",
+        product: selectedProduct?.label?.toString() || "",
         description: formProps.form.getFieldValue("description"),
         quantity: formProps.form.getFieldValue("quantity"),
         unitprice: formProps.form.getFieldValue("unitprice"),
@@ -271,8 +291,26 @@ useEffect(() => {
         credit: formProps.form.getFieldValue("credit"),
       };
       setTableData([...tableData, newRow]);
-    }}
-  >Add</Button>
+    } else {
+      // Alert or handle the case where some fields are empty
+      // For example, show a message to the user
+      // alert("Please fill in all fields.");
+      // Swal.fire({
+      //   title: 'Required Fields',
+      //   text: 'Please fill in all required fields.',
+      //   icon: 'warning',
+      //   confirmButtonText: 'OK',
+      //   zIndex: 1500, // Pass the zIndex option in the options object
+      // });
+      showErrorNotification();
+    }
+  }}
+    
+  
+>
+  Add
+</Button>
+
               </Form.Item>
             <Flex
               vertical
@@ -284,7 +322,6 @@ useEffect(() => {
               <PurchaseDetailsEditableTable
   data={tableData}
   setData={setTableData}
-  setTableRef={setTableRef}
 />
             </Flex>
 
@@ -297,11 +334,40 @@ useEffect(() => {
             >
               <Button onClick={onDrawerCLose}>Cancel</Button>
               <SaveButton
-                {...saveButtonProps}
-                htmlType="submit"
+                // {...saveButtonProps}
+                // htmlType="submit"
                 type="primary"
-                // onClick={handleSave}
                 icon={null}
+                onClick={async () => {
+                  console.log(tableData.length);
+                  
+                  if (tableData.length!==0){
+                  try {
+                    // Send the tableData to the backend
+                    const response = await fetch(`${apiUrl}/purchase`, {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({ purchaseDetails: tableData }),
+                    });
+              
+                    if (response.ok) {
+                      // Handle successful response
+                      console.log("Purchase details saved successfully");
+                      onDrawerCLose(); // Close the drawer
+                    } else {
+                      // Handle error response
+                      console.error("Failed to save purchase details");
+                    }
+                  } catch (error) {
+                    console.error("An error occurred:", error);
+                  }
+                }else{
+                  showErrorNotificationEmptyTable()
+                }
+              }}
+                
               >
                 Save
               </SaveButton>
@@ -312,3 +378,4 @@ useEffect(() => {
     </Drawer>
   );
 };
+

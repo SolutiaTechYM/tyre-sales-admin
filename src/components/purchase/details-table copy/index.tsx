@@ -27,35 +27,25 @@ import {
 import { PaginationTotal } from "../../paginationTotal";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
-import { useRef } from "react";
 
 export const PurchaseDetailsEditableTable = ({
   data,
   setData,
-  setTableRef,
 }: {
   data: RowData[];
   setData: (data: RowData[]) => void;
-  setTableRef: (ref: { getTableData: () => RowData[] }) => void;
 }) => {
   const { token } = theme.useToken();
   const t = useTranslate();
   const go = useGo();
   const { pathname } = useLocation();
   const { showUrl } = useNavigation();
-
-  const tableRef = useRef<{ getTableData: () => RowData[] }>({
-    getTableData: () => data,
-  });
-
-  setTableRef(tableRef.current);
-
+  
   const handleDeleteRow = (index: number) => {
     const newData = [...data];
     newData.splice(index, 1);
     setData(newData);
   };
-
   
   
 
@@ -68,8 +58,8 @@ export const PurchaseDetailsEditableTable = ({
         <Table.Column
            title={t("Supplier Name")}
 
-          dataIndex="name"
-          key="name"
+          dataIndex="suppliername"
+          key="suppliername"
           // width={80}
           align="center"
 
