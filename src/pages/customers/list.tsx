@@ -154,9 +154,9 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
         <Table.Column
           align="center"
           key="avatar"
-          dataIndex={["avatar"]}
+          dataIndex={"avatar"}
           title={t("users.fields.avatar.label")}
-          render={(value) => <Avatar src={value[0].url} />}
+          render={(value) => <Avatar src={value?.url} />}
         />
 
 <Table.Column
