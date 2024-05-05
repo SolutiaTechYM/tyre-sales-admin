@@ -43,7 +43,7 @@ export const PurchaseListTable = () => {
           value: "",
         },
         {
-          field: "name",
+          field: "date",
           operator: "contains",
           value: "",
         },
@@ -76,7 +76,7 @@ export const PurchaseListTable = () => {
               whiteSpace: "nowrap",
             }}
           >
-            ID #
+            ID 
           </Typography.Text>
         }
         dataIndex="id"
@@ -88,7 +88,7 @@ export const PurchaseListTable = () => {
               whiteSpace: "nowrap",
             }}
           >
-            #{value}
+            {value}
           </Typography.Text>
         )}
         filterIcon={(filtered) => (
@@ -102,7 +102,7 @@ export const PurchaseListTable = () => {
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
             <InputNumber
-              addonBefore="#"
+              // addonBefore="#"
               style={{ width: "100%" }}
               placeholder={t("products.filter.id.placeholder")}
             />
@@ -130,8 +130,8 @@ export const PurchaseListTable = () => {
       />
       <Table.Column
         title={t("purchases.fields.supplier")}
-        dataIndex="name"
-        key="name"
+        dataIndex="supplier"
+        key="supplier"
         filterIcon={(filtered) => (
           <SearchOutlined
             style={{
@@ -219,8 +219,8 @@ export const PurchaseListTable = () => {
       />
       <Table.Column
         title={t("purchases.fields.credit")}
-        dataIndex="credit"
-        key="credit"
+        dataIndex="payment"
+        key="payment"
         align="right"
         sorter
         //defaultSortOrder={getDefaultSortOrder("price", sorters)}

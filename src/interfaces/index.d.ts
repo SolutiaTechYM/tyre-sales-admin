@@ -38,6 +38,8 @@ export interface IUser {
  
 }
 
+
+
 // export interface IUser {
 //   id: number;
 //   firstName: string;
@@ -104,6 +106,13 @@ export interface IInvoice {
 
 
 
+export interface Iiepd {
+  income:number;
+  expense:number;
+  profit:number;
+  dueamount:number
+}
+
 export interface IIdentity {
   id: number;
   name: string;
@@ -140,52 +149,52 @@ export interface ITransaction {
   dueamount: number;
 }
 
-// export interface IStore {
-//   id: number;
-//   title: string;
-//   isActive: boolean;
-//   createdAt: string;
-//   gsm: string;
-//   email: string;
-//   address: IAddress;
-//   products: IProduct[];
-// }
+export interface IStore {
+  id: number;
+  title: string;
+  isActive: boolean;
+  createdAt: string;
+  gsm: string;
+  email: string;
+  address: IAddress;
+  products: IProduct[];
+}
 
 // export interface ICourierStatus {
 //   id: number;
 //   text: "Available" | "Offline" | "On delivery";
 // }
 
-// export interface ICourier {
-//   id: number;
-//   name: string;
-//   surname: string;
-//   email: string;
-//   gender: string;
-//   gsm: string;
-//   createdAt: string;
-//   accountNumber: string;
-//   licensePlate: string;
-//   address: string;
-//   avatar: IFile[];
-//   store: IStore;
-//   status: ICourierStatus;
-//   vehicle: IVehicle;
-// }
+export interface ICourier {
+  id: number;
+  name: string;
+  surname: string;
+  email: string;
+  gender: string;
+  gsm: string;
+  createdAt: string;
+  accountNumber: string;
+  licensePlate: string;
+  address: string;
+  avatar: IFile[];
+  store: IStore;
+  status: ICourierStatus;
+  vehicle: IVehicle;
+}
 
-// export interface IOrder {
-//   id: number;
-//   user: IUser;
-//   createdAt: string;
-//   products: IProduct[];
-//   status: IOrderStatus;
-//   adress: IAddress;
-//   store: IStore;
-//   courier: ICourier;
-//   events: IEvent[];
-//   orderNumber: number;
-//   amount: number;
-// }
+export interface IOrder {
+  id: number;
+  user: IUser;
+  createdAt: string;
+  products: IProduct[];
+  status: IOrderStatus;
+  adress: IAddress;
+  store: IStore;
+  courier: ICourier;
+  events: IEvent[];
+  orderNumber: number;
+  amount: number;
+}
 // export interface ICustomer {
 //   id: number;
 //   name: string;
@@ -211,6 +220,17 @@ export interface ISupplier{
   address: string;
   dueAmount: number;
   lastOrderDate: string;
+  createdAt: string;
+}
+
+
+export interface IPurchase{
+  id: number;
+  date: string;
+  supplier: string;
+  description: string;
+  price: string;
+  due_amount:string
   createdAt: string;
 }
 

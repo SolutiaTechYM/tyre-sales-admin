@@ -21,11 +21,11 @@ export const PurchaseList = ({ children }: PropsWithChildren) => {
     mapData: (item) => {
       return {
         id: item.id,
+        date:item.date,
         createdAt: item.createdAt,
-        name: item.name,
         description: item.description,
         price: item.price,
-        user: item.price,
+        supplier:item.supplier
       };
     },
   });

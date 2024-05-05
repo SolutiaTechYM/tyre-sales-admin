@@ -57,12 +57,8 @@ export const ProductListTable = () => {
           field: "category.id",
           operator: "in",
           value: [],
-        },
-        {
-          field: "isActive",
-          operator: "in",
-          value: [],
-        },
+        } 
+        
       ],
     },
   });
