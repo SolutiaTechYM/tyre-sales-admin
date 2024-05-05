@@ -55,7 +55,7 @@ export const PurchaseDetailsEditableTable = ({
         rowKey="id"
         scroll={{ x: true }}
       >
-        <Table.Column
+        {/* <Table.Column
            title={t("Supplier Name")}
 
           dataIndex="suppliername"
@@ -68,7 +68,7 @@ export const PurchaseDetailsEditableTable = ({
               {value}
             </Typography.Text>
           )}
-        />
+        /> */}
 
         <Table.Column
           title={t("Product ID")}
@@ -137,7 +137,7 @@ export const PurchaseDetailsEditableTable = ({
           </Typography.Text>
         )}
       />
-       <Table.Column
+       {/* <Table.Column
         title={t("Credit")}
         dataIndex="credit"
         key="credit"
@@ -150,7 +150,7 @@ export const PurchaseDetailsEditableTable = ({
             {value}
           </Typography.Text>
         )}
-      />
+      /> */}
         <Table.Column
           title="Action"
           key="action"

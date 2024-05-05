@@ -65,13 +65,13 @@ export interface IPurchase {
   rowdata:RowData[];
 }
 interface RowData {
-  suppliername: string | number;
+  // suppliername: string | number;
   product: string | number;
   description: string;
   quantity: number;
   unitprice: number;
-  totalprice: number;
-  credit: number;
+  // totalprice: number;
+  // payment: number;
 }
 
 
@@ -79,6 +79,20 @@ export interface IProduct {
   id: number;
   code: string;
   name: string;
+  images: IFile & { thumbnailUrl?: string };
+  curr_price: number;
+  category: {
+    id: number;
+  };
+}
+
+
+export interface IInvoice {
+  contact: number;
+  company: string;
+  name: string;
+
+ id: number | string;
   images: IFile & { thumbnailUrl?: string };
   curr_price: number;
   category: {

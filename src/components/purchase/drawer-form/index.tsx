@@ -1,5 +1,4 @@
 import { SaveButton, useDrawerForm } from "@refinedev/antd";
-import Swal from 'sweetalert2';
 import { Alert } from 'antd';
 import {
   BaseKey,
@@ -49,6 +48,9 @@ export const PurchaseDrawerForm = (props: Props) => {
   const breakpoint = Grid.useBreakpoint();
   const { styles, theme } = useStyles();
   const [tableData, setTableData] = useState<RowData[]>([]);
+  const [showModal, setShowModal] = useState(false);
+  const [totalPrice, settotalPrice] = useState(0);
+
 
   const { drawerProps, formProps, close, saveButtonProps, formLoading } =
     useDrawerForm<IPurchase>({
@@ -63,10 +65,10 @@ export const PurchaseDrawerForm = (props: Props) => {
     const quantity = Form.useWatch('quantity', formProps.form);
 const unitPrice = Form.useWatch('unitprice', formProps.form);
 
-useEffect(() => {
-  const totalPrice = quantity * unitPrice || 0;
-  formProps.form.setFieldsValue({ totalprice: totalPrice });
-}, [quantity, unitPrice, formProps.form]);
+// useEffect(() => {
+//   const totalPrice = quantity * unitPrice || 0;
+//   formProps.form.setFieldsValue({ totalprice: totalPrice });
+// }, [quantity, unitPrice, formProps.form]);
 
 
   const { selectProps: categorySelectProps } = useSelect<ICategory>({
@@ -80,6 +82,18 @@ useEffect(() => {
   });
 
 
+
+  useEffect(()=>{console.log(tableData.length);
+    if(tableData.length===0){
+      settotalPrice(0)
+    } else{
+      var temp=0
+      tableData.forEach(product => {
+        temp += product.quantity * product.unitprice;
+    });
+      settotalPrice(temp)
+    }
+  },[tableData])
   const onDrawerCLose = () => {
     close();
 
@@ -109,6 +123,26 @@ useEffect(() => {
     notification.error({
       message: 'Error',
       description: 'Please fill in all required fields.',
+      duration: 3,
+      style: {
+        zIndex: 1000, 
+      },
+    });
+  };
+  const showError = (error: any) => {
+    notification.error({
+      message: 'Error',
+      description: error,
+      duration: 3,
+      style: {
+        zIndex: 1000, 
+      },
+    });
+  };
+  const chooseasupplier = () => {
+    notification.error({
+      message: 'Error',
+      description: 'Please select a supplier',
       duration: 3,
       style: {
         zIndex: 1000, 
@@ -158,7 +192,27 @@ useEffect(() => {
                              <Select {...categorySelectProps} />
 
             </Form.Item>
+
             <Form.Item
+                name="add"
+                className={styles.formItem}
+              >
+                  <Button  type="primary" onClick={()=>{
+                       if (
+                        formProps.form.getFieldValue("suppliername") ){
+                          setShowModal(true)
+                        }else{
+                          chooseasupplier();
+                        }
+                 }}>Choose Products</Button>
+
+                  </Form.Item>
+
+
+{showModal && (<>
+
+            <Form.Item
+            
                 label={t("purchases.fields.details.name")}
                 name="proname"
                 className={styles.formItem}
@@ -232,19 +286,15 @@ useEffect(() => {
               </Form.Item> */}
 <Form.Item
   label={t("Total Price")}
-  name="totalprice"
+  // name="totalprice"
   className={styles.formItem}
-  rules={[
-    {
-      required: true,
-    },
-  ]}
+
 >
-  <InputNumber  prefix={"LKR"} style={{ width: "150px",color:'red' }} disabled />
+  <InputNumber  prefix={"LKR"} style={{ width: "150px",color:'red' }} disabled value={totalPrice}/>
 </Form.Item>
             <Form.Item
-              label={t("purchases.fields.credit")}
-              name="credit"
+              label={t("Payment")}
+              name="payment"
               className={styles.formItem}
               rules={[
                 {
@@ -267,12 +317,12 @@ useEffect(() => {
   onClick={() => {
     // Check if all fields are not empty
     if (
-      formProps.form.getFieldValue("suppliername") &&
+      // formProps.form.getFieldValue("suppliername") &&
       formProps.form.getFieldValue("proname") &&
       formProps.form.getFieldValue("quantity") &&
-      formProps.form.getFieldValue("unitprice") &&
-      formProps.form.getFieldValue("totalprice") &&
-      formProps.form.getFieldValue("credit")
+      formProps.form.getFieldValue("unitprice") 
+      // formProps.form.getFieldValue("totalprice") &&
+      // formProps.form.getFieldValue("payment")
     ) {
       const selectedCategory = (categorySelectProps.options || []).find(
         (option) => option.value === formProps.form.getFieldValue("suppliername")
@@ -282,13 +332,14 @@ useEffect(() => {
       );
 
       const newRow = {
-        suppliername: selectedCategory?.label?.toString() || "",
+        // suppliername: selectedCategory?.label?.toString() || "",
         product: selectedProduct?.label?.toString() || "",
+        productID: selectedProduct?.value?.toString() || "",
         description: formProps.form.getFieldValue("description"),
         quantity: formProps.form.getFieldValue("quantity"),
         unitprice: formProps.form.getFieldValue("unitprice"),
-        totalprice: formProps.form.getFieldValue("totalprice"),
-        credit: formProps.form.getFieldValue("credit"),
+        // totalprice: formProps.form.getFieldValue("totalprice"),
+        // payment: formProps.form.getFieldValue("payment"),
       };
       setTableData([...tableData, newRow]);
     } else {
@@ -312,6 +363,10 @@ useEffect(() => {
 </Button>
 
               </Form.Item>
+              </>
+
+)}
+
             <Flex
               vertical
               gap={32}
@@ -343,13 +398,16 @@ useEffect(() => {
                   
                   if (tableData.length!==0){
                   try {
-                    // Send the tableData to the backend
+                    const payment = formProps.form.getFieldValue("payment");
+
+                    if(payment)
+                  {  const supplierId = formProps.form.getFieldValue("suppliername");
                     const response = await fetch(`${apiUrl}/purchase`, {
                       method: "POST",
                       headers: {
                         "Content-Type": "application/json",
                       },
-                      body: JSON.stringify({ purchaseDetails: tableData }),
+                      body: JSON.stringify({ purchaseDetails: tableData,supplierId,payment }),
                     });
               
                     if (response.ok) {
@@ -359,6 +417,9 @@ useEffect(() => {
                     } else {
                       // Handle error response
                       console.error("Failed to save purchase details");
+                    }}
+                    else{
+                      showError("Please Enter Payment Amount")
                     }
                   } catch (error) {
                     console.error("An error occurred:", error);
