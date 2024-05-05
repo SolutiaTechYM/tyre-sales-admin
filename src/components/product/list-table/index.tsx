@@ -200,8 +200,10 @@ export const ProductListTable = () => {
           return (
             <Avatar
               shape="square"
-              src={images?.url}
-              alt={images?.name}
+              // src={images?.url}
+              // alt={images?.name}
+              src={images?.[0]?.thumbnailUrl }
+              // alt={images?.[0].name} || images?.[0]?.url
             />
           );
         }}
@@ -284,15 +286,15 @@ export const ProductListTable = () => {
 
 <Table.Column
         title={t("products.fields.price")}
-        dataIndex="price"
-        key="price"
+        dataIndex="curr_price"
+        key="curr_price"
         align="right"
         sorter
-        defaultSortOrder={getDefaultSortOrder("price", sorters)}
-        render={(price: number) => {
+        defaultSortOrder={getDefaultSortOrder("curr_price", sorters)}
+        render={(curr_price: number) => {
           return (
             <NumberField
-              value={price}
+              value={curr_price}
               style={{
                 width: "80px",
                 fontVariantNumeric: "tabular-nums",

@@ -81,7 +81,7 @@ export interface IProduct {
   id: number;
   code: string;
   name: string;
-  images: IFile & { thumbnailUrl?: string };
+  images: IFile & { thumbnailUrl?: string }[];
   curr_price: number;
   category: {
     id: number;

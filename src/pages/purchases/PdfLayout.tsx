@@ -13,11 +13,11 @@ import { IInvoice } from "../../interfaces";
 
 //   import { API_URL } from "../../constants";
   
-//   type PdfProps = {
-//     record: IInvoice | undefined;
-//   };
+  type PdfProps = {
+    record: IInvoice | undefined;
+  };
   
-  export const PdfLayout= () => {
+  export const PdfLayout: React.FC<PdfProps> = () => {
     // const subtotal =
     //   record?.missions.reduce((prev, cur) => {
     //     return prev + cur?.day * cur?.daily_rate;
@@ -90,9 +90,9 @@ import { IInvoice } from "../../interfaces";
                 </View>
                 <View style={styles.dividerSM} />
                 <View>
-                  {/* <Text
+                  <Text
                     style={styles.invoiceForFromText}
-                  >{`Invoice ID: ${record?.id}`}</Text> */}
+                  >{`Invoice ID: ${record?.id}`}</Text>
                   <Text
                     style={styles.invoiceForFromText}
                   >
