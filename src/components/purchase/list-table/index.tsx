@@ -48,15 +48,11 @@ export const PurchaseListTable = () => {
           value: "",
         },
         {
-          field: "category.id",
+          field: "id",
           operator: "in",
           value: [],
         },
-        {
-          field: "isActive",
-          operator: "in",
-          value: [],
-        },
+        
       ],
     },
   });
@@ -69,7 +65,7 @@ export const PurchaseListTable = () => {
       pagination={{
         ...tableProps.pagination,
         showTotal: (total) => (
-          <PaginationTotal total={total} entityName="products" />
+          <PaginationTotal total={total} entityName="Purchases" />
         ),
       }}
     >
@@ -222,16 +218,16 @@ export const PurchaseListTable = () => {
         }}
       />
       <Table.Column
-        title={t("Due Amount")}
-        dataIndex="due_amount"
-        key="due_amount"
+        title={t("purchases.fields.credit")}
+        dataIndex="payment"
+        key="payment"
         align="right"
         sorter
         //defaultSortOrder={getDefaultSortOrder("price", sorters)}
-        render={(price: number) => {
+        render={(credit: number) => {
           return (
             <NumberField
-              value={price}
+              value={credit}
               style={{
                 width: "80px",
                 fontVariantNumeric: "tabular-nums",

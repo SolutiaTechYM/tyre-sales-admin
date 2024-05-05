@@ -98,8 +98,8 @@ const currentQuanitity=10
             margin: "16px auto",
             borderRadius: "8px",
           }}
-          src={product?.images?.[0].url}
-          alt={product?.images?.[0].name}
+          src={product?.images?.[0].thumbnailUrl}
+          // alt={product?.images?.[0].name}
         />
       </Flex>
       <Flex
@@ -135,7 +135,7 @@ const currentQuanitity=10
               ),
               value: (
                 <NumberField
-                  value={product?.price || 0}
+                  value={product?.curr_price || 0}
                   options={{
                     style: "currency",
                     currency: "LKR",

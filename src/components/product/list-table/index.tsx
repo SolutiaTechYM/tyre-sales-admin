@@ -2,9 +2,11 @@ import {
   HttpError,
   getDefaultFilter,
   useGo,
+  useModal,
   useNavigation,
   useTranslate,
 } from "@refinedev/core";
+
 import {
   FilterDropdown,
   NumberField,
@@ -25,7 +27,7 @@ import {
 } from "antd";
 import { ProductStatus } from "../status";
 import { PaginationTotal } from "../../paginationTotal";
-import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
+import { EyeOutlined, FilePdfOutlined, SearchOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 
@@ -35,7 +37,9 @@ export const ProductListTable = () => {
   const go = useGo();
   const { pathname } = useLocation();
   const { showUrl } = useNavigation();
+  const { show, visible, close } = useModal();
 
+  
   const { tableProps, sorters, filters } = useTable<IProduct, HttpError>({
     filters: {
       initial: [
@@ -196,8 +200,10 @@ export const ProductListTable = () => {
           return (
             <Avatar
               shape="square"
-              src={images?.url}
-              alt={images?.name}
+              // src={images?.url}
+              // alt={images?.name}
+              src={images?.[0]?.thumbnailUrl }
+              // alt={images?.[0].name} || images?.[0]?.url
             />
           );
         }}
@@ -280,15 +286,15 @@ export const ProductListTable = () => {
 
 <Table.Column
         title={t("products.fields.price")}
-        dataIndex="price"
-        key="price"
+        dataIndex="curr_price"
+        key="curr_price"
         align="right"
         sorter
-        defaultSortOrder={getDefaultSortOrder("price", sorters)}
-        render={(price: number) => {
+        defaultSortOrder={getDefaultSortOrder("curr_price", sorters)}
+        render={(curr_price: number) => {
           return (
             <NumberField
-              value={price}
+              value={curr_price}
               style={{
                 width: "80px",
                 fontVariantNumeric: "tabular-nums",
@@ -373,6 +379,15 @@ export const ProductListTable = () => {
                 });
               }}
             />
+
+            // <Button
+            //           size="small"
+            //           icon={<FilePdfOutlined />}
+            //           onClick={() => {
+            //             // setRecord(record);
+            //             show();
+            //           }}
+            //         />
           );
         }}
       />
