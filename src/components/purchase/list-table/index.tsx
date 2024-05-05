@@ -65,7 +65,7 @@ export const PurchaseListTable = () => {
       pagination={{
         ...tableProps.pagination,
         showTotal: (total) => (
-          <PaginationTotal total={total} entityName="products" />
+          <PaginationTotal total={total} entityName="Purchases" />
         ),
       }}
     >
