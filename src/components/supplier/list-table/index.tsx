@@ -253,20 +253,27 @@ export const SupplierListTable = () => {
         sorter
         width={150}
         defaultSortOrder={getDefaultSortOrder("lastOrderDate", sorters)}
-        render={(lastOrderDate: number) => {
+        render={(lastOrderDate) => {
           return (
-            <NumberField
-              value={lastOrderDate}
+            // <NumberField
+            //   value={lastOrderDate}
+            //   style={{
+            //     width: "80px",
+            //     fontVariantNumeric: "tabular-nums",
+            //     whiteSpace: "nowrap",
+            //     textAlign: "right",
+            //   }}
+            //   options={{
+            //     style: "date"
+            //   }}
+            // />
+            <Typography.Text
               style={{
-                width: "80px",
-                fontVariantNumeric: "tabular-nums",
                 whiteSpace: "nowrap",
-                textAlign: "right",
               }}
-              options={{
-                style: "date"
-              }}
-            />
+            >
+              {lastOrderDate}
+            </Typography.Text>
           );
         }}
       />
