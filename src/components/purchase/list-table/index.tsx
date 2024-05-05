@@ -27,7 +27,7 @@ import { PaginationTotal } from "../../paginationTotal";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
 
-export const PurchaseListTable = () => {
+export const SalesListTable = () => {
   const { token } = theme.useToken();
   const t = useTranslate();
   const go = useGo();
