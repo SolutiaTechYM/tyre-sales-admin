@@ -53,6 +53,29 @@ export interface IUser {
 // }
 
 
+// export interface IPurchase {
+//   id: number;
+//   createdAt: string;
+//   name: string;
+//   price: number;
+//   credit: number;
+//   description:description;
+// }
+export interface IPurchase {
+  id: number;
+  createdAt: string;
+  rowdata:RowData[];
+}
+interface RowData {
+  // suppliername: string | number;
+  product: string | number;
+  description: string;
+  quantity: number;
+  unitprice: number;
+  // totalprice: number;
+  // payment: number;
+}
+
 
 export interface IProduct {
   id: number;
@@ -64,6 +87,23 @@ export interface IProduct {
     id: number;
   };
 }
+
+
+export interface IInvoice {
+  contact: number;
+  company: string;
+  name: string;
+
+ id: number | string;
+  images: IFile & { thumbnailUrl?: string };
+  curr_price: number;
+  category: {
+    id: number;
+  };
+}
+
+
+
 
 
 export interface Iiepd {

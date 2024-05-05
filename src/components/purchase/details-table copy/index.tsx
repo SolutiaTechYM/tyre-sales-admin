@@ -13,7 +13,7 @@ import {
   useSelect,
   useTable,
 } from "@refinedev/antd";
-import { ICategory, IProduct } from "../../../interfaces";
+import { ICategory, IProduct, RowData } from "../../../interfaces";
 import {
   Avatar,
   Button,
@@ -28,254 +28,143 @@ import { PaginationTotal } from "../../paginationTotal";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
 
-export const PurchaseDetailsEditableTable = () => {
+export const PurchaseDetailsEditableTable = ({
+  data,
+  setData,
+}: {
+  data: RowData[];
+  setData: (data: RowData[]) => void;
+}) => {
   const { token } = theme.useToken();
   const t = useTranslate();
   const go = useGo();
   const { pathname } = useLocation();
   const { showUrl } = useNavigation();
+  
+  const handleDeleteRow = (index: number) => {
+    const newData = [...data];
+    newData.splice(index, 1);
+    setData(newData);
+  };
+  
+  
 
-  const { tableProps, sorters, filters } = useTable<IProduct, HttpError>({
-    filters: {
-      initial: [
-        {
-          field: "description",
-          operator: "contains",
-          value: "",
-        },
-        {
-          field: "name",
-          operator: "contains",
-          value: "",
-        },
-        {
-          field: "category.id",
-          operator: "in",
-          value: [],
-        },
-        {
-          field: "isActive",
-          operator: "in",
-          value: [],
-        },
-      ],
-    },
-  });
+    return (
+      <Table
+        dataSource={data}
+        rowKey="id"
+        scroll={{ x: true }}
+      >
+        {/* <Table.Column
+           title={t("Supplier Name")}
 
-  const { selectProps: categorySelectProps, queryResult } =
-    useSelect<ICategory>({
-      resource: "categories",
-      optionLabel: "title",
-      optionValue: "id",
-      defaultValue: getDefaultFilter("category.id", filters, "in"),
-    });
+          dataIndex="suppliername"
+          key="suppliername"
+          // width={80}
+          align="center"
 
-  const categories = queryResult?.data?.data || [];
-
-  return (
-    <Table
-      {...tableProps}
-      rowKey="id"
-      scroll={{ x: true }}
-      pagination={{
-        ...tableProps.pagination,
-        showTotal: (total) => (
-          <PaginationTotal total={total} entityName="products" />
-        ),
-      }}
-    >
-      <Table.Column
-        title={
-          <Typography.Text
-            style={{
-              whiteSpace: "nowrap",
-            }}
-          >
-            Product ID #
-          </Typography.Text>
-        }
-        dataIndex="id"
-        key="id"
-        width={80}
-        render={(value) => (
-          <Typography.Text
-            style={{
-              whiteSpace: "nowrap",
-            }}
-          >
-            #{value}
-          </Typography.Text>
-        )}
-        filterIcon={(filtered) => (
-          <SearchOutlined
-            style={{
-              color: filtered ? token.colorPrimary : undefined,
-            }}
-          />
-        )}
-        defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
-        filterDropdown={(props) => (
-          <FilterDropdown {...props}>
-            <InputNumber
-              addonBefore="#"
-              style={{ width: "100%" }}
-              placeholder={t("products.filter.id.placeholder")}
-            />
-          </FilterDropdown>
-        )}
-      />
-      <Table.Column
-        title={t("purchases.fields.details.qty")}
-        dataIndex="price"
-        key="price"
-        align="right"
-        sorter
-        // defaultSortOrder={getDefaultSortOrder("price", sorters)}
-        render={(qty: number) => {
-          return (
-            <Typography.Text
-              style={{
-                whiteSpace: "nowrap",
-              }}
-            >
-              {qty}
-            </Typography.Text>
-          );
-        }}
-      />
-      <Table.Column
-        title={t("purchases.fields.details.unitPrice")}
-        dataIndex="price"
-        key="price"
-        align="right"
-        sorter
-        defaultSortOrder={getDefaultSortOrder("price", sorters)}
-        render={(price: number) => {
-          return (
-            <NumberField
-              value={price}
-              style={{
-                width: "80px",
-                fontVariantNumeric: "tabular-nums",
-                whiteSpace: "nowrap",
-              }}
-              options={{
-                style: "currency",
-                currency: "USD",
-              }}
-            />
-          );
-        }}
-      />
-      <Table.Column
-        title={t("purchases.fields.details.total")}
-        dataIndex="price"
-        key="price"
-        align="right"
-        sorter
-        //defaultSortOrder={getDefaultSortOrder("price", sorters)}
-        render={(price: number) => {
-          return (
-            <NumberField
-              value={price * price}
-              style={{
-                width: "80px",
-                fontVariantNumeric: "tabular-nums",
-                whiteSpace: "nowrap",
-              }}
-              options={{
-                style: "currency",
-                currency: "USD",
-              }}
-            />
-          );
-        }}
-      />
-      <Table.Column
-        title={t("purchases.fields.details.name")}
-        dataIndex="name"
-        key="name"
-        filterIcon={(filtered) => (
-          <SearchOutlined
-            style={{
-              color: filtered ? token.colorPrimary : undefined,
-            }}
-          />
-        )}
-        defaultFilteredValue={getDefaultFilter("name", filters, "contains")}
-        filterDropdown={(props) => (
-          <FilterDropdown {...props}>
-            <Input placeholder={t("purchases.filter.supplier.placeholder")} />
-          </FilterDropdown>
-        )}
-        render={(value: string) => {
-          return (
-            <Typography.Text
-              style={{
-                whiteSpace: "nowrap",
-              }}
-            >
+          render={(value) => (
+            <Typography.Text style={{ whiteSpace: "nowrap" }}>
               {value}
             </Typography.Text>
-          );
-        }}
-      />
-      <Table.Column<IProduct>
-        title={t("products.fields.category")}
-        dataIndex={["category", "title"]}
-        key="category.id"
-        width={128}
-        defaultFilteredValue={getDefaultFilter("category.id", filters, "in")}
-        filterDropdown={(props) => {
-          return (
-            <FilterDropdown
-              {...props}
-              selectedKeys={props.selectedKeys.map((item) => Number(item))}
-            >
-              <Select
-                {...categorySelectProps}
-                style={{ width: "200px" }}
-                allowClear
-                mode="multiple"
-                placeholder={t("products.filter.category.placeholder")}
-              />
-            </FilterDropdown>
-          );
-        }}
-        render={(_, record) => {
-          const category = categories.find(
-            (category) => category?.id === record.category?.id
-          );
+          )}
+        /> */}
 
-          return (
-            <Typography.Text
-              style={{
-                whiteSpace: "nowrap",
-              }}
-            >
-              {category?.title || "-"}
+        <Table.Column
+          title={t("Product ID")}
+          dataIndex="product"
+          key="product"
+          align="center"
+          sorter
+          render={(value) => (
+            <Typography.Text style={{ whiteSpace: "nowrap" }}>
+              {value}
             </Typography.Text>
-          );
-        }}
-      />
-      <Table.Column
-        title={t("table.actions")}
-        key="actions"
-        fixed="right"
+          )}
+        />
+        <Table.Column
+          title={t("Description")}
+          dataIndex="description"
+          key="description"
+          align="center"
+
+          sorter
+          render={(value) => (
+            <Typography.Text style={{ whiteSpace: "nowrap" }}>
+              {value}
+            </Typography.Text>
+          )}
+        />
+        <Table.Column
+          title={t("purchases.fields.details.qty")}
+          dataIndex="quantity"
+          key="quantity"
+          align="center"
+
+          
+          sorter
+          render={(qty) => (
+            <Typography.Text style={{ whiteSpace: "nowrap" }}>
+              {qty}
+            </Typography.Text>
+          )}
+        />
+        <Table.Column
+          title={t("Unit Price")}
+          dataIndex="unitprice"
+          key="unitprice"
+          align="center"
+
+          
+          sorter
+          render={(value) => (
+            <Typography.Text style={{ whiteSpace: "nowrap" }}>
+              {value}
+            </Typography.Text>
+          )}
+        />
+        <Table.Column
+        title={t("Total Price")}
+        dataIndex="totalprice"
+        key="totalprice"
         align="center"
-        render={(_, record: IProduct) => {
-          return (
-            <DeleteButton
-              type="text"
-              //recordItemId={product?.id}
-              //resource="products"
-              // onSuccess={() => {
-              //   handleDrawerClose();
-              // }}
-            />
-          );
-        }}
+
+        
+        sorter
+        render={(value) => (
+          <Typography.Text style={{ whiteSpace: "nowrap" }}>
+            {value}
+          </Typography.Text>
+        )}
       />
-    </Table>
-  );
+       {/* <Table.Column
+        title={t("Credit")}
+        dataIndex="credit"
+        key="credit"
+        align="center"
+
+        
+        sorter
+        render={(value) => (
+          <Typography.Text style={{ whiteSpace: "nowrap" }}>
+            {value}
+          </Typography.Text>
+        )}
+      /> */}
+        <Table.Column
+          title="Action"
+          key="action"
+          fixed="right"
+          render={(_, record, index) => (
+            <Button type="primary" onClick={() => handleDeleteRow(index)}>
+              Delete
+            </Button>
+          )}
+        />
+      </Table>
+    );
+  
 };
+
+
+

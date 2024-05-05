@@ -16,8 +16,8 @@ export const PurchaseList = ({ children }: PropsWithChildren) => {
   const { isLoading, triggerExport } = useExport<IPurchase>({
     // sorters,
     // filters,
-    pageSize: 50,
-    maxItemCount: 50,
+    // pageSize: 50,
+    // maxItemCount: 50,
     mapData: (item) => {
       return {
         id: item.id,

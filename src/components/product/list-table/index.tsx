@@ -2,9 +2,11 @@ import {
   HttpError,
   getDefaultFilter,
   useGo,
+  useModal,
   useNavigation,
   useTranslate,
 } from "@refinedev/core";
+
 import {
   FilterDropdown,
   NumberField,
@@ -25,7 +27,7 @@ import {
 } from "antd";
 import { ProductStatus } from "../status";
 import { PaginationTotal } from "../../paginationTotal";
-import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
+import { EyeOutlined, FilePdfOutlined, SearchOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 
@@ -35,7 +37,9 @@ export const ProductListTable = () => {
   const go = useGo();
   const { pathname } = useLocation();
   const { showUrl } = useNavigation();
+  const { show, visible, close } = useModal();
 
+  
   const { tableProps, sorters, filters } = useTable<IProduct, HttpError>({
     filters: {
       initial: [
@@ -358,21 +362,30 @@ export const ProductListTable = () => {
         align="center"
         render={(_, record: IProduct) => {
           return (
+            // <Button
+            //   icon={<EyeOutlined />}
+            //   onClick={() => {
+            //     return go({
+            //       to: `${showUrl("products", record.id)}`,
+            //       query: {
+            //         to: pathname,
+            //       },
+            //       options: {
+            //         keepQuery: true,
+            //       },
+            //       type: "replace",
+            //     });
+            //   }}
+            // />
+
             <Button
-              icon={<EyeOutlined />}
-              onClick={() => {
-                return go({
-                  to: `${showUrl("products", record.id)}`,
-                  query: {
-                    to: pathname,
-                  },
-                  options: {
-                    keepQuery: true,
-                  },
-                  type: "replace",
-                });
-              }}
-            />
+                      size="small"
+                      icon={<FilePdfOutlined />}
+                      onClick={() => {
+                        // setRecord(record);
+                        show();
+                      }}
+                    />
           );
         }}
       />
