@@ -362,30 +362,30 @@ export const ProductListTable = () => {
         align="center"
         render={(_, record: IProduct) => {
           return (
-            // <Button
-            //   icon={<EyeOutlined />}
-            //   onClick={() => {
-            //     return go({
-            //       to: `${showUrl("products", record.id)}`,
-            //       query: {
-            //         to: pathname,
-            //       },
-            //       options: {
-            //         keepQuery: true,
-            //       },
-            //       type: "replace",
-            //     });
-            //   }}
-            // />
-
             <Button
-                      size="small"
-                      icon={<FilePdfOutlined />}
-                      onClick={() => {
-                        // setRecord(record);
-                        show();
-                      }}
-                    />
+              icon={<EyeOutlined />}
+              onClick={() => {
+                return go({
+                  to: `${showUrl("products", record.id)}`,
+                  query: {
+                    to: pathname,
+                  },
+                  options: {
+                    keepQuery: true,
+                  },
+                  type: "replace",
+                });
+              }}
+            />
+
+            // <Button
+            //           size="small"
+            //           icon={<FilePdfOutlined />}
+            //           onClick={() => {
+            //             // setRecord(record);
+            //             show();
+            //           }}
+            //         />
           );
         }}
       />
