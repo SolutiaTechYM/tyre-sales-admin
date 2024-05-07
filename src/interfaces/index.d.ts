@@ -1,4 +1,4 @@
-import { Dayjs } from "dayjs";
+// import { Dayjs } from "dayjs";
 
 // export interface IOrderChart {
 //   count: number;
@@ -85,6 +85,7 @@ export interface IProduct {
   curr_price: number;
   category: {
     id: number;
+    title: string;
   };
 }
 
@@ -238,6 +239,9 @@ export interface ICategory {
   id: number;
   title: string;
   description: string;
+  quantity: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 // export interface IOrderFilterVariables {
