@@ -24,7 +24,7 @@ import {
   Segmented,
   Spin,
 } from "antd";
-import { IProduct, ICategory, RowData, IPurchase } from "../../../interfaces";
+import { IProduct, ICategory, RowData, IPurchase, ISupplier } from "../../../interfaces";
 import { useSearchParams } from "react-router-dom";
 import { Drawer } from "../../drawer";
 import { UploadOutlined } from "@ant-design/icons";
@@ -68,13 +68,14 @@ export const PurchaseDrawerForm = (props: Props) => {
   //   formProps.form.setFieldsValue({ totalprice: totalPrice });
   // }, [quantity, unitPrice, formProps.form]);
 
-  const { selectProps: categorySelectProps } = useSelect<ICategory>({
-    resource: "categories",
-    optionLabel: "title", // Add this line
+  const { selectProps: supplierSelectProps } = useSelect<ISupplier>({
+    resource: "suppliers",
+    optionLabel: "name", // Add this line
   });
   const { selectProps: productSelectProps } = useSelect<IProduct>({
     resource: "products",
     optionLabel: "name", // Add this line
+    optionValue: "id", // Add this line
   });
 
   useEffect(() => {
@@ -82,9 +83,9 @@ export const PurchaseDrawerForm = (props: Props) => {
     if (tableData.length === 0) {
       settotalPrice(0);
     } else {
-      var temp = 0;
+      let temp = 0;
       tableData.forEach((product) => {
-        temp += product.quantity * product.unitprice;
+        temp += product.totalprice;
       });
       settotalPrice(temp);
     }
@@ -183,7 +184,7 @@ export const PurchaseDrawerForm = (props: Props) => {
                 },
               ]}
             >
-              <Select {...categorySelectProps} />
+              <Select {...supplierSelectProps} />
             </Form.Item>
 
             <Form.Item
@@ -195,8 +196,8 @@ export const PurchaseDrawerForm = (props: Props) => {
                   </Form.Item>
 
                   <Form.Item
-                      label={t("Total Price")}
-                      name="totalprice"
+                      label={t("Grand Total")}
+                      // name="totalPrice"
                       className={styles.formItem}
                     >
                       <InputNumber
@@ -320,7 +321,7 @@ export const PurchaseDrawerForm = (props: Props) => {
                           // formProps.form.getFieldValue("payment")
                         ) {
                           const selectedCategory = (
-                            categorySelectProps.options || []
+                            supplierSelectProps.options || []
                           ).find(
                             (option) =>
                               option.value ===
@@ -336,17 +337,20 @@ export const PurchaseDrawerForm = (props: Props) => {
 
                           const newRow = {
                             // suppliername: selectedCategory?.label?.toString() || "",
-                            product: selectedProduct?.label?.toString() || "",
-                            productID: selectedProduct?.value?.toString() || "",
-                            description:
-                              formProps.form.getFieldValue("description"),
+                            name: selectedProduct?.label?.toString() || "",
+                            productID: selectedProduct?.value || "",
                             quantity: formProps.form.getFieldValue("quantity"),
                             unitprice:
                               formProps.form.getFieldValue("unitprice"),
-                            // totalprice: formProps.form.getFieldValue("totalprice"),
+                            totalprice: formProps.form.getFieldValue("unitprice") * formProps.form.getFieldValue("quantity"),
                             // payment: formProps.form.getFieldValue("payment"),
                           };
                           setTableData([...tableData, newRow]);
+                          formProps.form.setFieldsValue({
+                            proname: "",
+                            quantity: "",
+                            unitprice: "",
+                          });
                         } else {
                           // Alert or handle the case where some fields are empty
                           // For example, show a message to the user
@@ -392,11 +396,17 @@ export const PurchaseDrawerForm = (props: Props) => {
                   if (tableData.length !== 0) {
                     try {
                       const payment = formProps.form.getFieldValue("payment");
+                      const supplier = formProps.form.getFieldValue("suppliername");
+                      const description = formProps.form.getFieldValue("description");
 
+                      if(!supplier) {
+                        chooseasupplier();
+                        return;
+                      }
                       if (payment) {
                         const supplierId =
                           formProps.form.getFieldValue("suppliername");
-                        const response = await fetch(`${apiUrl}/purchase`, {
+                        const response = await fetch(`${apiUrl}/purchases`, {
                           method: "POST",
                           headers: {
                             "Content-Type": "application/json",
@@ -405,6 +415,8 @@ export const PurchaseDrawerForm = (props: Props) => {
                             purchaseDetails: tableData,
                             supplierId,
                             payment,
+                            totalPrice,
+                            description
                           }),
                         });
 
