@@ -496,11 +496,11 @@
     }
   },
   "purchases": {
-    "products": "Products",
+    "purchases": "Purchases",
     "titles": {
-      "list": "Products",
-      "create": "Create Product",
-      "edit": "Edit Product"
+      "list": "Purchases",
+      "create": "Create Purchase",
+      "edit": "Edit Purchase"
     },
     "fields": {
       "id": "ID",
