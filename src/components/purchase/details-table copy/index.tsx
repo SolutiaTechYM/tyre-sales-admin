@@ -54,6 +54,9 @@ export const PurchaseDetailsEditableTable = ({
         dataSource={data}
         rowKey="id"
         scroll={{ x: true }}
+        pagination={{
+          hideOnSinglePage: true,
+        }}
       >
         {/* <Table.Column
            title={t("Supplier Name")}
