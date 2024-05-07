@@ -64,15 +64,15 @@ export interface IUser {
 export interface IPurchase {
   id: number;
   createdAt: string;
+  description: string;
   rowdata:RowData[];
 }
 interface RowData {
   // suppliername: string | number;
-  product: string | number;
-  description: string;
+  productID: string | number;
   quantity: number;
   unitprice: number;
-  // totalprice: number;
+  totalprice: number;
   // payment: number;
 }
 
