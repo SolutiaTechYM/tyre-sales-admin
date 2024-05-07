@@ -48,14 +48,14 @@ const currentQuanitity=10
   });
   const product = queryResult.data?.data;
 
-  const { data: categoryData } = useOne<ICategory, HttpError>({
-    resource: "categories",
-    id: product?.category?.id,
-    queryOptions: {
-      enabled: !!product?.category?.id,
-    },
-  });
-  const category = categoryData?.data;
+  // const { data: categoryData } = useOne<ICategory, HttpError>({
+  //   resource: "categories",
+  //   id: product?.category?.id,
+  //   queryOptions: {
+  //     enabled: !!product?.category?.id,
+  //   },
+  // });
+  // const category = categoryData?.data;
 
   const handleDrawerClose = () => {
     if (props?.onClose) {
@@ -149,7 +149,7 @@ const currentQuanitity=10
                   {t("products.fields.category")}
                 </Typography.Text>
               ),
-              value: <Typography.Text>{category?.title}</Typography.Text>,
+              value: <Typography.Text>{product?.category?.title}</Typography.Text>,
             },
             {
               label: (
