@@ -71,10 +71,24 @@ export const PurchaseDetailsEditableTable = ({
         /> */}
 
         <Table.Column
-          title={t("Product ID")}
+          title={t("ID")}
           dataIndex="product"
           key="product"
-          align="center"
+          // align="center"
+          sorter
+          render={(value) => (
+            <Typography.Text style={{ whiteSpace: "nowrap" }}>
+              {value}
+            </Typography.Text>
+          )}
+        />
+        
+        <Table.Column
+          title={t("Product Name")}
+          dataIndex="name"
+          key="name"
+          // align="center"
+
           sorter
           render={(value) => (
             <Typography.Text style={{ whiteSpace: "nowrap" }}>
@@ -83,12 +97,12 @@ export const PurchaseDetailsEditableTable = ({
           )}
         />
         <Table.Column
-          title={t("Description")}
-          dataIndex="description"
-          key="description"
-          align="center"
+          title={t("Category")}
+          dataIndex="category"
+          key="category"
+          // align="center"
 
-          sorter
+          // sorter
           render={(value) => (
             <Typography.Text style={{ whiteSpace: "nowrap" }}>
               {value}
@@ -99,7 +113,7 @@ export const PurchaseDetailsEditableTable = ({
           title={t("purchases.fields.details.qty")}
           dataIndex="quantity"
           key="quantity"
-          align="center"
+          align="right"
 
           
           sorter
@@ -113,7 +127,7 @@ export const PurchaseDetailsEditableTable = ({
           title={t("Unit Price")}
           dataIndex="unitprice"
           key="unitprice"
-          align="center"
+          align="right"
 
           
           sorter
@@ -127,7 +141,7 @@ export const PurchaseDetailsEditableTable = ({
         title={t("Total Price")}
         dataIndex="totalprice"
         key="totalprice"
-        align="center"
+        align="right"
 
         
         sorter
@@ -154,6 +168,7 @@ export const PurchaseDetailsEditableTable = ({
         <Table.Column
           title="Action"
           key="action"
+          align="center"
           fixed="right"
           render={(_, record, index) => (
             <Button type="primary" onClick={() => handleDeleteRow(index)}>
