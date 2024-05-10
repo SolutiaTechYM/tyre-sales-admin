@@ -24,12 +24,12 @@ import {
   Segmented,
   Spin,
 } from "antd";
-import { IProduct, ICategory, RowData, IPurchase, ISupplier } from "../../../interfaces";
+import { IProduct, ICategory, RowData, IPurchase, ISupplier, ISales, IUser } from "../../../interfaces";
 import { useSearchParams } from "react-router-dom";
 import { Drawer } from "../../drawer";
 import { UploadOutlined } from "@ant-design/icons";
 import { useStyles } from "./styled";
-import { PurchaseDetailsEditableTable } from "../details-table copy";
+import { SaleDetailsEditableTable } from "../details-table copy";
 
 type Props = {
   id?: BaseKey;
@@ -38,7 +38,7 @@ type Props = {
   onMutationSuccess?: () => void;
 };
 
-export const PurchaseDrawerForm = (props: Props) => {
+export const SaleDrawerForm = (props: Props) => {
   const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
   const go = useGo();
@@ -51,8 +51,8 @@ export const PurchaseDrawerForm = (props: Props) => {
   const [totalPrice, settotalPrice] = useState(0);
 
   const { drawerProps, formProps, close, saveButtonProps, formLoading } =
-    useDrawerForm<IPurchase>({
-      resource: "purchases",
+    useDrawerForm<ISales>({
+      resource: "sales",
       id: props?.id, // when undefined, id will be read from the URL.
       action: props.action,
       redirect: false,
@@ -68,8 +68,8 @@ export const PurchaseDrawerForm = (props: Props) => {
   //   formProps.form.setFieldsValue({ totalprice: totalPrice });
   // }, [quantity, unitPrice, formProps.form]);
 
-  const { selectProps: supplierSelectProps } = useSelect<ISupplier>({
-    resource: "suppliers",
+  const { selectProps: supplierSelectProps } = useSelect<IUser>({
+    resource: "users",
     optionLabel: "name", // Add this line
   });
   const { selectProps: productSelectProps } = useSelect<IProduct>({
@@ -160,7 +160,7 @@ export const PurchaseDrawerForm = (props: Props) => {
   const images = Form.useWatch("images", formProps.form);
   const image = images?.[0] || null;
   const previewImageURL = image?.url || image?.response?.url;
-  const title = props.action === "edit" ? null : t("purchases.actions.add");
+  const title = props.action === "edit" ? null : t("Add new Sales");
 
   return (
     <Drawer
@@ -175,8 +175,8 @@ export const PurchaseDrawerForm = (props: Props) => {
         <Form {...formProps} layout="vertical">
           <Flex vertical>
             <Form.Item
-              label={t("purchases.fields.supplier")}
-              name="suppliername"
+              label={t("Customer")}
+              name="customername"
               className={styles.formItem}
               rules={[
                 {
@@ -244,7 +244,7 @@ export const PurchaseDrawerForm = (props: Props) => {
               }}
             >
               <Flex justify="space-between" style={{marginBottom:'15px'}}>
-              <h3 style={{marginBottom:'20px'}}>Add Products to Purchase</h3>
+              <h3 style={{marginBottom:'20px'}}>Add Products to Sale</h3>
               <Button
                 type="primary"
                 onClick={() => {
@@ -371,7 +371,7 @@ export const PurchaseDrawerForm = (props: Props) => {
                   </Form.Item>
                   </Flex>)}
 
-              <PurchaseDetailsEditableTable
+              <SaleDetailsEditableTable
                 data={tableData}
                 setData={setTableData}
               />
@@ -423,7 +423,22 @@ export const PurchaseDrawerForm = (props: Props) => {
                         if (response.ok) {
                           // Handle successful response
                           console.log("Purchase details saved successfully");
-                          onDrawerCLose(); // Close the drawer
+                          // onDrawerCLose(); // Close the drawer
+                          formProps.form.resetFields();
+            setTableData([]);
+            settotalPrice(0);
+            go({
+              to: getToPath({
+                action: "list",
+              }) ?? "",
+              query: {
+                to: undefined,
+              },
+              options: {
+                keepQuery: true,
+              },
+              type: "replace",
+            });
                         } else {
                           // Handle error response
                           console.error("Failed to save purchase details");

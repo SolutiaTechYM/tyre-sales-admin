@@ -12,7 +12,7 @@ import {
   useSelect,
   useTable,
 } from "@refinedev/antd";
-import { IProduct, IPurchase } from "../../../interfaces";
+import { IProduct, ISales } from "../../../interfaces";
 import {
   Avatar,
   Button,
@@ -28,14 +28,14 @@ import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
 import { log } from "console";
 
-export const PurchaseListTable = () => {
+export const SaleListTable = () => {
   const { token } = theme.useToken();
   const t = useTranslate();
   const go = useGo();
   const { pathname } = useLocation();
   const { showUrl } = useNavigation();
 
-  const { tableProps, sorters, filters } = useTable<IPurchase, HttpError>({
+  const { tableProps, sorters, filters } = useTable<ISales, HttpError>({
     filters: {
       initial: [
         {
@@ -70,7 +70,7 @@ export const PurchaseListTable = () => {
       pagination={{
         ...tableProps.pagination,
         showTotal: (total) => (
-          <PaginationTotal total={total} entityName="urchases" />
+          <PaginationTotal total={total} entityName="sales" />
         ),
       }}
     >
@@ -134,9 +134,9 @@ export const PurchaseListTable = () => {
         }}
       />
       <Table.Column
-        title={t("purchases.fields.supplier")}
-        dataIndex="supplier"
-        key="supplier"
+        title={t("Customer")}
+        dataIndex="customer"
+        key="customer"
         filterIcon={(filtered) => (
           <SearchOutlined
             style={{
@@ -251,13 +251,13 @@ export const PurchaseListTable = () => {
         key="actions"
         fixed="right"
         align="center"
-        render={(_, record: IProduct) => {
+        render={(_, record: ISales) => {
           return (
             <Button
               icon={<EyeOutlined />}
               onClick={() => {
                 return go({
-                  to: `${showUrl("purchases", record.id)}`,
+                  to: `${showUrl("sales", record.id)}`,
                   query: {
                     to: pathname,
                   },

@@ -78,6 +78,22 @@ interface RowData {
   // payment: number;
 }
 
+export interface ISales {
+  id: number;
+  createdAt: string;
+  description: string;
+  due_amount:number;
+  price:number;
+  rowdata:RowDatasale[];
+}
+interface RowDatasale {
+  // suppliername: string | number;
+  productID: string | number;
+  quantity: number;
+  unitprice: number;
+  totalprice: number;
+  // payment: number;
+}
 
 export interface IProduct {
   id: number;

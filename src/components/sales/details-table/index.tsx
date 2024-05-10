@@ -12,7 +12,7 @@ import {
   useSelect,
   useTable,
 } from "@refinedev/antd";
-import { IProduct, IPurchase } from "../../../interfaces";
+import { ICategory, IProduct } from "../../../interfaces";
 import {
   Avatar,
   Button,
@@ -26,16 +26,15 @@ import {
 import { PaginationTotal } from "../../paginationTotal";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
-import { log } from "console";
 
-export const PurchaseListTable = () => {
+export const PurchaseDetailsTable = () => {
   const { token } = theme.useToken();
   const t = useTranslate();
   const go = useGo();
   const { pathname } = useLocation();
   const { showUrl } = useNavigation();
 
-  const { tableProps, sorters, filters } = useTable<IPurchase, HttpError>({
+  const { tableProps, sorters, filters } = useTable<IProduct, HttpError>({
     filters: {
       initial: [
         {
@@ -44,33 +43,43 @@ export const PurchaseListTable = () => {
           value: "",
         },
         {
-          field: "date",
+          field: "name",
           operator: "contains",
           value: "",
         },
         {
-          field: "id",
+          field: "category.id",
           operator: "in",
           value: [],
         },
-        
+        {
+          field: "isActive",
+          operator: "in",
+          value: [],
+        },
       ],
     },
   });
 
-  console.log(tableProps);
-  
+  const { selectProps: categorySelectProps, queryResult } =
+    useSelect<ICategory>({
+      resource: "categories",
+      optionLabel: "title",
+      optionValue: "id",
+      defaultValue: getDefaultFilter("category.id", filters, "in"),
+    });
+
+  const categories = queryResult?.data?.data || [];
+
   return (
     <Table
       {...tableProps}
-     
-      
       rowKey="id"
       scroll={{ x: true }}
       pagination={{
         ...tableProps.pagination,
         showTotal: (total) => (
-          <PaginationTotal total={total} entityName="urchases" />
+          <PaginationTotal total={total} entityName="products" />
         ),
       }}
     >
@@ -81,7 +90,7 @@ export const PurchaseListTable = () => {
               whiteSpace: "nowrap",
             }}
           >
-            ID 
+            Product ID #
           </Typography.Text>
         }
         dataIndex="id"
@@ -93,7 +102,7 @@ export const PurchaseListTable = () => {
               whiteSpace: "nowrap",
             }}
           >
-            {value}
+            #{value}
           </Typography.Text>
         )}
         filterIcon={(filtered) => (
@@ -107,7 +116,7 @@ export const PurchaseListTable = () => {
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
             <InputNumber
-              // addonBefore="#"
+              addonBefore="#"
               style={{ width: "100%" }}
               placeholder={t("products.filter.id.placeholder")}
             />
@@ -115,28 +124,76 @@ export const PurchaseListTable = () => {
         )}
       />
       <Table.Column
-        title={t("purchases.fields.createdAt")}
-        dataIndex="createdAt"
-        key="createdAt"
+        title={t("purchases.fields.details.qty")}
+        dataIndex="price"
+        key="price"
         align="right"
         sorter
         // defaultSortOrder={getDefaultSortOrder("price", sorters)}
-        render={(value: string) => {
+        render={(qty: number) => {
           return (
             <Typography.Text
               style={{
                 whiteSpace: "nowrap",
               }}
             >
-              {value.split("T")[0]}
+              {qty}
             </Typography.Text>
           );
         }}
       />
       <Table.Column
-        title={t("purchases.fields.supplier")}
-        dataIndex="supplier"
-        key="supplier"
+        title={t("purchases.fields.details.unitPrice")}
+        dataIndex="price"
+        key="price"
+        align="right"
+        sorter
+        defaultSortOrder={getDefaultSortOrder("price", sorters)}
+        render={(price: number) => {
+          return (
+            <NumberField
+              value={price}
+              style={{
+                width: "80px",
+                fontVariantNumeric: "tabular-nums",
+                whiteSpace: "nowrap",
+              }}
+              options={{
+                style: "currency",
+                currency: "USD",
+              }}
+            />
+          );
+        }}
+      />
+      <Table.Column
+        title={t("purchases.fields.details.total")}
+        dataIndex="price"
+        key="price"
+        align="right"
+        sorter
+        //defaultSortOrder={getDefaultSortOrder("price", sorters)}
+        render={(price: number) => {
+          return (
+            <NumberField
+              value={price * price}
+              style={{
+                width: "80px",
+                fontVariantNumeric: "tabular-nums",
+                whiteSpace: "nowrap",
+              }}
+              options={{
+                style: "currency",
+                currency: "USD",
+              }}
+            />
+          );
+        }}
+      />
+      <Table.Column
+        title={t("purchases.fields.details.name")}
+        dataIndex="name"
+        key="name"
         filterIcon={(filtered) => (
           <SearchOutlined
             style={{
@@ -162,112 +219,41 @@ export const PurchaseListTable = () => {
           );
         }}
       />
-      <Table.Column
-        title={t("purchases.fields.note")}
-        dataIndex="description"
-        key="description"
-        width={432}
-        filterIcon={(filtered) => (
-          <SearchOutlined
-            style={{
-              color: filtered ? token.colorPrimary : undefined,
-            }}
-          />
-        )}
-        defaultFilteredValue={getDefaultFilter(
-          "description",
-          filters,
-          "contains"
-        )}
-        filterDropdown={(props) => (
-          <FilterDropdown {...props}>
-            <Input placeholder={t("purchases.filter.note.placeholder")} />
-          </FilterDropdown>
-        )}
-        render={(description: string) => {
+      <Table.Column<IProduct>
+        title={t("products.fields.category")}
+        dataIndex={["category", "title"]}
+        key="category.id"
+        width={128}
+        defaultFilteredValue={getDefaultFilter("category.id", filters, "in")}
+        filterDropdown={(props) => {
           return (
-            <Typography.Paragraph
-              ellipsis={{ rows: 1, tooltip: true }}
+            <FilterDropdown
+              {...props}
+              selectedKeys={props.selectedKeys.map((item) => Number(item))}
+            >
+              <Select
+                {...categorySelectProps}
+                style={{ width: "200px" }}
+                allowClear
+                mode="multiple"
+                placeholder={t("products.filter.category.placeholder")}
+              />
+            </FilterDropdown>
+          );
+        }}
+        render={(_, record) => {
+          const category = categories.find(
+            (category) => category?.id === record.category?.id
+          );
+
+          return (
+            <Typography.Text
               style={{
-                maxWidth: "400px",
-                marginBottom: 0,
+                whiteSpace: "nowrap",
               }}
             >
-              {description}
-            </Typography.Paragraph>
-          );
-        }}
-      />
-      <Table.Column
-        title={t("products.fields.price")}
-        dataIndex="price"
-        key="price"
-        align="right"
-        sorter
-        defaultSortOrder={getDefaultSortOrder("price", sorters)}
-        render={(price: number) => {
-          return (
-            <NumberField
-              value={price}
-              style={{
-                width: "80px",
-                fontVariantNumeric: "tabular-nums",
-                whiteSpace: "nowrap",
-              }}
-              options={{
-                style: "currency",
-                currency: "USD",
-              }}
-            />
-          );
-        }}
-      />
-      <Table.Column
-        title={t("purchases.fields.credit")}
-        dataIndex="due_amount"
-        key="due_amount"
-        align="right"
-        sorter
-        //defaultSortOrder={getDefaultSortOrder("price", sorters)}
-        render={(credit: number) => {
-          return (
-            <NumberField
-              value={credit}
-              style={{
-                width: "80px",
-                fontVariantNumeric: "tabular-nums",
-                whiteSpace: "nowrap",
-              }}
-              options={{
-                style: "currency",
-                currency: "USD",
-              }}
-            />
-          );
-        }}
-      />
-      <Table.Column
-        title={t("table.actions")}
-        key="actions"
-        fixed="right"
-        align="center"
-        render={(_, record: IProduct) => {
-          return (
-            <Button
-              icon={<EyeOutlined />}
-              onClick={() => {
-                return go({
-                  to: `${showUrl("purchases", record.id)}`,
-                  query: {
-                    to: pathname,
-                  },
-                  options: {
-                    keepQuery: true,
-                  },
-                  type: "replace",
-                });
-              }}
-            />
+              {category?.title || "-"}
+            </Typography.Text>
           );
         }}
       />
