@@ -423,7 +423,22 @@ export const PurchaseDrawerForm = (props: Props) => {
                         if (response.ok) {
                           // Handle successful response
                           console.log("Purchase details saved successfully");
-                          onDrawerCLose(); // Close the drawer
+                          // onDrawerCLose(); // Close the drawer
+                          formProps.form.resetFields();
+            setTableData([]);
+            settotalPrice(0);
+            go({
+              to: getToPath({
+                action: "list",
+              }) ?? "",
+              query: {
+                to: undefined,
+              },
+              options: {
+                keepQuery: true,
+              },
+              type: "replace",
+            });
                         } else {
                           // Handle error response
                           console.error("Failed to save purchase details");
