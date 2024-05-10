@@ -1,5 +1,5 @@
 import { PurchaseDrawerForm } from "../../components/purchase/drawer-form";
 
-export const PurchaseEdit = () => {
-  return <PurchaseDrawerForm action="edit" />;
+export const SalesEdit = () => {
+  // return <SalesDrawerForm action="edit" />;
 };

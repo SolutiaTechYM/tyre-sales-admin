@@ -2,13 +2,13 @@ import { useGetToPath, useGo } from "@refinedev/core";
 import { PurchaseDrawerForm } from "../../components/purchase/drawer-form";
 import { useSearchParams } from "react-router-dom";
 
-export const PurchaseCreate = () => {
+export const SalesCreate = () => {
   const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
   const go = useGo();
 
   return (
-    <PurchaseDrawerForm
+    <SalesDrawerForm
       action="create"
       onMutationSuccess={() => {
         go({
