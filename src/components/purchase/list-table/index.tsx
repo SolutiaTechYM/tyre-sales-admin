@@ -26,6 +26,7 @@ import {
 import { PaginationTotal } from "../../paginationTotal";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
+import { log } from "console";
 
 export const PurchaseListTable = () => {
   const { token } = theme.useToken();
@@ -57,9 +58,13 @@ export const PurchaseListTable = () => {
     },
   });
 
+  console.log(tableProps);
+  
   return (
     <Table
       {...tableProps}
+     
+      
       rowKey="id"
       scroll={{ x: true }}
       pagination={{
@@ -219,8 +224,8 @@ export const PurchaseListTable = () => {
       />
       <Table.Column
         title={t("purchases.fields.credit")}
-        dataIndex="payment"
-        key="payment"
+        dataIndex="due_amount"
+        key="due_amount"
         align="right"
         sorter
         //defaultSortOrder={getDefaultSortOrder("price", sorters)}

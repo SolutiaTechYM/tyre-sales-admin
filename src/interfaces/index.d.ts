@@ -65,6 +65,8 @@ export interface IPurchase {
   id: number;
   createdAt: string;
   description: string;
+  due_amount:number;
+  price:number;
   rowdata:RowData[];
 }
 interface RowData {
