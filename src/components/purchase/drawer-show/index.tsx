@@ -15,12 +15,13 @@ import {
   Flex,
   Grid,
   List,
+  Table,
   Typography,
   theme,
 } from "antd";
 import { useSearchParams } from "react-router-dom";
 import { Drawer } from "../../drawer";
-import { ICategory, IProduct, IPurchase } from "../../../interfaces";
+import { ICategory, IProduct, IPurchase, RowData } from "../../../interfaces";
 import { DeleteButton, NumberField } from "@refinedev/antd";
 import { PurchaseStatus } from "../status";
 import { EditOutlined } from "@ant-design/icons";
@@ -47,15 +48,6 @@ export const PurchaseDrawerShow = (props: Props) => {
   });
   const purchase = queryResult.data?.data;
 
-  // const { data: categoryData } = useOne<ICategory, HttpError>({
-  //   resource: "categories",
-  //   id: product?.category?.id,
-  //   queryOptions: {
-  //     enabled: !!product?.category?.id,
-  //   },
-  // });
-  // const category = categoryData?.data;
-
   const handleDrawerClose = () => {
     if (props?.onClose) {
       props.onClose();
@@ -78,6 +70,31 @@ export const PurchaseDrawerShow = (props: Props) => {
       type: "replace",
     });
   };
+
+  const columns = [
+    {
+      title: 'Product Name',
+      dataIndex: 'productID',
+      key: 'productID',
+    },
+    {
+      title: 'Unit Price',
+      dataIndex: 'unitprice',
+      key: 'unitprice',
+      render: (value: number) => <NumberField value={value} options={{ style: 'currency', currency: 'USD' }} />,
+    },
+    {
+      title: 'Quantity',
+      dataIndex: 'quantity',
+      key: 'quantity',
+    },
+    {
+      title: 'Total',
+      dataIndex: 'totalprice',
+      key: 'totalprice',
+      render: (value: number) => <NumberField value={value} options={{ style: 'currency', currency: 'USD' }} />,
+    },
+  ];
 
   return (
     <Drawer
@@ -104,6 +121,12 @@ export const PurchaseDrawerShow = (props: Props) => {
           <Typography.Text type="secondary">
             {purchase?.description}
           </Typography.Text>
+          <Typography.Text>
+            Due Amount: <NumberField value={purchase?.due_amount || 0} options={{ style: 'currency', currency: 'USD' }} />
+          </Typography.Text>
+          <Typography.Text>
+            Total Price: <NumberField value={purchase?.price || 0} options={{ style: 'currency', currency: 'USD' }} />
+          </Typography.Text>
         </Flex>
         <Divider
           style={{
@@ -111,92 +134,16 @@ export const PurchaseDrawerShow = (props: Props) => {
             padding: 0,
           }}
         />
-        {/* <List
-          dataSource={[
-            {
-              label: (
-                <Typography.Text type="secondary">
-                  {t("purchases.fields.supplier")}
-                </Typography.Text>
-              ),
-              value: <Typography.Text>{product?.name}</Typography.Text>,
-            },
-            {
-              label: (
-                <Typography.Text type="secondary">
-                  {t("purchases.fields.price")}
-                </Typography.Text>
-              ),
-              value: (
-                <NumberField
-                  value={product?.price || 0}
-                  options={{
-                    style: "currency",
-                    currency: "USD",
-                  }}
-                />
-              ),
-            },
-            {
-              label: (
-                <Typography.Text type="secondary">
-                  {t("purchases.fields.credit")}
-                </Typography.Text>
-              ),
-              value: (
-                <NumberField
-                  value={product?.price || 0}
-                  options={{
-                    style: "currency",
-                    currency: "USD",
-                  }}
-                />
-              ),
-            },
-            {
-              label: (
-                <Typography.Text type="secondary">
-                  {t("purchases.fields.createdAt")}
-                </Typography.Text>
-              ),
-              value: (
-                <Typography.Text>
-                  {product?.createdAt.split("T")[0]}
-                </Typography.Text>
-              ),
-            },
-          ]}
-          renderItem={(item) => {
-            return (
-              <List.Item>
-                <List.Item.Meta
-                  style={{
-                    padding: "0 16px",
-                  }}
-                  avatar={item.label}
-                  title={item.value}
-                />
-              </List.Item>
-            );
-          }}
-        /> */}
-        <Divider
+        <Flex
+          vertical
+          gap={32}
           style={{
-            margin: 0,
-            padding: 10,
+            padding: "32px",
           }}
-        />
+        >
+          <Table dataSource={purchase?.rowdata} columns={columns} />
+        </Flex>
       </Flex>
-      {/* <Flex
-        vertical
-        gap={32}
-        style={{
-          padding: "32px",
-        }}
-      >
-        <PurchaseDetailsTable />
-        
-      </Flex> */}
 
       <Flex
         align="center"
