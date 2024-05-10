@@ -20,7 +20,7 @@ import {
 } from "antd";
 import { useSearchParams } from "react-router-dom";
 import { Drawer } from "../../drawer";
-import { ICategory, IProduct } from "../../../interfaces";
+import { ICategory, IProduct, IPurchase } from "../../../interfaces";
 import { DeleteButton, NumberField } from "@refinedev/antd";
 import { PurchaseStatus } from "../status";
 import { EditOutlined } from "@ant-design/icons";
@@ -41,20 +41,20 @@ export const PurchaseDrawerShow = (props: Props) => {
   const { token } = theme.useToken();
   const breakpoint = Grid.useBreakpoint();
 
-  const { queryResult } = useShow<IProduct, HttpError>({
-    resource: "products",
+  const { queryResult } = useShow<IPurchase, HttpError>({
+    resource: "purchases",
     id: props?.id, // when undefined, id will be read from the URL.
   });
-  const product = queryResult.data?.data;
+  const purchase = queryResult.data?.data;
 
-  const { data: categoryData } = useOne<ICategory, HttpError>({
-    resource: "categories",
-    id: product?.category?.id,
-    queryOptions: {
-      enabled: !!product?.category?.id,
-    },
-  });
-  const category = categoryData?.data;
+  // const { data: categoryData } = useOne<ICategory, HttpError>({
+  //   resource: "categories",
+  //   id: product?.category?.id,
+  //   queryOptions: {
+  //     enabled: !!product?.category?.id,
+  //   },
+  // });
+  // const category = categoryData?.data;
 
   const handleDrawerClose = () => {
     if (props?.onClose) {
@@ -99,10 +99,10 @@ export const PurchaseDrawerShow = (props: Props) => {
           }}
         >
           <Typography.Title level={5}>
-            Purchase ID : {product?.id}
+            Purchase ID : {purchase?.id}
           </Typography.Title>
           <Typography.Text type="secondary">
-            {product?.description}
+            {purchase?.description}
           </Typography.Text>
         </Flex>
         <Divider
@@ -111,7 +111,7 @@ export const PurchaseDrawerShow = (props: Props) => {
             padding: 0,
           }}
         />
-        <List
+        {/* <List
           dataSource={[
             {
               label: (
@@ -179,7 +179,7 @@ export const PurchaseDrawerShow = (props: Props) => {
               </List.Item>
             );
           }}
-        />
+        /> */}
         <Divider
           style={{
             margin: 0,
@@ -187,7 +187,7 @@ export const PurchaseDrawerShow = (props: Props) => {
           }}
         />
       </Flex>
-      <Flex
+      {/* <Flex
         vertical
         gap={32}
         style={{
@@ -195,7 +195,8 @@ export const PurchaseDrawerShow = (props: Props) => {
         }}
       >
         <PurchaseDetailsTable />
-      </Flex>
+        
+      </Flex> */}
 
       <Flex
         align="center"
@@ -206,7 +207,7 @@ export const PurchaseDrawerShow = (props: Props) => {
       >
         <DeleteButton
           type="text"
-          recordItemId={product?.id}
+          recordItemId={purchase?.id}
           resource="products"
           onSuccess={() => {
             handleDrawerClose();
@@ -220,9 +221,9 @@ export const PurchaseDrawerShow = (props: Props) => {
             }
 
             return go({
-              to: `${editUrl("products", product?.id || "")}`,
+              to: `${editUrl("purchases", purchase?.id || "")}`,
               query: {
-                to: "/products",
+                to: "/purchases",
               },
               options: {
                 keepQuery: true,

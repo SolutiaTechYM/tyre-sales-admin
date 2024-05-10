@@ -252,7 +252,7 @@ export const PurchaseListTable = () => {
               icon={<EyeOutlined />}
               onClick={() => {
                 return go({
-                  to: `${showUrl("products", record.id)}`,
+                  to: `${showUrl("purchases", record.id)}`,
                   query: {
                     to: pathname,
                   },
