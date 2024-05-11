@@ -1,292 +1,237 @@
 import {
-    Document,
-    Image,
-    Page,
-    StyleSheet,
-    View,
-    Text,
-    PDFViewer,
-  } from "@react-pdf/renderer";
-import { IInvoice } from "../../interfaces";
+  Document,
+  Image,
+  Page,
+  StyleSheet,
+  View,
+  Text,
+  PDFViewer,
+} from "@react-pdf/renderer";
+import tyreImage from "../../../src/images/icons8-tyre-64.png";
+import { useEffect, useState } from "react";
+import dayjs from "dayjs";
 
 
 
-//   import { API_URL } from "../../constants";
-  
-  type PdfProps = {
-    record: IInvoice | undefined;
-  };
-  
-  export const PdfLayout: React.FC = () => {
-    // const subtotal =
-    //   record?.missions.reduce((prev, cur) => {
-    //     return prev + cur?.day * cur?.daily_rate;
-    //   }, 0) ?? 0;
-  
-    return (
-      <PDFViewer style={styles.viewer}>
-        <Document>
-          <Page style={styles.page} size="A4">
-            <View>
-              {/* <Image
-                src={API_URL + record?.company?.logo?.url}
-                style={{ width: "120px", height: "auto" }}
-              /> */}
-              {/* <View style={styles.invoiceTextNumberContainer}>
-                <Text
-                  style={styles.invoiceText}
-                >{`Invoice: Invoice_#${record?.id}${record?.name}`}</Text>
-                <Text
-                  style={styles.invoiceId}
-                >{`Invoice ID: INVOICE_#${record?.id}`}</Text>
-              </View> */}
+const syntheticData = {
+  purchaseId: "PO-0123",
+  supplierName: "Acme Tyre Suppliers",
+  createdDate: "2023-05-11",
+  note: "Please deliver the order within 7 business days.",
+  totalPrice: 1250.75,
+  dueBalance: 875.52,
+  products: [
+    {
+      id: 1,
+      name: "All-Season Radial Tyre",
+      unitPrice: 75.99,
+      quantity: 4,
+      category: "Passenger Car Tyres",
+    },
+    {
+      id: 2,
+      name: "Off-Road Mud Tyre",
+      unitPrice: 125.25,
+      quantity: 2,
+      category: "Truck & SUV Tyres",
+    },
+    {
+      id: 3,
+      name: "High-Performance Summer Tyre",
+      unitPrice: 89.99,
+      quantity: 8,
+      category: "Passenger Car Tyres",
+    },
+  ],
+};
+
+export const PdfLayout: React.FC = () => {
+  const [todatdate,settodaydate]=useState("");
+
+  useEffect(() => {
+    const today = dayjs().format("YYYY-MM-DD");
+    settodaydate(today)
+    // console.log("Today's date:", today);
+  }, []);
+
+  return (
+    <PDFViewer style={styles.viewer}>
+      <Document>
+        <Page style={styles.page} size="A4">
+          <View style={styles.header}>
+            <Image src={tyreImage} style={styles.logo} />
+            <Text style={styles.title}>A.S.Enterprise</Text>
+          </View>
+          <View style={styles.bodycontainer}>
+
+
+          <View style={styles.infoContainer}>
+            <View style={styles.infoRow}>
+              <Text style={styles.infoLabel}>Purchase ID:</Text>
+              <Text style={styles.infoValue}>{syntheticData.purchaseId}</Text>
             </View>
-            <View style={styles.dividerLG} />
-  
-            <View style={styles.invoiceForFromContainer}>
-              <View style={styles.invoiceFor}>
-                <Text style={styles.invoiceForFromTitle}>invoice For:</Text>
-                <View>
-                  <Text style={styles.invoiceForFromText}>
-                    "Test"
-                  </Text>
-                  <Text style={styles.invoiceForFromText}>
-                    {/* {record?.contact?.first_name} */}
-                    "Test"
-
-                  </Text>
-                  <Text style={styles.invoiceForFromText}>
-                    {/* {record?.contact?.last_name}
-                     */}
-                    "Test"
-
-                  </Text>
-                  <Text style={styles.invoiceForFromText}>
-                    {/* {record?.contact?.email} */}
-                    "Test"
-
-                  </Text>
-                </View>
-              </View>
-  
-              <View style={styles.invoiceFrom}>
-                <Text style={styles.invoiceForFromTitle}>From:</Text>
-                <View>
-                  <Text style={styles.invoiceForFromText}>
-                    {/* {record?.company.name} */}
-                    "Test"
-
-                  </Text>
-                  <Text style={styles.invoiceForFromText}>
-                    {/* {record?.company.city} */}
-
-                  </Text>
-                  <Text style={styles.invoiceForFromText}>
-                    {/* {record?.company.address}, {record?.company.country}
-                     */}
-                    "Test"
-
-                  </Text>
-                </View>
-                <View style={styles.dividerSM} />
-                <View>
-                  <Text
-                    style={styles.invoiceForFromText}
-                  >"SDsfs"</Text>
-                  <Text
-                    style={styles.invoiceForFromText}
-                  >
-                    {/* {`Invoice Custom ID: ${record?.custom_id}`} */}
-                    "Test"
-
-                  </Text>
-                  <Text
-                    style={styles.invoiceForFromText}
-                  >
-                    "Test"
-
-                    {/* {`Invoice Date: ${record?.date}`} */}
-                    </Text>
-                </View>
-              </View>
+            <View style={styles.infoRow}>
+              <Text style={styles.infoLabel}>Supplier Name:</Text>
+              <Text style={styles.infoValue}>{syntheticData.supplierName}</Text>
             </View>
-  
-            <View style={styles.table}>
-              <View style={styles.tableHeader}>
-                <Text style={[styles.tableHeaderItem, { width: "40%" }]}>
-                  Mission
-                </Text>
-                <Text style={[styles.tableHeaderItem, { width: "20%" }]}>
-                  Day
-                </Text>
-                <Text style={[styles.tableHeaderItem, { width: "20%" }]}>
-                  Day Rate
-                </Text>
-                <Text style={[styles.tableHeaderItem, { width: "20%" }]}>
-                  Total
-                </Text>
-              </View>
-              {/* {record?.missions.map((item) => {
-                return (
-                  <View key={item.id} style={styles.tableRow}>
-                    <Text style={[styles.tableCol, { width: "40%" }]}>
-                      {item.mission}
-                    </Text>
-                    <Text style={[styles.tableCol, { width: "20%" }]}>
-                      {item?.day}
-                    </Text>
-                    <Text style={[styles.tableCol, { width: "20%" }]}>
-                      {item?.daily_rate}
-                    </Text>
-                    <Text style={[styles.tableCol, { width: "20%" }]}>
-                      {item?.daily_rate * item?.day}
-                    </Text>
-                  </View>
-                );
-              })} */}
+            <View style={styles.infoRow}>
+              <Text style={styles.infoLabel}>Created Date:</Text>
+              <Text style={styles.infoValue}>{syntheticData.createdDate}</Text>
             </View>
-  
-            <View style={styles.signatureTotalContainer}>
-              <View style={styles.signatureContainer}>
-                <Text style={styles.signatureText}>
-                  Signature: ________________
-                </Text>
-                <Text style={styles.signatureText}>
-                  Date:                     "Test"
-
-                </Text>
-              </View>
-  
-              {/* <View style={styles.totalContainer}>
-                <Text style={styles.totalText}>SUBTOTAL: {subtotal}</Text>
-                <Text style={styles.totalText}>
-                  Discount(%): {record?.discount}
-                </Text>
-                <Text style={styles.totalText}>Tax(%): {record?.tax}</Text>
-                <Text style={styles.totalText}>
-                  Total($):
-                  {subtotal +
-                    (subtotal * (record?.tax as number)) / 100 -
-                    (subtotal * (record?.discount as number)) / 100}
-                </Text>
-              </View> */}
+            <View style={styles.infoRow}>
+              <Text style={styles.infoLabel}>Note:</Text>
+              <Text style={styles.infoValue}>{syntheticData.note}</Text>
             </View>
-            <View style={styles.footer}>
-              <Text style={styles.footerText}>
-                "Test"
-                </Text>
-              <Text style={styles.footerText}>
-              "Test"
+            <View style={styles.infoRow}>
+              <Text style={styles.infoLabel}>Total Price:</Text>
+              <Text style={styles.infoValue}>${syntheticData.totalPrice.toFixed(2)}</Text>
+            </View>
+            <View style={styles.infoRow}>
+              <Text style={styles.infoLabel}>Due Balance:</Text>
+              <Text style={styles.infoValue}>${syntheticData.dueBalance.toFixed(2)}</Text>
+            </View>
+          </View>
 
+          <View style={styles.table}>
+            <View style={styles.tableHeader}>
+              <Text style={[styles.tableHeaderItem, { width: "10%" }]}>ID</Text>
+              <Text style={[styles.tableHeaderItem, { width: "40%" }]}>
+                Product Name
+              </Text>
+              <Text style={[styles.tableHeaderItem, { width: "20%" }]}>
+                Unit Price
+              </Text>
+              <Text style={[styles.tableHeaderItem, { width: "15%" }]}>
+                Quantity
+              </Text>
+              <Text style={[styles.tableHeaderItem, { width: "15%" }]}>
+                Category
               </Text>
             </View>
-          </Page>
-        </Document>
-      </PDFViewer>
-    );
-  };
-  
-  const styles = StyleSheet.create({
-    viewer: {
-      paddingTop: 32,
-      width: "100%",
-      height: "80vh",
-      border: "none",
-    },
-    page: {
-      display: "flex",
-      padding: "0.4in 0.4in",
-      fontSize: 12,
-      color: "#333",
-      backgroundColor: "#fff",
-    },
-    invoiceTextNumberContainer: {
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
-    },
-    invoiceText: {
-      color: "#3aabf0",
-    },
-    invoiceId: {
-      textAlign: "center",
-    },
-    invoiceForFromContainer: {
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "space-between",
-    },
-    invoiceForFromTitle: {
-      marginBottom: 24,
-    },
-    invoiceFor: {
-      flex: 1.5,
-    },
-    invoiceFrom: {
-      flex: 1,
-    },
-    invoiceForFromText: {
-      color: "#787878",
-      lineHeight: 1.5,
-    },
-    dividerSM: {
-      width: "100%",
-      height: 1,
-      marginTop: 12,
-      marginBottom: 12,
-      backgroundColor: "#e5e5e5",
-    },
-    dividerLG: {
-      width: "100%",
-      height: 1,
-      marginTop: 40,
-      marginBottom: 40,
-      backgroundColor: "#e5e5e5",
-    },
-    table: {
-      marginTop: 32,
-    },
-    tableHeader: {
-      display: "flex",
-      flexDirection: "row",
-      textAlign: "center",
-    },
-    tableHeaderItem: {
-      paddingVertical: 8,
-      border: "1px solid #000",
-      borderBottom: "none",
-    },
-    tableRow: {
-      display: "flex",
-      flexDirection: "row",
-    },
-    tableCol: {
-      paddingVertical: 8,
-      paddingHorizontal: 4,
-      border: "1px solid #000",
-    },
-    signatureTotalContainer: {
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "space-between",
-      marginTop: 32,
-    },
-    signatureContainer: {},
-    totalContainer: {},
-    signatureText: {
-      marginTop: 32,
-    },
-    totalText: {
-      marginTop: 16,
-    },
-    footer: {
-      borderTop: "1px solid #e5e5e5",
-      paddingTop: 8,
-      marginTop: "auto",
-    },
-    footerText: {
-      color: "#787878",
-      lineHeight: 1.5,
-    },
-  });
+            {syntheticData.products.map((product) => (
+              <View key={product.id} style={styles.tableRow}>
+                <Text style={[styles.tableCol, { width: "10%" }]}>
+                  {product.id}
+                </Text>
+                <Text style={[styles.tableCol, { width: "40%" }]}>
+                  {product.name}
+                </Text>
+                <Text style={[styles.tableCol, { width: "20%" }]}>
+                  ${product.unitPrice.toFixed(2)}
+                </Text>
+                <Text style={[styles.tableCol, { width: "15%" }]}>
+                  {product.quantity}
+                </Text>
+                <Text style={[styles.tableCol, { width: "15%" }]}>
+                  {product.category}
+                </Text>
+              </View>
+            ))}
+          </View>
+          <View style={styles.signatureContainer}>
+              <Text style={styles.signatureText}>
+                Signature: ________________
+              </Text>
+              <Text style={styles.signatureText}>
+                Date: {todatdate}
+              </Text>
+            </View>
+            </View>
+          <View style={styles.footer}>
+            <Text style={styles.footerText}>"Footer one"</Text>
+            <Text style={styles.footerText}>
+            "Footer one2", "Footer one3"
+            </Text>
+          </View>
+        </Page>
+      </Document>
+    </PDFViewer>
+  );
+};
+
+const styles = StyleSheet.create({
+  viewer: {
+    paddingTop: 32,
+    width: "100%",
+    height: "80vh",
+    border: "none",
+  },
+  page: {
+    display: "flex",
+    fontSize: 12,
+    color: "#333",
+    backgroundColor: "#fff",
+    flexDirection: "column",
+  },
+  header: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFA07A", // Coral orange shade
+    padding: 16,
+  },
+  logo: {
+    width: 50,
+    height: 50,
+    marginRight: 16,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+  },bodycontainer : {
+    padding: "0.4in 0.4in 0.4in 0.4in",
+
+  },
+  infoContainer: {
+    marginBottom: 16,
+
+  },
+  infoRow: {
+    display: "flex",
+    flexDirection: "row",
+    marginBottom: 8,
+  },
+  infoLabel: {
+    fontWeight: "bold",
+    marginRight: 8,
+  },
+  infoValue: {
+    flexGrow: 1,
+  },
+  table: {
+    marginTop: 32,
+  },
+  tableHeader: {
+    display: "flex",
+    flexDirection: "row",
+    textAlign: "center",
+  },
+  tableHeaderItem: {
+    paddingVertical: 8,
+    border: "1px solid #000",
+    borderBottom: "none",
+  },
+  tableRow: {
+    display: "flex",
+    flexDirection: "row",
+  },
+  tableCol: {
+    paddingVertical: 8,
+    paddingHorizontal: 4,
+    border: "1px solid #000",
+  },
+  footer: {
+    borderTop: "1px solid #e5e5e5",
+    paddingTop: 8,
+    marginTop: "auto",
+  },
+  footerText: {
+    color: "#787878",
+    lineHeight: 1.5,
+  },
+  signatureContainer: {},
+  totalContainer: {},
+  signatureText: {
+    marginTop: 32,
+  },
+});
