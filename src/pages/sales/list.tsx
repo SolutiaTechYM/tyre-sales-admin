@@ -53,7 +53,7 @@ export const SaleList = ({ children }: PropsWithChildren) => {
             });
           }}
         >
-          {t("purchases.actions.add")}
+          {t("Add new Sale")}
         </CreateButton>,
       ]}
     >
