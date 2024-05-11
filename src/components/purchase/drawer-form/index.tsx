@@ -257,7 +257,7 @@ export const PurchaseDrawerForm = (props: Props) => {
               </Flex>
                 
                   
-                  {showModal && (<Flex gap={25} style={{marginBottom:'15px'}}>
+                  {showModal && (<Flex gap={25} style={{marginBottom:'15px',flexWrap: 'wrap'}}>
                   <Form.Item
                     label={t("purchases.fields.details.name")}
                     name="proname"
