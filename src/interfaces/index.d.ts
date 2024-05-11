@@ -122,6 +122,15 @@ export interface IInvoice {
 }
 
 
+export interface IStock {
+  id: number;
+  quantity: number;
+  unitprice: number;
+  recieveddata:String;
+  
+}
+
+
 
 
 

@@ -24,7 +24,7 @@ import {
   Segmented,
   Spin,
 } from "antd";
-import { IProduct, ICategory, RowData, IPurchase, ISupplier, ISales, IUser } from "../../../interfaces";
+import { IProduct, ICategory, RowData, IPurchase, ISupplier, ISales, IUser, IStock } from "../../../interfaces";
 import { useSearchParams } from "react-router-dom";
 import { Drawer } from "../../drawer";
 import { UploadOutlined } from "@ant-design/icons";
@@ -75,6 +75,11 @@ export const SaleDrawerForm = (props: Props) => {
   const { selectProps: productSelectProps } = useSelect<IProduct>({
     resource: "products",
     optionLabel: "name", // Add this line
+    optionValue: "id", // Add this line
+  });
+  const { selectProps: stockSelectProps } = useSelect<IStock>({
+    resource: "stocks",
+    // optionLabel: "name", // Add this line
     optionValue: "id", // Add this line
   });
 
@@ -256,120 +261,95 @@ export const SaleDrawerForm = (props: Props) => {
               
               </Flex>
                 
-                  
-                  {showModal && (<Flex gap={25} style={{marginBottom:'15px'}}>
-                  <Form.Item
-                    label={t("purchases.fields.details.name")}
-                    name="proname"
-                    style={{minWidth:'300px'}}
-                    className={styles.subFormItem}
-                    rules={[
-                      {
-                        required: true,
-                      },
-                    ]}
-                  >
-                    <Select {...productSelectProps} />
-                  </Form.Item>
-                    <Form.Item
-                      label={t("purchases.fields.details.qty")}
-                      name="quantity"
-                      className={styles.subFormItem}
-                      rules={[
-                        {
-                          required: true,
-                        },
-                      ]}
-                    >
-                      <InputNumber style={{ width: "150px" }} />
-                    </Form.Item>
-                    <Form.Item
-                      label={t("purchases.fields.details.unitPrice")}
-                      name="unitprice"
-                      className={styles.subFormItem}
-                      rules={[
-                        {
-                          required: true,
-                        },
-                      ]}
-                    >
-                      <InputNumber
-                        type="number"
-                        prefix={"LKR"}
-                        style={{ width: "150px" }}
-                      />
-                    </Form.Item>
-                    
-                    
-                  <Form.Item
-                    label={' '}
-                    name="add"
-                    // className={styles.formItem}
-                  >
-                    <Button
-                      // {...saveButtonProps}
+              {showModal && (
+  <Flex gap={25} style={{ marginBottom: '15px',flexWrap: 'wrap' }} >
+    <Form.Item
+      label={t("purchases.fields.details.name")}
+      name="proname"
+      style={{ minWidth: '300px' }}
+      className={styles.subFormItem}
+      rules={[
+        {
+          required: true,
+        },
+      ]}
+    >
+      <Select {...productSelectProps} />
+    </Form.Item>
+    <Form.Item
+      label={t("Stock")}
+      name="stockid"
+      style={{ minWidth: '300px' }}
+      className={styles.subFormItem}
+      rules={[
+        {
+          required: true,
+        },
+      ]}
+    >
+      <Select {...productSelectProps} />
+    </Form.Item>
+    <Form.Item
+      label={t("purchases.fields.details.qty")}
+      name="quantity"
+      className={styles.subFormItem}
+      rules={[
+        {
+          required: true,
+        },
+      ]}
+    >
+      <InputNumber style={{ width: "150px" }} />
+    </Form.Item>
+    <Form.Item
+      label={t("purchases.fields.details.unitPrice")}
+      name="unitprice"
+      className={styles.subFormItem}
+      rules={[
+        {
+          required: true,
+        },
+      ]}
+    >
+      <InputNumber type="number" prefix={"LKR"} style={{ width: "150px" }} />
+    </Form.Item>
 
-                      // htmlType="submit"
-                      onClick={() => {
-                        // Check if all fields are not empty
-                        if (
-                          // formProps.form.getFieldValue("suppliername") &&
-                          formProps.form.getFieldValue("proname") &&
-                          formProps.form.getFieldValue("quantity") &&
-                          formProps.form.getFieldValue("unitprice")
-                          // formProps.form.getFieldValue("totalprice") &&
-                          // formProps.form.getFieldValue("payment")
-                        ) {
-                          const selectedCategory = (
-                            supplierSelectProps.options || []
-                          ).find(
-                            (option) =>
-                              option.value ===
-                              formProps.form.getFieldValue("suppliername")
-                          );
-                          const selectedProduct = (
-                            productSelectProps.options || []
-                          ).find(
-                            (option) =>
-                              option.value ===
-                              formProps.form.getFieldValue("proname")
-                          );
+    <Form.Item label={' '} name="add">
+      <Button
+        onClick={() => {
+          // Check if all fields are not empty
+          if (
+            formProps.form.getFieldValue("proname") &&
+            formProps.form.getFieldValue("quantity") &&
+            formProps.form.getFieldValue("unitprice")
+          ) {
+            const selectedProduct = (productSelectProps.options || []).find(
+              (option) => option.value === formProps.form.getFieldValue("proname")
+            );
 
-                          const newRow = {
-                            // suppliername: selectedCategory?.label?.toString() || "",
-                            name: selectedProduct?.label?.toString() || "",
-                            productID: selectedProduct?.value || "",
-                            quantity: formProps.form.getFieldValue("quantity"),
-                            unitprice:
-                              formProps.form.getFieldValue("unitprice"),
-                            totalprice: formProps.form.getFieldValue("unitprice") * formProps.form.getFieldValue("quantity"),
-                            // payment: formProps.form.getFieldValue("payment"),
-                          };
-                          setTableData([...tableData, newRow]);
-                          formProps.form.setFieldsValue({
-                            proname: "",
-                            quantity: "",
-                            unitprice: "",
-                          });
-                        } else {
-                          // Alert or handle the case where some fields are empty
-                          // For example, show a message to the user
-                          // alert("Please fill in all fields.");
-                          // Swal.fire({
-                          //   title: 'Required Fields',
-                          //   text: 'Please fill in all required fields.',
-                          //   icon: 'warning',
-                          //   confirmButtonText: 'OK',
-                          //   zIndex: 1500, // Pass the zIndex option in the options object
-                          // });
-                          showErrorNotification();
-                        }
-                      }}
-                    >
-                      Add
-                    </Button>
-                  </Form.Item>
-                  </Flex>)}
+            const newRow = {
+              name: selectedProduct?.label?.toString() || "",
+              productID: selectedProduct?.value || "",
+              quantity: formProps.form.getFieldValue("quantity"),
+              unitprice: formProps.form.getFieldValue("unitprice"),
+              totalprice: formProps.form.getFieldValue("unitprice") * formProps.form.getFieldValue("quantity"),
+            };
+            setTableData([...tableData, newRow]);
+            formProps.form.setFieldsValue({
+              proname: "",
+              quantity: "",
+              unitprice: "",
+            });
+          } else {
+            showErrorNotification();
+          }
+        }}
+      >
+        Add
+      </Button>
+    </Form.Item>
+  </Flex>
+)}
 
               <SaleDetailsEditableTable
                 data={tableData}
