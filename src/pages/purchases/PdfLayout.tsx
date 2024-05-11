@@ -17,7 +17,7 @@ import { IInvoice } from "../../interfaces";
     record: IInvoice | undefined;
   };
   
-  export const PdfLayout: React.FC<PdfProps> = () => {
+  export const PdfLayout: React.FC = () => {
     // const subtotal =
     //   record?.missions.reduce((prev, cur) => {
     //     return prev + cur?.day * cur?.daily_rate;
@@ -92,7 +92,7 @@ import { IInvoice } from "../../interfaces";
                 <View>
                   <Text
                     style={styles.invoiceForFromText}
-                  >{`Invoice ID: ${record?.id}`}</Text>
+                  >"SDsfs"</Text>
                   <Text
                     style={styles.invoiceForFromText}
                   >

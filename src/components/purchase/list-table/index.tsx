@@ -2,9 +2,11 @@ import {
   HttpError,
   getDefaultFilter,
   useGo,
+  useModal,
   useNavigation,
   useTranslate,
 } from "@refinedev/core";
+
 import {
   FilterDropdown,
   NumberField,
@@ -18,15 +20,17 @@ import {
   Button,
   Input,
   InputNumber,
+  Modal,
   Select,
   Table,
   Typography,
   theme,
 } from "antd";
 import { PaginationTotal } from "../../paginationTotal";
-import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
+import { EyeOutlined, FilePdfOutlined, SearchOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
 import { log } from "console";
+import { PdfLayout } from "../../../pages/purchases/PdfLayout";
 
 export const PurchaseListTable = () => {
   const { token } = theme.useToken();
@@ -59,8 +63,10 @@ export const PurchaseListTable = () => {
   });
 
   console.log(tableProps);
+  const { show, visible, close } = useModal();
   
   return (
+    <>
     <Table
       {...tableProps}
      
@@ -254,23 +260,20 @@ export const PurchaseListTable = () => {
         render={(_, record: IProduct) => {
           return (
             <Button
-              icon={<EyeOutlined />}
-              onClick={() => {
-                return go({
-                  to: `${showUrl("purchases", record.id)}`,
-                  query: {
-                    to: pathname,
-                  },
-                  options: {
-                    keepQuery: true,
-                  },
-                  type: "replace",
-                });
-              }}
-            />
+            size="small"
+            icon={<FilePdfOutlined />}
+            onClick={() => {
+              // setRecord(record);
+              show();
+            }}
+          />
           );
         }}
       />
     </Table>
+          <Modal visible={visible} onCancel={close} width="80%" footer={null}>
+          <PdfLayout  />
+        </Modal>
+        </>
   );
 };
