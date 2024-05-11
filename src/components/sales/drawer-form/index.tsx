@@ -279,7 +279,7 @@ export const SaleDrawerForm = (props: Props) => {
     <Form.Item
       label={t("Stock")}
       name="stockid"
-      style={{ minWidth: '300px' }}
+      style={{ minWidth: '100px' }}
       className={styles.subFormItem}
       rules={[
         {
