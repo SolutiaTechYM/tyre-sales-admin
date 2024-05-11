@@ -92,7 +92,7 @@ import { IInvoice } from "../../interfaces";
                 <View>
                   <Text
                     style={styles.invoiceForFromText}
-                  >{`Invoice ID: ${record?.id}`}</Text>
+                  >"dadafd  "</Text>
                   <Text
                     style={styles.invoiceForFromText}
                   >
