@@ -49,6 +49,8 @@ export const SaleDrawerForm = (props: Props) => {
   const [tableData, setTableData] = useState<RowData[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [totalPrice, settotalPrice] = useState(0);
+  const [stockunitprice, setstockunitprice] = useState(12345);
+
 
   const { drawerProps, formProps, close, saveButtonProps, formLoading } =
     useDrawerForm<ISales>({
@@ -62,7 +64,6 @@ export const SaleDrawerForm = (props: Props) => {
     });
   const quantity = Form.useWatch("quantity", formProps.form);
   const unitPrice = Form.useWatch("unitprice", formProps.form);
-
   // useEffect(() => {
   //   const totalPrice = quantity * unitPrice || 0;
   //   formProps.form.setFieldsValue({ totalprice: totalPrice });
@@ -140,10 +141,10 @@ export const SaleDrawerForm = (props: Props) => {
       },
     });
   };
-  const chooseasupplier = () => {
+  const chooseacustomer = () => {
     notification.error({
       message: "Error",
-      description: "Please select a supplier",
+      description: "Please select a Customer",
       duration: 3,
       style: {
         zIndex: 1000,
@@ -303,15 +304,15 @@ export const SaleDrawerForm = (props: Props) => {
     </Form.Item>
     <Form.Item
       label={t("purchases.fields.details.unitPrice")}
-      name="unitprice"
+      // name="unitprice"
       className={styles.subFormItem}
-      rules={[
-        {
-          required: true,
-        },
-      ]}
+      // rules={[
+      //   {
+      //     required: true,
+      //   },
+      // ]}
     >
-      <InputNumber type="number" prefix={"LKR"} style={{ width: "150px" }} />
+      <InputNumber type="number" prefix={"LKR"} style={{ width: "150px" }} value={stockunitprice} disabled/>
     </Form.Item>
 
     <Form.Item label={' '} name="add">
@@ -376,24 +377,24 @@ export const SaleDrawerForm = (props: Props) => {
                   if (tableData.length !== 0) {
                     try {
                       const payment = formProps.form.getFieldValue("payment");
-                      const supplier = formProps.form.getFieldValue("suppliername");
+                      const customer = formProps.form.getFieldValue("customername");
                       const description = formProps.form.getFieldValue("description");
 
-                      if(!supplier) {
-                        chooseasupplier();
+                      if(!customer) {
+                        chooseacustomer();
                         return;
                       }
                       if (payment) {
-                        const supplierId =
-                          formProps.form.getFieldValue("suppliername");
-                        const response = await fetch(`${apiUrl}/purchases`, {
+                        const customerId =
+                          formProps.form.getFieldValue("customername");
+                        const response = await fetch(`${apiUrl}/sales`, {
                           method: "POST",
                           headers: {
                             "Content-Type": "application/json",
                           },
                           body: JSON.stringify({
                             purchaseDetails: tableData,
-                            supplierId,
+                            customerId,
                             payment,
                             totalPrice,
                             description
