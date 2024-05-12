@@ -25,6 +25,48 @@ const syntheticData = {
       id: 1,
       name: "All-Season Radial Tyre",
       unitPrice: 75.99,
+      quantity: 1000,
+      category: "Passenger Car Tyres",
+    },
+    {
+      id: 2,
+      name: "Off-Road Mud Tyre",
+      unitPrice: 125.25,
+      quantity: 2,
+      category: "Truck & SUV Tyres",
+    },
+    {
+      id: 3,
+      name: "High-Performance Summer Tyre",
+      unitPrice: 89.99,
+      quantity: 8,
+      category: "Passenger Car Tyres",
+    },
+    {
+      id: 1,
+      name: "All-Season Radial Tyre",
+      unitPrice: 75.99,
+      quantity: 4,
+      category: "Passenger Car Tyres",
+    },
+    {
+      id: 2,
+      name: "Off-Road Mud Tyre",
+      unitPrice: 125.25,
+      quantity: 2,
+      category: "Truck & SUV Tyres",
+    },
+    {
+      id: 3,
+      name: "High-Performance Summer Tyre",
+      unitPrice: 89.99,
+      quantity: 8,
+      category: "Passenger Car Tyres",
+    },
+    {
+      id: 1,
+      name: "All-Season Radial Tyre",
+      unitPrice: 75.99,
       quantity: 4,
       category: "Passenger Car Tyres",
     },
@@ -58,12 +100,29 @@ export const PdfLayout: React.FC = () => {
     <PDFViewer style={styles.viewer}>
       <Document>
         <Page style={styles.page} size="A4">
-          <View style={styles.header}>
-            <Image src={tyreImage} style={styles.logo} />
-            <Text style={styles.title}>A.S.Enterprise</Text>
-          </View>
-          <View style={styles.bodycontainer}>
+       
 
+          <View style={styles.header}>
+          {/* <View style={styles.headrContainer}> */}
+            <View><Image src={tyreImage} style={styles.logo} /></View>
+            <View><Text style={styles.title}>A.S.Enterprise</Text>
+            {/* <Text style={styles.subtitle}>All kind of Tyre Repair and Factory Accessories</Text> */}
+        
+            <View style={styles.addressphone}>
+            <View><Text style={styles.subtitleaddress}>No.135 ,Ihalagedara Watte,</Text>
+            <Text style={styles.subtitleaddress}>Gonigoda, Medawala.</Text></View>
+            <View style={styles.numbers}><View ><Text style={styles.subtitlenumtel}>Tel :</Text></View>
+          <View><Text style={styles.subtitlenum}>077-4115018</Text>
+            <Text style={styles.subtitlenum}>071-1067406</Text>
+            <Text style={styles.subtitlenum}>081-2490568</Text></View>
+            </View>
+            </View>
+            </View>
+            {/* </View> */}
+
+          </View>
+
+          <View style={styles.bodycontainer}>
 
           <View style={styles.infoContainer}>
             <View style={styles.infoRow}>
@@ -94,41 +153,54 @@ export const PdfLayout: React.FC = () => {
 
           <View style={styles.table}>
             <View style={styles.tableHeader}>
-              <Text style={[styles.tableHeaderItem, { width: "10%" }]}>ID</Text>
-              <Text style={[styles.tableHeaderItem, { width: "40%" }]}>
+              <Text style={[styles.tableHeaderItem, { width: "5%" }]}>ID</Text>
+              <Text style={[styles.tableHeaderItem, { width: "32%" }]}>
                 Product Name
               </Text>
-              <Text style={[styles.tableHeaderItem, { width: "20%" }]}>
-                Unit Price
-              </Text>
-              <Text style={[styles.tableHeaderItem, { width: "15%" }]}>
-                Quantity
-              </Text>
-              <Text style={[styles.tableHeaderItem, { width: "15%" }]}>
+              <Text style={[styles.tableHeaderItem, { width: "25%" }]}>
                 Category
+              </Text>
+              <Text style={[styles.tableHeaderItem, { width: "15%" }]}>
+                Unit Price (LKR)
+              </Text>
+              <Text style={[styles.tableHeaderItem, { width: "8%" }]}>
+                Qty
+              </Text>
+              <Text style={[styles.tableHeaderItem, { width: "15%" }]}>
+                Tot.price
               </Text>
             </View>
             {syntheticData.products.map((product) => (
               <View key={product.id} style={styles.tableRow}>
-                <Text style={[styles.tableCol, { width: "10%" }]}>
+                <Text style={[styles.tableCol, { width: "5%" }]}>
                   {product.id}
                 </Text>
-                <Text style={[styles.tableCol, { width: "40%" }]}>
+                <Text style={[styles.tableCol, { width: "32%" }]}>
                   {product.name}
                 </Text>
-                <Text style={[styles.tableCol, { width: "20%" }]}>
-                  ${product.unitPrice.toFixed(2)}
+                <Text style={[styles.tableCol, { width: "25%" }]}>
+                  {product.category}
                 </Text>
                 <Text style={[styles.tableCol, { width: "15%" }]}>
+                  {product.unitPrice.toFixed(2)}
+                </Text>
+                <Text style={[styles.tableCol, { width: "8%" }]}>
                   {product.quantity}
                 </Text>
                 <Text style={[styles.tableCol, { width: "15%" }]}>
-                  {product.category}
+                  {(product.unitPrice * product.quantity).toFixed(2)}
                 </Text>
               </View>
             ))}
           </View>
-          <View style={styles.signatureContainer}>
+
+            </View>
+            
+            
+          <View style={styles.footer}>
+            {/* <Text style={styles.footerText}>All kind of Tyre Repair and Factory Accessories</Text>
+             */}
+                       <View style={styles.signatureContainer}>
               <Text style={styles.signatureText}>
                 Signature: ________________
               </Text>
@@ -136,12 +208,7 @@ export const PdfLayout: React.FC = () => {
                 Date: {todatdate}
               </Text>
             </View>
-            </View>
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>"Footer one"</Text>
-            <Text style={styles.footerText}>
-            "Footer one2", "Footer one3"
-            </Text>
+            <Text style={styles.footerText}>All kind of Tyre Repair and Factory Accessories</Text>
           </View>
         </Page>
       </Document>
@@ -167,21 +234,50 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
     backgroundColor: "#FFA07A", // Coral orange shade
-    padding: 16,
+    padding: "16 80 16 80",
+  },headrContainer:{
+    justifyContent:"space-between"
   },
   logo: {
-    width: 50,
-    height: 50,
+    width: 70,
+    height: 70,
     marginRight: 16,
+    
   },
   title: {
-    fontSize: 24,
+    fontSize: 33,
     fontWeight: "bold",
-  },bodycontainer : {
-    padding: "0.4in 0.4in 0.4in 0.4in",
+  },subtitle:{
+    fontSize: 11,
+
+  },subtitleaddress:{
+    fontSize: 10,
+    fontWeight: "bold",
+
+  },subtitlenum:{
+    fontSize: 10,
+
+  },subtitlenumtel:{
+    fontSize: 10,
+    fontWeight: 900,
 
   },
+  bodycontainer : {
+    padding: "0.4in 0.4in 0.4in 0.4in",
+
+  },addressphone:{
+    display: "flex",
+    flexDirection: "row",
+    justifyContent:"space-between"
+
+  },numbers:{  
+     display: "flex",
+  flexDirection: "row",
+  justifyContent:"space-between"
+}
+  ,
   infoContainer: {
     marginBottom: 16,
 
@@ -205,31 +301,51 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     textAlign: "center",
+    backgroundColor:"#D3D3D3",
+    
   },
   tableHeaderItem: {
     paddingVertical: 8,
     border: "1px solid #000",
     borderBottom: "none",
+    
   },
   tableRow: {
     display: "flex",
     flexDirection: "row",
+    textAlign: "center",
   },
   tableCol: {
-    paddingVertical: 8,
-    paddingHorizontal: 4,
+    paddingVertical: 4,
+    paddingHorizontal: 2,
     border: "1px solid #000",
+    fontSize: 10,
+
   },
   footer: {
-    borderTop: "1px solid #e5e5e5",
-    paddingTop: 8,
     marginTop: "auto",
+
+    
   },
   footerText: {
-    color: "#787878",
-    lineHeight: 1.5,
+    // color: "#787878",
+    paddingTop: 8,
+
+    borderTop: "1px solid #e5e5e5",
+
+    lineHeight: 2,
+    display: "flex",
+    flexDirection: "row",
+    textAlign: "center",
+    
   },
-  signatureContainer: {},
+  signatureContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent:"space-between",
+    padding: "0.4in 0.4in 0.4in 0.4in",
+
+  },
   totalContainer: {},
   signatureText: {
     marginTop: 32,
