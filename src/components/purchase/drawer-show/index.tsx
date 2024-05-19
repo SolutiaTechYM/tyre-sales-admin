@@ -3,6 +3,7 @@ import {
   HttpError,
   useGetToPath,
   useGo,
+  useModal,
   useNavigation,
   useOne,
   useShow,
@@ -15,6 +16,7 @@ import {
   Flex,
   Grid,
   List,
+  Modal,
   Table,
   Typography,
   theme,
@@ -24,8 +26,10 @@ import { Drawer } from "../../drawer";
 import { ICategory, IProduct, IPurchase, IPurchaseProductshow } from "../../../interfaces";
 import { DeleteButton, NumberField } from "@refinedev/antd";
 import { PurchaseStatus } from "../status";
-import { EditOutlined } from "@ant-design/icons";
+import { EditOutlined, FilePdfOutlined } from "@ant-design/icons";
 import { PurchaseDetailsTable } from "../details-table";
+import { PdfLayout } from "../../../pages/purchases/PdfLayout";
+import { useState } from "react";
 
 type Props = {
   id?: BaseKey;
@@ -41,6 +45,10 @@ export const PurchaseDrawerShow = (props: Props) => {
   const t = useTranslate();
   const { token } = theme.useToken();
   const breakpoint = Grid.useBreakpoint();
+  const [record, setRecord] = useState<IPurchase>();
+
+  const { show, visible, close } = useModal();
+
 
   const { queryResult } = useShow<IPurchase, HttpError>({
     resource: "purchases",
@@ -97,6 +105,7 @@ export const PurchaseDrawerShow = (props: Props) => {
   ];
 
   return (
+    <>
     <Drawer
       open={true}
       width={breakpoint.sm ? "1134px" : "100%"}
@@ -131,8 +140,22 @@ export const PurchaseDrawerShow = (props: Props) => {
                 options={{ style: "currency", currency: "USD" }}
             />
         </Typography.Text>
-    </Flex>
-    <Button>Print</Button>
+    </Flex >
+    <Flex vertical>
+        <Typography.Title level={5} style={{color:"red"}}>
+            Print Invoice 
+        </Typography.Title>
+
+    <Button
+            style={{ alignSelf: "center",borderColor:"red" }}
+            size="large"
+            icon={<FilePdfOutlined style={{ color: "red"}} />}
+            onClick={() => {
+              setRecord(purchase);
+              show();
+            }}
+          />
+          </Flex>
 </Flex>
         <Divider
           style={{
@@ -153,5 +176,9 @@ export const PurchaseDrawerShow = (props: Props) => {
 
 
     </Drawer>
+    <Modal visible={visible} onCancel={close} width="80%" footer={null} zIndex={99999999}>
+          <PdfLayout  record={record}/>
+        </Modal>
+    </>
   );
 };
