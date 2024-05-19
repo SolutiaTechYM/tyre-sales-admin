@@ -213,6 +213,7 @@ export const PurchaseListTable = () => {
                 width: "80px",
                 fontVariantNumeric: "tabular-nums",
                 whiteSpace: "nowrap",
+                fontWeight:"bold"
               }}
               options={{
                 style: "currency",

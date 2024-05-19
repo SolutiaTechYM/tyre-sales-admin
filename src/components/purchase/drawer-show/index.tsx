@@ -183,7 +183,11 @@ export const PurchaseDrawerShow = (props: Props) => {
             Total Price:{" "}
             <NumberField
                 value={purchase?.price || 0}
-                options={{ style: "currency", currency: "USD" }}
+                options={{ style: "currency", currency: "lkr", }}
+                style={{
+                fontWeight:"bold"
+
+                }}
             />
         </Typography.Text>
     </Flex >
