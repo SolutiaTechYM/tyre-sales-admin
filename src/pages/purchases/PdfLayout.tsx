@@ -150,8 +150,11 @@ export const PdfLayout: React.FC<PdfProps> = ({ record }) =>  {
 
           <View style={styles.table}>
             <View style={styles.tableHeader}>
-              <Text style={[styles.tableHeaderItem, { width: "10%" }]}></Text>
-              <Text style={[styles.tableHeaderItem, { width: "40%" }]}>
+              <Text style={[styles.tableHeaderItem, { width: "5%" }]}></Text>
+              <Text style={[styles.tableHeaderItem, { width: "10%" }]}>
+              Product Code
+              </Text>
+              <Text style={[styles.tableHeaderItem, { width: "35%" }]}>
                 Product Name
               </Text>
               {/* <Text style={[styles.tableHeaderItem, { width: "25%" }]}>
@@ -169,11 +172,15 @@ export const PdfLayout: React.FC<PdfProps> = ({ record }) =>  {
             </View>
             {record?.purchaseDetails.map((product,index) => (
               <View key={product.productID} style={styles.tableRow}>
-                <Text style={[styles.tableCol, { width: "10%" }]}>
+                <Text style={[styles.tableCol, { width: "5%" }]}>
                   {index+1}
                 </Text>
-                <Text style={[styles.tableCol, { width: "40%" }]}>
-                {product.productID}
+                <Text style={[styles.tableCol, { width: "10%" }]}>
+                {product.productCode}
+
+                </Text>
+                <Text style={[styles.tableCol, { width: "35%" }]}>
+                {product.productName}
 
                 </Text>
                 <Text style={[styles.tableCol, { width: "15%" }]}>
@@ -188,7 +195,7 @@ export const PdfLayout: React.FC<PdfProps> = ({ record }) =>  {
                   {product.quantity}
                 </Text> */}
                 <Text style={[styles.tableCol, { width: "20%" }]}>
-                  {(product.unitPrice * product.quantity).toFixed(2)}
+                  {product.totalPrice}
                 </Text>
               </View>
             ))}

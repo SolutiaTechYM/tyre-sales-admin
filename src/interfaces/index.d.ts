@@ -313,6 +313,8 @@ purchaseDetails: IPurchaseProductshow[];
 
 interface IPurchaseProductshow{
   productID: string | number;
+  productCode:string;
+  productName:string;
   categoryID?: number;
   quantity: number;
   unitPrice: number;

@@ -81,9 +81,19 @@ export const PurchaseDrawerShow = (props: Props) => {
 
   const columns = [
     {
-      title: 'Product Name',
+      title: '',
       dataIndex: 'productID',
       key: 'productID',
+    },
+    {
+      title: 'Product Code',
+      dataIndex: 'productCode',
+      key: 'productCode',
+    },
+    {
+      title: 'Product Name',
+      dataIndex: 'productName',
+      key: 'productName',
     },
     {
       title: 'Unit Price',
@@ -127,12 +137,48 @@ export const PurchaseDrawerShow = (props: Props) => {
             {purchase?.description}
         </Typography.Text>
         <Typography.Text>
-            Due Amount:{" "}
-            <NumberField
-                value={purchase?.due_amount || 0}
-                options={{ style: "currency", currency: "USD" }}
-            />
-        </Typography.Text>
+  Due Amount:{" "}
+  {purchase?.due_amount !== undefined ? (
+    purchase.due_amount < 0 ? (
+      <span
+        style={{
+          color: "lightgreen",
+          fontVariantNumeric: "tabular-nums",
+          whiteSpace: "nowrap",
+        }}
+      >
+        Cr{" "}
+        {Math.abs(purchase.due_amount).toLocaleString("en-US", {
+          style: "currency",
+          currency: "lkr",
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}
+      </span>
+    ) : (
+      <span
+        style={{
+          color: "red",
+          fontVariantNumeric: "tabular-nums",
+          whiteSpace: "nowrap",
+        }}
+      >
+        Dr{" "}
+        {purchase.due_amount.toLocaleString("en-US", {
+          style: "currency",
+          currency: "lkr",
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}
+      </span>
+    )
+  ) : (
+    <NumberField
+      value={0}
+      options={{ style: "currency", currency: "USD" }}
+    />
+  )}
+</Typography.Text>
         <Typography.Text>
             Total Price:{" "}
             <NumberField
