@@ -21,7 +21,7 @@ import {
 } from "antd";
 import { useSearchParams } from "react-router-dom";
 import { Drawer } from "../../drawer";
-import { ICategory, IProduct, IPurchase, RowData } from "../../../interfaces";
+import { ICategory, IProduct, IPurchase, IPurchaseProductshow } from "../../../interfaces";
 import { DeleteButton, NumberField } from "@refinedev/antd";
 import { PurchaseStatus } from "../status";
 import { EditOutlined } from "@ant-design/icons";
@@ -79,8 +79,8 @@ export const PurchaseDrawerShow = (props: Props) => {
     },
     {
       title: 'Unit Price',
-      dataIndex: 'unitprice',
-      key: 'unitprice',
+      dataIndex: 'unitPrice',
+      key: 'unitPrice',
       render: (value: number) => <NumberField value={value} options={{ style: 'currency', currency: 'USD' }} />,
     },
     {
@@ -90,8 +90,8 @@ export const PurchaseDrawerShow = (props: Props) => {
     },
     {
       title: 'Total',
-      dataIndex: 'totalprice',
-      key: 'totalprice',
+      dataIndex: 'totalPrice',
+      key: 'totalPrice',
       render: (value: number) => <NumberField value={value} options={{ style: 'currency', currency: 'USD' }} />,
     },
   ];
@@ -109,25 +109,31 @@ export const PurchaseDrawerShow = (props: Props) => {
           backgroundColor: token.colorBgContainer,
         }}
       >
-        <Flex
-          vertical
-          style={{
-            padding: "16px",
-          }}
-        >
-          <Typography.Title level={5}>
+<Flex style={{ padding: "16px", justifyContent: "space-between" }}>
+    <Flex vertical>
+        <Typography.Title level={5}>
             Purchase ID : {purchase?.id}
-          </Typography.Title>
-          <Typography.Text type="secondary">
+        </Typography.Title>
+        <Typography.Text type="secondary">
             {purchase?.description}
-          </Typography.Text>
-          <Typography.Text>
-            Due Amount: <NumberField value={purchase?.due_amount || 0} options={{ style: 'currency', currency: 'USD' }} />
-          </Typography.Text>
-          <Typography.Text>
-            Total Price: <NumberField value={purchase?.price || 0} options={{ style: 'currency', currency: 'USD' }} />
-          </Typography.Text>
-        </Flex>
+        </Typography.Text>
+        <Typography.Text>
+            Due Amount:{" "}
+            <NumberField
+                value={purchase?.due_amount || 0}
+                options={{ style: "currency", currency: "USD" }}
+            />
+        </Typography.Text>
+        <Typography.Text>
+            Total Price:{" "}
+            <NumberField
+                value={purchase?.price || 0}
+                options={{ style: "currency", currency: "USD" }}
+            />
+        </Typography.Text>
+    </Flex>
+    <Button>Print</Button>
+</Flex>
         <Divider
           style={{
             margin: 0,
@@ -141,47 +147,11 @@ export const PurchaseDrawerShow = (props: Props) => {
             padding: "32px",
           }}
         >
-          <Table dataSource={purchase?.rowdata} columns={columns} />
+          <Table dataSource={purchase?.purchaseDetails} columns={columns} />
         </Flex>
       </Flex>
 
-      <Flex
-        align="center"
-        justify="space-between"
-        style={{
-          padding: "16px 16px 16px 0",
-        }}
-      >
-        <DeleteButton
-          type="text"
-          recordItemId={purchase?.id}
-          resource="products"
-          onSuccess={() => {
-            handleDrawerClose();
-          }}
-        />
-        <Button
-          icon={<EditOutlined />}
-          onClick={() => {
-            if (props?.onEdit) {
-              return props.onEdit();
-            }
 
-            return go({
-              to: `${editUrl("purchases", purchase?.id || "")}`,
-              query: {
-                to: "/purchases",
-              },
-              options: {
-                keepQuery: true,
-              },
-              type: "replace",
-            });
-          }}
-        >
-          {t("actions.edit")}
-        </Button>
-      </Flex>
     </Drawer>
   );
 };

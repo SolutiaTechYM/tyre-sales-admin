@@ -26,7 +26,21 @@ export interface ISalesChart {
 //   text: "Pending" | "Ready" | "On The Way" | "Delivered" | "Cancelled";
 // }
 
-export interface IUser {
+// export interface IUser {
+//   id: number;
+//   name: string;
+//   company: string;
+//   contact: string;
+//   address: string;
+//   dueAmount: number;
+//   lastOrderDate: string;
+//   createdAt: string;
+ 
+// }
+
+
+
+export interface ICustomer {
   id: number;
   name: string;
   company: string;
@@ -35,9 +49,8 @@ export interface IUser {
   dueAmount: number;
   lastOrderDate: string;
   createdAt: string;
- 
+  avatar: IFile & { thumbnailUrl?: string };
 }
-
 
 
 // export interface IUser {
@@ -61,34 +74,65 @@ export interface IUser {
 //   credit: number;
 //   description:description;
 // }
-export interface IPurchase {
-  id: number;
-  createdAt: string;
-  description: string;
-  due_amount:number;
-  price:number;
-  rowdata:RowData[];
+// export interface IPurchase {
+//   id: number;
+//   createdAt: string;
+//   description: string;
+//   due_amount:number;
+//   price:number;
+//   rowdata:IPurchaseProduct[];
+// }
+// interface RowData {
+//   // suppliername: string | number;
+//   productID: string | number;
+//   quantity: number;
+//   unitprice: number;
+//   totalprice: number;
+//   // payment: number;
+// }
+
+
+export interface IPurchaseCreate{
+  totalPrice: number;
+  payment: number;
+  supplierId: number;
+  description?: string;
+  purchaseDetails: IPurchaseProduct[];
 }
-interface RowData {
-  // suppliername: string | number;
+interface IPurchaseProduct{
   productID: string | number;
+  categoryID?: number;
   quantity: number;
-  unitprice: number;
-  totalprice: number;
-  // payment: number;
+  unitPrice: number;
+  totalPrice: number;
 }
 
+
+// export interface IProduct {
+//   id: number;
+//   code: string;
+//   name: string;
+//   images: IFile & { thumbnailUrl?: string }[];
+//   curr_price: number;
+//   category: {
+//     id: number;
+//     title: string;
+//   };
+// }
 
 export interface IProduct {
   id: number;
-  code: string;
   name: string;
-  images: IFile & { thumbnailUrl?: string }[];
-  curr_price: number;
+  code: string;
+  description: string;
+  images?: (IFile & { thumbnailUrl?: string })[];
+  createdAt: string;
   category: {
-    id: number;
-    title: string;
+      id: number;
+      title?: string;
   };
+  current_price: number;
+  quantity?: number;
 }
 
 
@@ -109,7 +153,7 @@ export interface IInvoice {
 
 
 
-export interface Iiepd {
+export interface ISummary {
   income:number;
   expense:number;
   profit:number;
@@ -127,30 +171,57 @@ export interface IIdentity {
 //   coordinate: [number, number];
 // }
 
+// export interface IFile {
+//   name: string;
+//   percent: number;
+//   size: number;
+//   status: "error" | "success" | "done" | "uploading" | "removed";
+//   type: string;
+//   uid: string;
+//   url: string;
+// }
+
+
+
 export interface IFile {
-  name: string;
-  percent: number;
-  size: number;
-  status: "error" | "success" | "done" | "uploading" | "removed";
-  type: string;
-  uid: string;
+  uid?: string;
+  name?: string;
+  percent?: number;
+  size?: number;
+  status?: "error" | "success" | "done" | "uploading" | "removed";
+  type?: string;
   url: string;
+  response?: {
+      url?: string;
+  };
 }
+
 
 // export interface IEvent {
 //   date: string;
 //   status: string;
 // }
 
+// export interface ITransaction {
+//   type: any;
+//   id: number;
+//   date: string;
+  
+//   value: number;
+  
+//   dueamount: number;
+// }
+
+
+
 export interface ITransaction {
-  type: any;
+  type: "purchase" | "sale";
   id: number;
   date: string;
-  
   value: number;
-  
   dueamount: number;
 }
+
 
 export interface IStore {
   id: number;
@@ -232,18 +303,46 @@ export interface IPurchase{
   date: string;
   supplier: string;
   description: string;
-  price: string;
-  due_amount:string
+  price: number;
+  due_amount:number
   createdAt: string;
+purchaseDetails: IPurchaseProductshow[];
+
 }
+
+
+interface IPurchaseProductshow{
+  productID: string | number;
+  categoryID?: number;
+  quantity: number;
+  unitPrice: number;
+  totalPrice: number;
+}
+
+
+// export interface ICategory {
+//   id: number;
+//   title: string;
+//   description: string;
+//   quantity: number;
+//   createdAt: string;
+//   updatedAt: string;
+// }
+
+
 
 export interface ICategory {
   id: number;
   title: string;
-  description: string;
-  quantity: number;
-  createdAt: string;
-  updatedAt: string;
+  products?: {
+      id: number;
+      name: string;
+      images?: (IFile & { thumbnailUrl?: string })[];
+  }[];
+  description?: string;
+  quantity?: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 // export interface IOrderFilterVariables {

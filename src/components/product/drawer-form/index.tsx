@@ -226,7 +226,7 @@ export const ProductDrawerForm = (props: Props) => {
 
             <Form.Item
               label={t("products.fields.price")}
-              name="price"
+              name="current_price"
               className={styles.formItem}
               rules={[
                 {

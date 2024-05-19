@@ -13,7 +13,7 @@ import {
   useSelect,
   useTable,
 } from "@refinedev/antd";
-import { ICategory, IProduct, RowData } from "../../../interfaces";
+import { ICategory, IProduct, IPurchaseProduct } from "../../../interfaces";
 import {
   Avatar,
   Button,
@@ -32,8 +32,8 @@ export const PurchaseDetailsEditableTable = ({
   data,
   setData,
 }: {
-  data: RowData[];
-  setData: (data: RowData[]) => void;
+  data: IPurchaseProduct[];
+  setData: (data: IPurchaseProduct[]) => void;
 }) => {
   const { token } = theme.useToken();
   const t = useTranslate();

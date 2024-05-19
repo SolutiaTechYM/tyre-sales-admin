@@ -135,7 +135,7 @@ const currentQuanitity=10
               ),
               value: (
                 <NumberField
-                  value={product?.curr_price || 0}
+                  value={product?.current_price || 0}
                   options={{
                     style: "currency",
                     currency: "LKR",

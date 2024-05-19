@@ -39,7 +39,7 @@ import debounce from "lodash/debounce";
 
 import { useConfigProvider } from "../../context";
 import { IconMoon, IconSun } from "../../components/icons";
-import { IOrder, IStore, ICourier, IIdentity, Iiepd } from "../../interfaces";
+import { IOrder, IStore, ICourier, IIdentity, ISummary } from "../../interfaces";
 import { useStyles } from "./styled";
 import { head } from "lodash";
 
@@ -99,34 +99,34 @@ export const Header: React.FC = () => {
   const [options, setOptions] = useState<IOptions[]>([]);
   
 
-  const { refetch: refetchOrders } = useList<IOrder>({
-    resource: "orders",
-    config: {
-      filters: [{ field: "q", operator: "contains", value }],
-    },
-    queryOptions: {
-      enabled: false,
-      onSuccess: (data) => {
-        const orderOptionGroup = data.data.map((item) =>
-          renderItem(
-            `${item.store.title} / #${item.orderNumber}`,
-            item?.products?.[0].images?.url ||
-              "/images/default-order-img.png",
-            `/orders/show/${item.id}`,
-          ),
-        );
-        if (orderOptionGroup.length > 0) {
-          setOptions((prevOptions) => [
-            ...prevOptions,
-            {
-              label: renderTitle(t("orders.orders")),
-              options: orderOptionGroup,
-            },
-          ]);
-        }
-      },
-    },
-  });
+  // const { refetch: refetchOrders } = useList<IOrder>({
+  //   resource: "orders",
+  //   config: {
+  //     filters: [{ field: "q", operator: "contains", value }],
+  //   },
+  //   queryOptions: {
+  //     enabled: false,
+  //     onSuccess: (data) => {
+  //       const orderOptionGroup = data.data.map((item) =>
+  //         renderItem(
+  //           `${item.store.title} / #${item.orderNumber}`,
+  //           item?.products?.[0].images?.url ||
+  //             "/images/default-order-img.png",
+  //           `/orders/show/${item.id}`,
+  //         ),
+  //       );
+  //       if (orderOptionGroup.length > 0) {
+  //         setOptions((prevOptions) => [
+  //           ...prevOptions,
+  //           {
+  //             label: renderTitle(t("orders.orders")),
+  //             options: orderOptionGroup,
+  //           },
+  //         ]);
+  //       }
+  //     },
+  //   },
+  // });
 
   const { refetch: refetchStores } = useList<IStore>({
     resource: "stores",
@@ -182,7 +182,7 @@ export const Header: React.FC = () => {
 
 
 
-  const { data: iepdData } = useCustom<Iiepd>({
+  const { data: iepdData } = useCustom<ISummary>({
     url: `${API_URL}/misc/headerdata`,
     method: "get",
     
@@ -192,7 +192,7 @@ export const Header: React.FC = () => {
 
   useEffect(() => {
     setOptions([]);
-    refetchOrders();
+    // refetchOrders();
     refetchCouriers();
     refetchStores();
   }, [value]);

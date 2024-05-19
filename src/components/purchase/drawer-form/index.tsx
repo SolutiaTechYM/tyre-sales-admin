@@ -24,7 +24,7 @@ import {
   Segmented,
   Spin,
 } from "antd";
-import { IProduct, ICategory, RowData, IPurchase, ISupplier } from "../../../interfaces";
+import { IProduct, ICategory, IPurchase, ISupplier, IPurchaseProduct, IPurchaseCreate } from "../../../interfaces";
 import { useSearchParams } from "react-router-dom";
 import { Drawer } from "../../drawer";
 import { UploadOutlined } from "@ant-design/icons";
@@ -46,12 +46,12 @@ export const PurchaseDrawerForm = (props: Props) => {
   const apiUrl = useApiUrl();
   const breakpoint = Grid.useBreakpoint();
   const { styles, theme } = useStyles();
-  const [tableData, setTableData] = useState<RowData[]>([]);
+  const [tableData, setTableData] = useState<IPurchaseProduct[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [totalPrice, settotalPrice] = useState(0);
 
   const { drawerProps, formProps, close, saveButtonProps, formLoading } =
-    useDrawerForm<IPurchase>({
+    useDrawerForm<IPurchaseCreate>({
       resource: "purchases",
       id: props?.id, // when undefined, id will be read from the URL.
       action: props.action,
@@ -85,7 +85,7 @@ export const PurchaseDrawerForm = (props: Props) => {
     } else {
       let temp = 0;
       tableData.forEach((product) => {
-        temp += product.totalprice;
+        temp += product.totalPrice;
       });
       settotalPrice(temp);
     }
@@ -340,16 +340,16 @@ export const PurchaseDrawerForm = (props: Props) => {
                             name: selectedProduct?.label?.toString() || "",
                             productID: selectedProduct?.value || "",
                             quantity: formProps.form.getFieldValue("quantity"),
-                            unitprice:
+                            unitPrice:
                               formProps.form.getFieldValue("unitprice"),
-                            totalprice: formProps.form.getFieldValue("unitprice") * formProps.form.getFieldValue("quantity"),
+                            totalPrice: formProps.form.getFieldValue("unitprice") * formProps.form.getFieldValue("quantity"),
                             // payment: formProps.form.getFieldValue("payment"),
                           };
                           setTableData([...tableData, newRow]);
                           formProps.form.setFieldsValue({
                             proname: "",
                             quantity: "",
-                            unitprice: "",
+                            unitPrice: "",
                           });
                         } else {
                           // Alert or handle the case where some fields are empty
