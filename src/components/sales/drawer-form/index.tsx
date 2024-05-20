@@ -24,12 +24,13 @@ import {
   Segmented,
   Spin,
 } from "antd";
-import { IProduct, ICategory, RowData, IPurchase, ISupplier, ISales, IUser, IStock } from "../../../interfaces";
+import { IProduct, ICategory, RowDatasale, IPurchase, ISupplier, ISales, IUser, IStock } from "../../../interfaces";
 import { useSearchParams } from "react-router-dom";
 import { Drawer } from "../../drawer";
 import { UploadOutlined } from "@ant-design/icons";
 import { useStyles } from "./styled";
 import { SaleDetailsEditableTable } from "../details-table copy";
+import { ProductStock } from "../../product/stock";
 
 type Props = {
   id?: BaseKey;
@@ -46,7 +47,7 @@ export const SaleDrawerForm = (props: Props) => {
   const apiUrl = useApiUrl();
   const breakpoint = Grid.useBreakpoint();
   const { styles, theme } = useStyles();
-  const [tableData, setTableData] = useState<RowData[]>([]);
+  const [tableData, setTableData] = useState<RowDatasale[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [totalPrice, settotalPrice] = useState(0);
   const [stockunitprice, setstockunitprice] = useState(12345);
@@ -80,8 +81,8 @@ export const SaleDrawerForm = (props: Props) => {
   });
   const { selectProps: stockSelectProps } = useSelect<IStock>({
     resource: "stocks",
-    // optionLabel: "name", // Add this line
-    optionValue: "id", // Add this line
+    optionLabel: "id", // Add this line
+    optionValue: "unitPrice", // Add this line
   });
 
   useEffect(() => {
@@ -91,7 +92,7 @@ export const SaleDrawerForm = (props: Props) => {
     } else {
       let temp = 0;
       tableData.forEach((product) => {
-        temp += product.totalprice;
+        temp += product.totalPrice;
       });
       settotalPrice(temp);
     }
@@ -303,43 +304,72 @@ export const SaleDrawerForm = (props: Props) => {
       <InputNumber style={{ width: "150px" }} />
     </Form.Item>
     <Form.Item
-      label={t("purchases.fields.details.unitPrice")}
-      // name="unitprice"
+  label={t("Unit Buying Price")}
+  className={styles.subFormItem}
+>
+  {formProps.form.getFieldValue("stockid") ? (
+    <InputNumber
+      type="number"
+      prefix={"LKR"}
+      style={{ width: "150px" }}
+      value={
+        (stockSelectProps.options || []).find(
+          (option) => option.value === formProps.form.getFieldValue("stockid")
+        )?.unitPrice || 0
+      }
+      disabled
+    />
+  ) : (
+    <InputNumber type="number" prefix={"LKR"} style={{ width: "150px" }} disabled />
+  )}
+</Form.Item>
+    <Form.Item
+      label={t("Unit Selling Price")}
+      name="unitsellingprice"
       className={styles.subFormItem}
-      // rules={[
-      //   {
-      //     required: true,
-      //   },
-      // ]}
+      rules={[
+        {
+          required: true,
+        },
+      ]}
     >
-      <InputNumber type="number" prefix={"LKR"} style={{ width: "150px" }} value={stockunitprice} disabled/>
+      <InputNumber type="number" prefix={"LKR"} style={{ width: "150px" }} />
     </Form.Item>
-
-    <Form.Item label={' '} name="add">
+    {/* <Form.Item label={' '} name="add">
       <Button
         onClick={() => {
           // Check if all fields are not empty
           if (
             formProps.form.getFieldValue("proname") &&
             formProps.form.getFieldValue("quantity") &&
-            formProps.form.getFieldValue("unitprice")
+            formProps.form.getFieldValue("unitsellingprice")&&
+            formProps.form.getFieldValue("stockid")
+
           ) {
             const selectedProduct = (productSelectProps.options || []).find(
               (option) => option.value === formProps.form.getFieldValue("proname")
+            );
+            const selectedStock = (stockSelectProps.options || []).find(
+              (option) => option.value === formProps.form.getFieldValue("stockid")
             );
 
             const newRow = {
               name: selectedProduct?.label?.toString() || "",
               productID: selectedProduct?.value || "",
+              stockID: selectedStock?.label?.toString() || "",
+              unitBuyingPrice: selectedStock?.value || "",
               quantity: formProps.form.getFieldValue("quantity"),
-              unitprice: formProps.form.getFieldValue("unitprice"),
-              totalprice: formProps.form.getFieldValue("unitprice") * formProps.form.getFieldValue("quantity"),
+              unitSellingPrice: formProps.form.getFieldValue("unitsellingprice"),
+              totalPrice: formProps.form.getFieldValue("unitsellingprice") * formProps.form.getFieldValue("quantity"),
             };
             setTableData([...tableData, newRow]);
+
             formProps.form.setFieldsValue({
               proname: "",
-              quantity: "",
+              unitsellingprice: "",
+              stockid:"",
               unitprice: "",
+              quantity:""
             });
           } else {
             showErrorNotification();
@@ -348,7 +378,69 @@ export const SaleDrawerForm = (props: Props) => {
       >
         Add
       </Button>
-    </Form.Item>
+    </Form.Item> */}
+
+<Form.Item label={' '} name="add">
+  <Button
+    onClick={() => {
+      // Check if all fields are not empty
+      if (
+        formProps.form.getFieldValue("proname") &&
+        formProps.form.getFieldValue("quantity") &&
+        formProps.form.getFieldValue("unitsellingprice") &&
+        formProps.form.getFieldValue("stockid")
+      ) {
+        const selectedProduct = (productSelectProps.options || []).find(
+          (option) => option.value === formProps.form.getFieldValue("proname")
+        );
+        const selectedStock = (stockSelectProps.options || []).find(
+          (option) => option.value === formProps.form.getFieldValue("stockid")
+        );
+
+        const newRow = {
+          name: selectedProduct?.label?.toString() || "",
+          productID: selectedProduct?.value || "",
+          stockID: selectedStock?.label?.toString() || "",
+          unitBuyingPrice: selectedStock?.value || "",
+          quantity: formProps.form.getFieldValue("quantity"),
+          unitSellingPrice: formProps.form.getFieldValue("unitsellingprice"),
+          totalPrice: formProps.form.getFieldValue("unitsellingprice") * formProps.form.getFieldValue("quantity"),
+        };
+
+        const existingRow = tableData.find(
+          (row) =>
+            row.productID === newRow.productID &&
+            row.stockID === newRow.stockID 
+        );
+
+        if (existingRow) {
+          if (existingRow.unitSellingPrice !== newRow.unitSellingPrice) {
+            showError(`Unit Selling Price cannot be changed. Current price: ${existingRow.unitSellingPrice}`);
+          } else {
+            const updatedRows = tableData.map((row) =>
+              row === existingRow ? { ...row, quantity: row.quantity + newRow.quantity } : row
+            );
+            setTableData(updatedRows);
+          }
+        } else {
+          setTableData([...tableData, newRow]);
+        }
+
+        formProps.form.setFieldsValue({
+          proname: "",
+          unitsellingprice: "",
+          stockid: "",
+          unitprice: "",
+          quantity: "",
+        });
+      } else {
+        showErrorNotification();
+      }
+    }}
+  >
+    Add
+  </Button>
+</Form.Item>
   </Flex>
 )}
 
@@ -393,7 +485,7 @@ export const SaleDrawerForm = (props: Props) => {
                             "Content-Type": "application/json",
                           },
                           body: JSON.stringify({
-                            purchaseDetails: tableData,
+                            salesDetails: tableData,
                             customerId,
                             payment,
                             totalPrice,

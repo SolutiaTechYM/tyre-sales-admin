@@ -87,12 +87,13 @@ export interface ISales {
   rowdata:RowDatasale[];
 }
 interface RowDatasale {
-  // suppliername: string | number;
+  name: string;
   productID: string | number;
-  quantity: number;
-  unitprice: number;
-  totalprice: number;
-  // payment: number;
+  stockID: string | number; // Change the type to string | number
+  quantity:  number;
+  unitBuyingPrice: string | number;
+  unitSellingPrice: number;
+  totalPrice: number;
 }
 
 export interface IProduct {
@@ -125,8 +126,8 @@ export interface IInvoice {
 export interface IStock {
   id: number;
   quantity: number;
-  unitprice: number;
-  recieveddata:String;
+  unitPrice: number;
+  recievedData:String;
   
 }
 

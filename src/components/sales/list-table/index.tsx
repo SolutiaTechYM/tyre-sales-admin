@@ -223,7 +223,7 @@ export const SaleListTable = () => {
         }}
       />
       <Table.Column
-        title={t("purchases.fields.credit")}
+        title={t("Due Amount")}
         dataIndex="due_amount"
         key="due_amount"
         align="right"

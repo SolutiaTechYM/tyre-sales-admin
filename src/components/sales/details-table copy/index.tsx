@@ -13,7 +13,7 @@ import {
   useSelect,
   useTable,
 } from "@refinedev/antd";
-import { ICategory, IProduct, RowData } from "../../../interfaces";
+import { ICategory, IProduct, RowDatasale } from "../../../interfaces";
 import {
   Avatar,
   Button,
@@ -32,8 +32,8 @@ export const SaleDetailsEditableTable = ({
   data,
   setData,
 }: {
-  data: RowData[];
-  setData: (data: RowData[]) => void;
+  data: RowDatasale[];
+  setData: (data: RowDatasale[]) => void;
 }) => {
   const { token } = theme.useToken();
   const t = useTranslate();
@@ -75,8 +75,8 @@ export const SaleDetailsEditableTable = ({
 
         <Table.Column
           title={t("ID")}
-          dataIndex="product"
-          key="product"
+          dataIndex="productID"
+          key="productID"
           // align="center"
           sorter
           render={(value) => (
@@ -112,6 +112,20 @@ export const SaleDetailsEditableTable = ({
             </Typography.Text>
           )}
         />
+                <Table.Column
+          title={t("U.Buying Price")}
+          dataIndex="unitBuyingPrice"
+          key="unitBuyingPrice"
+          align="right"
+
+          
+          sorter
+          render={(value) => (
+            <Typography.Text style={{ whiteSpace: "nowrap" }}>
+              {value}
+            </Typography.Text>
+          )}
+        />
         <Table.Column
           title={t("purchases.fields.details.qty")}
           dataIndex="quantity"
@@ -127,9 +141,9 @@ export const SaleDetailsEditableTable = ({
           )}
         />
         <Table.Column
-          title={t("Unit Price")}
-          dataIndex="unitprice"
-          key="unitprice"
+          title={t("U.Selling Price")}
+          dataIndex="unitSellingPrice"
+          key="unitSellingPrice"
           align="right"
 
           
@@ -142,8 +156,8 @@ export const SaleDetailsEditableTable = ({
         />
         <Table.Column
         title={t("Total Price")}
-        dataIndex="totalprice"
-        key="totalprice"
+        dataIndex="totalPrice"
+        key="totalPrice"
         align="right"
 
         
