@@ -22,6 +22,7 @@ import {
   DollarOutlined,
   ShoppingCartOutlined,
   UnorderedListOutlined,
+  FundOutlined,
 } from "@ant-design/icons";
 import jsonServerDataProvider from "@refinedev/simple-rest";
 import { authProvider } from "./authProvider";
@@ -64,6 +65,7 @@ import { CustomerCreate } from "./pages/customers/create";
 import { CustomerEdit } from "./pages/customers/edit";
 import { AccountsList } from "./pages/accounts";
 import { AccountsCreate } from "./pages/accounts/create";
+import { SaleCreate, SaleList } from "./pages/sales";
 
 
 const App: React.FC = () => {
@@ -172,6 +174,17 @@ const API_URL = " https://tyre-sales-admin-backend.onrender.com";
                 },
               },
               {
+                name: "sales",
+                list: "/sales",
+                create: "/sales/new",
+                edit: "/sales/:id/edit",
+                show: "/sales/:id",
+                meta: {
+                  icon: <DollarOutlined />,
+
+                },
+              },
+              {
                 name: "categories",
                 list: "/categories",
                 create: "/categories/new",
@@ -209,7 +222,8 @@ const API_URL = " https://tyre-sales-admin-backend.onrender.com";
                 show: "/accounts/:id",
                 meta: {
                   label: "Accounts",
-                  icon: <DollarOutlined />,
+                  icon: <FundOutlined />,
+
                 },
               },
             ]}
@@ -294,6 +308,21 @@ const API_URL = " https://tyre-sales-admin-backend.onrender.com";
                   }
                 >
                   <Route path="new" element={<PurchaseCreate />} />
+                  <Route path=":id" element={<PurchaseShow />} />
+                  <Route path=":id/edit" element={<PurchaseEdit />} />
+                </Route>
+
+                
+                <Route
+                  path="/sales"
+                  element={
+                    <SaleList>
+                      <Outlet />
+                    </SaleList>
+                    
+                  }
+                >
+                  <Route path="new" element={<SaleCreate />} />
                   <Route path=":id" element={<PurchaseShow />} />
                   <Route path=":id/edit" element={<PurchaseEdit />} />
                 </Route>

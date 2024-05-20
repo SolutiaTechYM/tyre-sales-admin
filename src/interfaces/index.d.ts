@@ -107,6 +107,23 @@ interface IPurchaseProduct{
   totalPrice: number;
 }
 
+export interface ISales {
+  id: number;
+  createdAt: string;
+  description: string;
+  due_amount:number;
+  price:number;
+  rowdata:RowDatasale[];
+}
+interface RowDatasale {
+  name: string;
+  productID: string | number;
+  stockID: string | number; // Change the type to string | number
+  quantity:  number;
+  unitBuyingPrice: string | number;
+  unitSellingPrice: number;
+  totalPrice: number;
+}
 
 // export interface IProduct {
 //   id: number;
@@ -147,6 +164,15 @@ export interface IInvoice {
   category: {
     id: number;
   };
+}
+
+
+export interface IStock {
+  id: number;
+  quantity: number;
+  unitPrice: number;
+  recievedData:String;
+  
 }
 
 
