@@ -26,7 +26,7 @@ import {
   Button,
 } from "antd";
 
-import { IUser, IUserFilterVariables } from "../../interfaces";
+import {  ICustomer, IUserFilterVariables } from "../../interfaces";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { PaginationTotal, UserStatus } from "../../components";
 import { PropsWithChildren } from "react";
@@ -42,7 +42,7 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
 
 
   const {   tableProps, filters, sorters } = useTable<
-    IUser,
+  ICustomer,
     HttpError,
     IUserFilterVariables
   >({
@@ -254,7 +254,7 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
             </FilterDropdown>
           )}
         /> */}
-        <Table.Column<IUser>
+        <Table.Column<ICustomer>
           fixed="right"
           title={t("table.actions")}
           render={(_, record) => (

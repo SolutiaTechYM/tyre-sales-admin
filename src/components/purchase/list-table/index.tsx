@@ -70,7 +70,7 @@ export const PurchaseListTable = () => {
       pagination={{
         ...tableProps.pagination,
         showTotal: (total) => (
-          <PaginationTotal total={total} entityName="urchases" />
+          <PaginationTotal total={total} entityName="purchases" />
         ),
       }}
     >
@@ -213,37 +213,61 @@ export const PurchaseListTable = () => {
                 width: "80px",
                 fontVariantNumeric: "tabular-nums",
                 whiteSpace: "nowrap",
+                fontWeight:"bold"
               }}
               options={{
                 style: "currency",
-                currency: "USD",
+                currency: "lkr",
               }}
             />
           );
         }}
       />
       <Table.Column
-        title={t("purchases.fields.credit")}
+        title={t("Due Amount")}
         dataIndex="due_amount"
         key="due_amount"
         align="right"
         sorter
         //defaultSortOrder={getDefaultSortOrder("price", sorters)}
+ 
         render={(credit: number) => {
-          return (
-            <NumberField
-              value={credit}
-              style={{
-                width: "80px",
-                fontVariantNumeric: "tabular-nums",
-                whiteSpace: "nowrap",
-              }}
-              options={{
-                style: "currency",
-                currency: "USD",
-              }}
-            />
-          );
+          const formatOptions = {
+            style: 'currency',
+            currency: 'LKR',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          };
+        
+          if (credit < 0) {
+            const formattedValue = `Cr ${Math.abs(credit).toLocaleString('en-LK', formatOptions)}`;
+            return (
+              <span
+                style={{
+                  width: "80px",
+                  fontVariantNumeric: "tabular-nums",
+                  whiteSpace: "nowrap",
+                  color: "lightgreen"
+                }}
+              >
+                {formattedValue}
+              </span>
+            );
+          } else {
+            const formattedValue = `Dr ${credit.toLocaleString('en-LK', formatOptions)}`;
+            return (
+              <span
+                style={{
+                  width: "80px",
+                  fontVariantNumeric: "tabular-nums",
+                  whiteSpace: "nowrap",
+                  color: "red"
+                }}
+              >
+                {formattedValue}
+              </span>
+            );
+          }
         }}
       />
       <Table.Column

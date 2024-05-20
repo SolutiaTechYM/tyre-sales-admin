@@ -3,6 +3,7 @@ import {
   HttpError,
   useGetToPath,
   useGo,
+  useModal,
   useNavigation,
   useOne,
   useShow,
@@ -15,17 +16,20 @@ import {
   Flex,
   Grid,
   List,
+  Modal,
   Table,
   Typography,
   theme,
 } from "antd";
 import { useSearchParams } from "react-router-dom";
 import { Drawer } from "../../drawer";
-import { ICategory, IProduct, IPurchase, RowData } from "../../../interfaces";
+import { ICategory, IProduct, IPurchase, IPurchaseProductshow } from "../../../interfaces";
 import { DeleteButton, NumberField } from "@refinedev/antd";
 import { PurchaseStatus } from "../status";
-import { EditOutlined } from "@ant-design/icons";
+import { EditOutlined, FilePdfOutlined } from "@ant-design/icons";
 import { PurchaseDetailsTable } from "../details-table";
+import { PdfLayout } from "../../../pages/purchases/PdfLayout";
+import { useState } from "react";
 
 type Props = {
   id?: BaseKey;
@@ -41,6 +45,10 @@ export const PurchaseDrawerShow = (props: Props) => {
   const t = useTranslate();
   const { token } = theme.useToken();
   const breakpoint = Grid.useBreakpoint();
+  const [record, setRecord] = useState<IPurchase>();
+
+  const { show, visible, close } = useModal();
+
 
   const { queryResult } = useShow<IPurchase, HttpError>({
     resource: "purchases",
@@ -73,14 +81,24 @@ export const PurchaseDrawerShow = (props: Props) => {
 
   const columns = [
     {
-      title: 'Product Name',
+      title: '',
       dataIndex: 'productID',
       key: 'productID',
     },
     {
+      title: 'Product Code',
+      dataIndex: 'productCode',
+      key: 'productCode',
+    },
+    {
+      title: 'Product Name',
+      dataIndex: 'productName',
+      key: 'productName',
+    },
+    {
       title: 'Unit Price',
-      dataIndex: 'unitprice',
-      key: 'unitprice',
+      dataIndex: 'unitPrice',
+      key: 'unitPrice',
       render: (value: number) => <NumberField value={value} options={{ style: 'currency', currency: 'USD' }} />,
     },
     {
@@ -90,13 +108,14 @@ export const PurchaseDrawerShow = (props: Props) => {
     },
     {
       title: 'Total',
-      dataIndex: 'totalprice',
-      key: 'totalprice',
+      dataIndex: 'totalPrice',
+      key: 'totalPrice',
       render: (value: number) => <NumberField value={value} options={{ style: 'currency', currency: 'USD' }} />,
     },
   ];
 
   return (
+    <>
     <Drawer
       open={true}
       width={breakpoint.sm ? "1134px" : "100%"}
@@ -109,25 +128,85 @@ export const PurchaseDrawerShow = (props: Props) => {
           backgroundColor: token.colorBgContainer,
         }}
       >
-        <Flex
-          vertical
-          style={{
-            padding: "16px",
-          }}
-        >
-          <Typography.Title level={5}>
+<Flex style={{ padding: "16px", justifyContent: "space-between" }}>
+    <Flex vertical>
+        <Typography.Title level={5}>
             Purchase ID : {purchase?.id}
-          </Typography.Title>
-          <Typography.Text type="secondary">
+        </Typography.Title>
+        <Typography.Text type="secondary">
             {purchase?.description}
-          </Typography.Text>
-          <Typography.Text>
-            Due Amount: <NumberField value={purchase?.due_amount || 0} options={{ style: 'currency', currency: 'USD' }} />
-          </Typography.Text>
-          <Typography.Text>
-            Total Price: <NumberField value={purchase?.price || 0} options={{ style: 'currency', currency: 'USD' }} />
-          </Typography.Text>
-        </Flex>
+        </Typography.Text>
+        <Typography.Text>
+  Due Amount:{" "}
+  {purchase?.due_amount !== undefined ? (
+    purchase.due_amount < 0 ? (
+      <span
+        style={{
+          color: "lightgreen",
+          fontVariantNumeric: "tabular-nums",
+          whiteSpace: "nowrap",
+        }}
+      >
+        Cr{" "}
+        {Math.abs(purchase.due_amount).toLocaleString("en-US", {
+          style: "currency",
+          currency: "lkr",
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}
+      </span>
+    ) : (
+      <span
+        style={{
+          color: "red",
+          fontVariantNumeric: "tabular-nums",
+          whiteSpace: "nowrap",
+        }}
+      >
+        Dr{" "}
+        {purchase.due_amount.toLocaleString("en-US", {
+          style: "currency",
+          currency: "lkr",
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}
+      </span>
+    )
+  ) : (
+    <NumberField
+      value={0}
+      options={{ style: "currency", currency: "USD" }}
+    />
+  )}
+</Typography.Text>
+        <Typography.Text>
+            Total Price:{" "}
+            <NumberField
+                value={purchase?.price || 0}
+                options={{ style: "currency", currency: "lkr", }}
+                style={{
+                fontWeight:"bold"
+
+                }}
+            />
+        </Typography.Text>
+    </Flex >
+    <Flex vertical>
+        <Typography.Title level={5} style={{color:"red"}}>
+            Print Invoice 
+        </Typography.Title>
+
+    <Button
+            style={{ alignSelf: "center",borderColor:"red" }}
+            size="large"
+            icon={<FilePdfOutlined style={{ color: "red"}} />}
+            onClick={() => {
+              setRecord(purchase);
+              show();
+            }}
+          />
+          </Flex>
+</Flex>
         <Divider
           style={{
             margin: 0,
@@ -141,47 +220,15 @@ export const PurchaseDrawerShow = (props: Props) => {
             padding: "32px",
           }}
         >
-          <Table dataSource={purchase?.rowdata} columns={columns} />
+          <Table dataSource={purchase?.purchaseDetails} columns={columns} />
         </Flex>
       </Flex>
 
-      <Flex
-        align="center"
-        justify="space-between"
-        style={{
-          padding: "16px 16px 16px 0",
-        }}
-      >
-        <DeleteButton
-          type="text"
-          recordItemId={purchase?.id}
-          resource="products"
-          onSuccess={() => {
-            handleDrawerClose();
-          }}
-        />
-        <Button
-          icon={<EditOutlined />}
-          onClick={() => {
-            if (props?.onEdit) {
-              return props.onEdit();
-            }
 
-            return go({
-              to: `${editUrl("purchases", purchase?.id || "")}`,
-              query: {
-                to: "/purchases",
-              },
-              options: {
-                keepQuery: true,
-              },
-              type: "replace",
-            });
-          }}
-        >
-          {t("actions.edit")}
-        </Button>
-      </Flex>
     </Drawer>
+    <Modal visible={visible} onCancel={close} width="80%" footer={null} zIndex={99999999}>
+          <PdfLayout  record={record}/>
+        </Modal>
+    </>
   );
 };

@@ -286,15 +286,15 @@ export const ProductListTable = () => {
 
 <Table.Column
         title={t("products.fields.price")}
-        dataIndex="curr_price"
-        key="curr_price"
+        dataIndex="current_price"
+        key="current_price"
         align="right"
         sorter
-        defaultSortOrder={getDefaultSortOrder("curr_price", sorters)}
-        render={(curr_price: number) => {
+        defaultSortOrder={getDefaultSortOrder("current_price", sorters)}
+        render={(current_price: number) => {
           return (
             <NumberField
-              value={curr_price}
+              value={current_price}
               style={{
                 width: "80px",
                 fontVariantNumeric: "tabular-nums",

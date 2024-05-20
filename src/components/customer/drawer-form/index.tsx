@@ -24,7 +24,7 @@ import {
   Spin,
   DatePicker,
 } from "antd";
-import { IProduct, ICategory, IUser } from "../../../interfaces";
+import { IProduct, ICategory, ICustomer } from "../../../interfaces";
 import { useSearchParams } from "react-router-dom";
 import { Drawer } from "../../drawer";
 import { UploadOutlined } from "@ant-design/icons";
@@ -48,7 +48,7 @@ export const CustomerDrawerForm = (props: Props) => {
 
   const [form] = useForm();
   const { drawerProps, formProps, close, saveButtonProps, formLoading } =
-    useDrawerForm<IUser>({
+    useDrawerForm<ICustomer>({
       resource: "users",
       id: props?.id, // when undefined, id will be read from the URL.
       action: props.action,
@@ -60,7 +60,7 @@ export const CustomerDrawerForm = (props: Props) => {
       // form,
     });
 
-  const { selectProps: categorySelectProps } = useSelect<IUser>({
+  const { selectProps: categorySelectProps } = useSelect<ICustomer>({
     resource: "users",
   });
 
