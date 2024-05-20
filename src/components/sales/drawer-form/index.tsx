@@ -24,7 +24,7 @@ import {
   Segmented,
   Spin,
 } from "antd";
-import { IProduct, ICategory, RowDatasale, IPurchase, ISupplier, ISales, IUser, IStock } from "../../../interfaces";
+import { IProduct, ICategory, RowDatasale, IPurchase, ISupplier, ISales, ICustomer, IStock } from "../../../interfaces";
 import { useSearchParams } from "react-router-dom";
 import { Drawer } from "../../drawer";
 import { UploadOutlined } from "@ant-design/icons";
@@ -70,7 +70,7 @@ export const SaleDrawerForm = (props: Props) => {
   //   formProps.form.setFieldsValue({ totalprice: totalPrice });
   // }, [quantity, unitPrice, formProps.form]);
 
-  const { selectProps: supplierSelectProps } = useSelect<IUser>({
+  const { selectProps: supplierSelectProps } = useSelect<ICustomer>({
     resource: "users",
     optionLabel: "name", // Add this line
   });
