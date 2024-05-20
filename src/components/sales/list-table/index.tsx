@@ -12,7 +12,7 @@ import {
   useSelect,
   useTable,
 } from "@refinedev/antd";
-import { IProduct, ISales } from "../../../interfaces";
+import { IProduct, ISalesShow } from "../../../interfaces";
 import {
   Avatar,
   Button,
@@ -35,7 +35,7 @@ export const SaleListTable = () => {
   const { pathname } = useLocation();
   const { showUrl } = useNavigation();
 
-  const { tableProps, sorters, filters } = useTable<ISales, HttpError>({
+  const { tableProps, sorters, filters } = useTable<ISalesShow, HttpError>({
     filters: {
       initial: [
         {
@@ -222,28 +222,51 @@ export const SaleListTable = () => {
           );
         }}
       />
-      <Table.Column
+  <Table.Column
         title={t("Due Amount")}
         dataIndex="due_amount"
         key="due_amount"
         align="right"
         sorter
         //defaultSortOrder={getDefaultSortOrder("price", sorters)}
+ 
         render={(credit: number) => {
-          return (
-            <NumberField
-              value={credit}
-              style={{
-                width: "80px",
-                fontVariantNumeric: "tabular-nums",
-                whiteSpace: "nowrap",
-              }}
-              options={{
-                style: "currency",
-                currency: "USD",
-              }}
-            />
-          );
+          const formatOptions = {
+            style: 'currency',
+            currency: 'LKR',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          };
+        
+          if (credit < 0) {
+            const formattedValue = `Cr ${Math.abs(credit).toLocaleString('en-LK', formatOptions)}`;
+            return (
+              <span
+                style={{
+                  width: "80px",
+                  fontVariantNumeric: "tabular-nums",
+                  whiteSpace: "nowrap",
+                  color: "lightgreen"
+                }}
+              >
+                {formattedValue}
+              </span>
+            );
+          } else {
+            const formattedValue = `Dr ${credit.toLocaleString('en-LK', formatOptions)}`;
+            return (
+              <span
+                style={{
+                  width: "80px",
+                  fontVariantNumeric: "tabular-nums",
+                  whiteSpace: "nowrap",
+                  color: "red"
+                }}
+              >
+                {formattedValue}
+              </span>
+            );
+          }
         }}
       />
       <Table.Column
@@ -251,7 +274,7 @@ export const SaleListTable = () => {
         key="actions"
         fixed="right"
         align="center"
-        render={(_, record: ISales) => {
+        render={(_, record: ISalesShow) => {
           return (
             <Button
               icon={<EyeOutlined />}

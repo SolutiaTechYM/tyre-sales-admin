@@ -349,7 +349,7 @@ export const PurchaseDrawerForm = (props: Props) => {
                           formProps.form.setFieldsValue({
                             proname: "",
                             quantity: "",
-                            unitPrice: "",
+                            unitprice: "",
                           });
                         } else {
                           // Alert or handle the case where some fields are empty

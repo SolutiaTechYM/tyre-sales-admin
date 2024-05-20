@@ -99,7 +99,7 @@ export const PurchaseDrawerShow = (props: Props) => {
       title: 'Unit Price',
       dataIndex: 'unitPrice',
       key: 'unitPrice',
-      render: (value: number) => <NumberField value={value} options={{ style: 'currency', currency: 'USD' }} />,
+      render: (value: number) => <NumberField value={value} options={{ style: 'currency', currency: 'lkr' }} />,
     },
     {
       title: 'Quantity',
@@ -110,7 +110,7 @@ export const PurchaseDrawerShow = (props: Props) => {
       title: 'Total',
       dataIndex: 'totalPrice',
       key: 'totalPrice',
-      render: (value: number) => <NumberField value={value} options={{ style: 'currency', currency: 'USD' }} />,
+      render: (value: number) => <NumberField value={value} options={{ style: 'currency', currency: 'lkr' }} />,
     },
   ];
 

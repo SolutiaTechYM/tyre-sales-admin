@@ -1,5 +1,5 @@
-import { PurchaseDrawerShow } from "../../components/purchase/drawer-show";
+import { SalesDrawerShow } from "../../components/sales/drawer-show";
 
-export const PurchaseShow = () => {
-  return <PurchaseDrawerShow />;
+export const SalesShow = () => {
+  return <SalesDrawerShow />;
 };

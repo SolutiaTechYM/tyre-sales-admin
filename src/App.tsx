@@ -65,7 +65,7 @@ import { CustomerCreate } from "./pages/customers/create";
 import { CustomerEdit } from "./pages/customers/edit";
 import { AccountsList } from "./pages/accounts";
 import { AccountsCreate } from "./pages/accounts/create";
-import { SaleCreate, SaleList } from "./pages/sales";
+import { SaleCreate, SaleList, SalesShow } from "./pages/sales";
 
 
 const App: React.FC = () => {
@@ -323,8 +323,8 @@ const API_URL = " https://tyre-sales-admin-backend.onrender.com";
                   }
                 >
                   <Route path="new" element={<SaleCreate />} />
-                  <Route path=":id" element={<PurchaseShow />} />
-                  <Route path=":id/edit" element={<PurchaseEdit />} />
+                  <Route path=":id" element={<SalesShow />} />
+                  {/* <Route path=":id/edit" element={<PurchaseEdit />} /> */}
                 </Route>
 
                 <Route

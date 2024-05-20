@@ -108,11 +108,11 @@ interface IPurchaseProduct{
 }
 
 export interface ISales {
-  id: number;
-  createdAt: string;
-  description: string;
-  due_amount:number;
-  price:number;
+  totalPrice: number;
+  payment: number;
+  customerId: number;
+  description?: string;
+
   rowdata:RowDatasale[];
 }
 interface RowDatasale {
@@ -124,6 +124,33 @@ interface RowDatasale {
   unitSellingPrice: number;
   totalPrice: number;
 }
+
+
+
+export interface ISalesShow {
+  // id: number;
+  // createdAt: string;
+  id: number;
+  createdAt: string;
+  description: string;
+  due_amount:number;
+  price:number;
+  custmoer:string;
+
+  rowdata:RowDatasaleshow[];
+}
+interface RowDatasaleshow {
+  name: string;
+  productID: string | number;
+  stockID: string | number; // Change the type to string | number
+  productCode:string;
+productName:string;
+  quantity:  number;
+  unitBuyingPrice: string | number;
+  unitSellingPrice: number;
+  totalPrice: number;
+}
+
 
 // export interface IProduct {
 //   id: number;
