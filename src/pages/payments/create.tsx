@@ -1,14 +1,15 @@
 import { useGetToPath, useGo } from "@refinedev/core";
 import { useSearchParams } from "react-router-dom";
-import { AccountsDrawerForm } from "../../components/accounts/drawer-form";
+import {  PaymentDrawerForm } from "../../components/payment/drawer-form";
+// import { AccountsDrawerForm } from "../../components/payment/drawer-form";
 
-export const AccountsCreate = () => {
+export const PaymentCreate = () => {
   const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
   const go = useGo();
 
   return (
-    <AccountsDrawerForm
+    <PaymentDrawerForm
       action="create"
       onMutationSuccess={() => {
         go({

@@ -24,7 +24,7 @@ import {
   Spin,
   DatePicker,
 } from "antd";
-import {  ITransaction, ICategory, IUser } from "../../../interfaces";
+import {  ITransaction, ICategory, ICustomer } from "../../../interfaces";
 import { useSearchParams } from "react-router-dom";
 import { Drawer } from "../../drawer";
 import { UploadOutlined } from "@ant-design/icons";
@@ -37,7 +37,7 @@ type Props = {
   onMutationSuccess?: () => void;
 };
 
-export const AccountsDrawerForm = (props: Props) => {
+export const PaymentDrawerForm = (props: Props) => {
   const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
   const go = useGo();
@@ -49,7 +49,7 @@ export const AccountsDrawerForm = (props: Props) => {
   const [form] = useForm();
   const { drawerProps, formProps, close, saveButtonProps, formLoading } =
     useDrawerForm<ITransaction>({
-      resource: "accounts",
+      resource: "payments",
       id: props?.id, // when undefined, id will be read from the URL.
       action: props.action,
       redirect: false,
@@ -60,7 +60,7 @@ export const AccountsDrawerForm = (props: Props) => {
       // form,
     });
 
-  const { selectProps: categorySelectProps } = useSelect<IUser>({
+  const { selectProps: categorySelectProps } = useSelect<ICustomer>({
     resource: "users",
   });
 

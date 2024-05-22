@@ -330,15 +330,15 @@ const API_URL = " https://tyre-sales-admin-backend.onrender.com";
                 <Route
                   path="/payments"
                   element={
-                    <AccountsList>
+                    <PaymentList>
                       <Outlet />
-                    </AccountsList>
+                    </PaymentList>
                   }
                 >
 
 
                   {/* <Route path=":id" element={<CustomerShow />} /> */}
-                  <Route path="new" element={<AccountsCreate />} />
+                  <Route path="new" element={<PaymentCreate />} />
                   {/* <Route path=":id/edit" element={<CustomerEdit />} /> */}
 
 
