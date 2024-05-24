@@ -131,11 +131,11 @@ export interface ISalesShow {
   // id: number;
   // createdAt: string;
   id: number;
-  createdAt: string;
+  date: string;
   description: string;
   due_amount:number;
   price:number;
-  custmoer:string;
+  customer:string;
 
   rowdata:RowDatasaleshow[];
 }

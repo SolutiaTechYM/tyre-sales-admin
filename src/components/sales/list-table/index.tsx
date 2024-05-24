@@ -116,8 +116,8 @@ export const SaleListTable = () => {
       />
       <Table.Column
         title={t("purchases.fields.createdAt")}
-        dataIndex="createdAt"
-        key="createdAt"
+        dataIndex="date"
+        key="date"
         align="right"
         sorter
         // defaultSortOrder={getDefaultSortOrder("price", sorters)}
