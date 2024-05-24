@@ -166,7 +166,7 @@ export const PurchaseListTable = () => {
         title={t("purchases.fields.note")}
         dataIndex="description"
         key="description"
-        width={432}
+        width={380}
         filterIcon={(filtered) => (
           <SearchOutlined
             style={{
@@ -189,7 +189,7 @@ export const PurchaseListTable = () => {
             <Typography.Paragraph
               ellipsis={{ rows: 1, tooltip: true }}
               style={{
-                maxWidth: "400px",
+                maxWidth: "380px",
                 marginBottom: 0,
               }}
             >
@@ -216,8 +216,9 @@ export const PurchaseListTable = () => {
                 fontWeight:"bold"
               }}
               options={{
-                style: "currency",
-                currency: "lkr",
+
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
               }}
             />
           );
@@ -233,14 +234,13 @@ export const PurchaseListTable = () => {
  
         render={(credit: number) => {
           const formatOptions = {
-            style: 'currency',
-            currency: 'LKR',
+
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           };
         
-          if (credit < 0) {
-            const formattedValue = `Cr ${Math.abs(credit).toLocaleString('en-LK', formatOptions)}`;
+          if (credit > 0) {
+            const formattedValue = `${credit.toLocaleString('en-LK', formatOptions)}`;
             return (
               <span
                 style={{
@@ -250,11 +250,18 @@ export const PurchaseListTable = () => {
                   color: "lightgreen"
                 }}
               >
+                <div style={{display:"flex",justifyContent:"space-between"}}>
+                <div>C</div>
+                <div>
                 {formattedValue}
+
+                </div>
+
+                </div>
               </span>
             );
-          } else {
-            const formattedValue = `Dr ${credit.toLocaleString('en-LK', formatOptions)}`;
+          } else if(credit < 0) {
+            const formattedValue = `${Math.abs(credit).toLocaleString('en-LK', formatOptions)}`;
             return (
               <span
                 style={{
@@ -264,9 +271,30 @@ export const PurchaseListTable = () => {
                   color: "red"
                 }}
               >
+                                <div style={{display:"flex",justifyContent:"space-between"}}>
+                <div>D</div>
+                <div>
                 {formattedValue}
+
+                </div>
+
+                </div>
+
+
               </span>
             );
+          }else{
+            return (
+              <span
+                style={{
+                  width: "80px",
+                  fontVariantNumeric: "tabular-nums",
+                  whiteSpace: "nowrap",
+                  color: "white"
+                }}
+              >
+              -
+              </span>)
           }
         }}
       />

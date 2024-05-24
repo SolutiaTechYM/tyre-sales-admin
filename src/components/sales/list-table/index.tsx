@@ -166,7 +166,7 @@ export const SaleListTable = () => {
         title={t("purchases.fields.note")}
         dataIndex="description"
         key="description"
-        width={432}
+        width={380}
         filterIcon={(filtered) => (
           <SearchOutlined
             style={{
@@ -189,7 +189,7 @@ export const SaleListTable = () => {
             <Typography.Paragraph
               ellipsis={{ rows: 1, tooltip: true }}
               style={{
-                maxWidth: "400px",
+                maxWidth: "380px",
                 marginBottom: 0,
               }}
             >
@@ -222,7 +222,7 @@ export const SaleListTable = () => {
           );
         }}
       />
-  <Table.Column
+           <Table.Column
         title={t("Due Amount")}
         dataIndex="due_amount"
         key="due_amount"
@@ -232,14 +232,13 @@ export const SaleListTable = () => {
  
         render={(credit: number) => {
           const formatOptions = {
-            style: 'currency',
-            currency: 'LKR',
+
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           };
         
-          if (credit < 0) {
-            const formattedValue = `Cr ${Math.abs(credit).toLocaleString('en-LK', formatOptions)}`;
+          if (credit > 0) {
+            const formattedValue = `${credit.toLocaleString('en-LK', formatOptions)}`;
             return (
               <span
                 style={{
@@ -249,11 +248,18 @@ export const SaleListTable = () => {
                   color: "lightgreen"
                 }}
               >
+                <div style={{display:"flex",justifyContent:"space-between"}}>
+                <div>C</div>
+                <div>
                 {formattedValue}
+
+                </div>
+
+                </div>
               </span>
             );
-          } else {
-            const formattedValue = `Dr ${credit.toLocaleString('en-LK', formatOptions)}`;
+          } else if(credit < 0) {
+            const formattedValue = `${Math.abs(credit).toLocaleString('en-LK', formatOptions)}`;
             return (
               <span
                 style={{
@@ -263,9 +269,30 @@ export const SaleListTable = () => {
                   color: "red"
                 }}
               >
+                                <div style={{display:"flex",justifyContent:"space-between"}}>
+                <div>D</div>
+                <div>
                 {formattedValue}
+
+                </div>
+
+                </div>
+
+
               </span>
             );
+          }else{
+            return (
+              <span
+                style={{
+                  width: "80px",
+                  fontVariantNumeric: "tabular-nums",
+                  whiteSpace: "nowrap",
+                  color: "white"
+                }}
+              >
+              -
+              </span>)
           }
         }}
       />
