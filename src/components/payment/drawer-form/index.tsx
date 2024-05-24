@@ -1,5 +1,5 @@
 import { SaveButton, useDrawerForm } from "@refinedev/antd";
-import { BaseKey, useApiUrl, useGetToPath, useGo, useList, useTranslate, useCustomMutation } from "@refinedev/core";
+import { BaseKey, useApiUrl, useGetToPath, useGo, useList, useTranslate } from "@refinedev/core";
 import { getValueFromEvent, useSelect } from "@refinedev/antd";
 import { useForm } from "antd/lib/form/Form";
 import { Form, Input, Select, Table, Button, Flex, Spin } from "antd";
@@ -9,7 +9,6 @@ import { Drawer } from "../../drawer";
 import { useState, useEffect } from "react";
 import { Empty } from 'antd';
 import { log } from "console";
-import { httpClient } from "@refinedev/simple-rest";
 
 type Props = {
   id?: BaseKey;
@@ -36,8 +35,10 @@ export const PaymentDrawerForm = (props: Props) => {
     },
   });
 
+  
   const [selectedTransactionType, setSelectedTransactionType] = useState<"capital" | "purchase" | "sell" | undefined>(undefined);
   const [selectedcustomerid, setselectedcustomerid] = useState<number | undefined>();
+
   const [selectedsellerid, setselectedsellerid] = useState();
 
   const { selectProps: supplierSelectProps } = useSelect<ISupplier>({
@@ -63,23 +64,13 @@ export const PaymentDrawerForm = (props: Props) => {
   const [filteredSellData, setFilteredSellData] = useState<ISalesShow[]>([]);
   const [filteredPurchaseData, setFilteredPurchaseData] = useState<IPurchase[]>([]);
 
-  const { mutate: fetchSalesByCustomer } = useCustomMutation();
-  const { mutate: fetchPurchasesBySupplier } = useCustomMutation();
-
-  const fetchSales = async (customerId: number) => {
-    const { data } = await httpClient.get(`/sales/:customer_id=${customerId}`);
-    setFilteredSellData(data);
-  };
-
-  const fetchPurchases = async (supplierId: number) => {
-    const { data } = await httpClient.get(`/purchases/:supplier_id=${supplierId}`);
-    setFilteredPurchaseData(data);
-  };
-
   useEffect(() => {
-    if (selectedcustomerid) {
-      fetchSales(selectedcustomerid);
-      console.log(filteredSellData);
+    console.log(selectedcustomerid);
+    
+    if (sellData && selectedcustomerid) {
+      setFilteredSellData(sellData.data.filter(item => item.custmoer === selectedcustomerid));
+    
+      console.log("filteredSellData");
       
     } else {
       setFilteredSellData([]);
@@ -87,12 +78,12 @@ export const PaymentDrawerForm = (props: Props) => {
   }, [selectedcustomerid]);
 
   useEffect(() => {
-    if (form.getFieldValue("supplierId")) {
-      fetchPurchases(form.getFieldValue("supplierId"));
+    if (purchaseData && form.getFieldValue("supplierId")) {
+      setFilteredPurchaseData(purchaseData.filter((item: { supplier: any; }) => item.supplier === form.getFieldValue("supplierId")));
     } else {
       setFilteredPurchaseData([]);
     }
-  }, [form.getFieldValue("supplierId")]);
+  }, [purchaseData, form.getFieldValue("supplierId")]);
 
   const onDrawerClose = () => {
     close();
@@ -116,6 +107,7 @@ export const PaymentDrawerForm = (props: Props) => {
     { label: "Sell", value: "sell" },
   ];
 
+
   const renderTransactionForm = () => {
     switch (selectedTransactionType) {
       case "capital":
@@ -128,19 +120,7 @@ export const PaymentDrawerForm = (props: Props) => {
         return (
           <>
             <Form.Item name="customerId" label="Customer" rules={[{ required: true, message: "Please select a customer" }]} >
-              <Select
-                {...customerSelectProps}
-                onChange={(value) => {
-                  if(selectedcustomerid){
-                  setselectedcustomerid(value as unknown as number);
-                  console.log(selectedcustomerid);
-                  fetchSales(selectedcustomerid)}
-                  
-                  // fetchSalesByCustomer({ resource: "sales", values: { customer_id: value } })
-                  //   .then(({ data }) => setFilteredSellData(data))
-                  //   .catch((error) => console.error(error));
-                }}
-              />
+              <Select {...customerSelectProps}  onChange={(value) => setselectedcustomerid(value as unknown as number)}/>
             </Form.Item>
             <Form.Item>
               <Table
@@ -173,15 +153,7 @@ export const PaymentDrawerForm = (props: Props) => {
         return (
           <>
             <Form.Item name="supplierId" label="Supplier" rules={[{ required: true, message: "Please select a supplier" }]} >
-              <Select
-                {...supplierSelectProps}
-                onChange={(value) => {
-                  form.setFieldValue("supplierId", value);
-                  fetchPurchasesBySupplier({ resource: "purchases", values: { supplier_id: value } })
-                    .then(({ data }) => setFilteredPurchaseData(data))
-                    .catch((error) => console.error(error));
-                }}
-              />
+              <Select {...supplierSelectProps}/>
             </Form.Item>
             <Form.Item>
               <Table
@@ -232,6 +204,7 @@ export const PaymentDrawerForm = (props: Props) => {
               Save
             </SaveButton>
           </Flex>
+        
         </Form>
       </Spin>
     </Drawer>
