@@ -96,7 +96,7 @@ export const DashboardPage: React.FC = () => {
     total: number;
     trend: number;
   }>({
-    url: `${API_URL}/dailyRevenue`,
+    url: `${API_URL}/misc/dailyRevenue`,
     method: "get",
     config: {
       query: dateFilterQuery,
@@ -108,7 +108,7 @@ export const DashboardPage: React.FC = () => {
     total: number;
     trend: number;
   }>({
-    url: `${API_URL}/dailyOrders`,
+    url: `${API_URL}/misc/dailyOrders`,
     method: "get",
     config: {
       query: dateFilterQuery,
@@ -120,7 +120,7 @@ export const DashboardPage: React.FC = () => {
     total: number;
     trend: number;
   }>({
-    url: `${API_URL}/newCustomers`,
+    url: `${API_URL}/misc/newCustomers`,
     method: "get",
     config: {
       query: dateFilterQuery,

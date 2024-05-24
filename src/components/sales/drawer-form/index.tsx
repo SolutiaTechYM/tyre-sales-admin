@@ -51,7 +51,8 @@ export const SaleDrawerForm = (props: Props) => {
   const [showModal, setShowModal] = useState(false);
   const [totalPrice, settotalPrice] = useState(0);
   const [stockunitprice, setstockunitprice] = useState(12345);
-  const [customerid, setstockunitprice] = useState(12345);
+  const [selectedproductid, setselectedproductid] = useState<number | undefined>();
+
 
 
   const { drawerProps, formProps, close, saveButtonProps, formLoading } =
@@ -278,7 +279,7 @@ export const SaleDrawerForm = (props: Props) => {
         },
       ]}
     >
-      <Select {...productSelectProps} />
+      <Select {...productSelectProps}  onChange={(value) => setselectedproductid(value as unknown as number)}/>
     </Form.Item>
     <Form.Item
       label={t("Stock")}
