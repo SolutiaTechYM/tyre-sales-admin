@@ -142,7 +142,7 @@ const API_URL = " https://tyre-sales-admin-backend.onrender.com";
                 },
               },
               {
-                name: "users",
+                name: "customers",
                 list: "/customers",
                 create: "/customers/new",
                 edit: "/customers/:id/edit",

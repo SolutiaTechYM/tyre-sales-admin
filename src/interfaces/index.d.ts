@@ -50,8 +50,16 @@ export interface ICustomer {
   lastOrderDate: string;
   createdAt: string;
   avatar: IFile & { thumbnailUrl?: string };
+  trades:ITrades[];
 }
 
+export interface ITrades {
+  id: number;
+  date: string;
+  value: number;
+  dueAmount: number;
+  description?: string;
+}
 
 // export interface IUser {
 //   id: number;
