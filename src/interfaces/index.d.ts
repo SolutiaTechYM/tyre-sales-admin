@@ -358,7 +358,7 @@ export interface IPurchase{
   description: string;
   price: number;
   due_amount:number
-  createdAt: string;
+  // createdAt: string;
 purchaseDetails: IPurchaseProductshow[];
 
 }

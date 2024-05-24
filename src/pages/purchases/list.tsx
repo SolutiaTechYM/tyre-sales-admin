@@ -22,7 +22,7 @@ export const PurchaseList = ({ children }: PropsWithChildren) => {
       return {
         id: item.id,
         date:item.date,
-        createdAt: item.createdAt,
+        // createdAt: item.createdAt,
         description: item.description,
         price: item.price,
         supplier:item.supplier
