@@ -223,6 +223,14 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
           
           sorter
         />
+        
+<Table.Column
+          key="lastOrderDate"
+          dataIndex="lastOrderDate"
+          title="last Order Date"
+          
+          sorter
+        />
 
 <Table.Column
           key="due_amount"
