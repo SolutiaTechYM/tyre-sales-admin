@@ -40,7 +40,7 @@ console.log(user);
       >
         <SupplierInfoSummary supplier={user} />
         <SupplierInfoList supplier={user} />
-        <SupplierOrderHistory supplier={user} />
+      {user &&  <SupplierOrderHistory supplier={user} />}
       </Flex>
     </Drawer>
   );

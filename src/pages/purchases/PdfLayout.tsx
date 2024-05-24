@@ -17,79 +17,6 @@ type PdfProps = {
 };
 
 
-const syntheticData = {
-  purchaseId: "PO-0123",
-  supplierName: "Acme Tyre Suppliers",
-  createdDate: "2023-05-11",
-  note: "Please deliver the order within 7 business days.",
-  totalPrice: 1250.75,
-  dueBalance: 875.52,
-  products: [
-    {
-      id: 1,
-      name: "All-Season Radial Tyre",
-      unitPrice: 75.99,
-      quantity: 1000,
-      category: "Passenger Car Tyres",
-    },
-    {
-      id: 2,
-      name: "Off-Road Mud Tyre",
-      unitPrice: 125.25,
-      quantity: 2,
-      category: "Truck & SUV Tyres",
-    },
-    {
-      id: 3,
-      name: "High-Performance Summer Tyre",
-      unitPrice: 89.99,
-      quantity: 8,
-      category: "Passenger Car Tyres",
-    },
-    {
-      id: 1,
-      name: "All-Season Radial Tyre",
-      unitPrice: 75.99,
-      quantity: 4,
-      category: "Passenger Car Tyres",
-    },
-    {
-      id: 2,
-      name: "Off-Road Mud Tyre",
-      unitPrice: 125.25,
-      quantity: 2,
-      category: "Truck & SUV Tyres",
-    },
-    {
-      id: 3,
-      name: "High-Performance Summer Tyre",
-      unitPrice: 89.99,
-      quantity: 8,
-      category: "Passenger Car Tyres",
-    },
-    {
-      id: 1,
-      name: "All-Season Radial Tyre",
-      unitPrice: 75.99,
-      quantity: 4,
-      category: "Passenger Car Tyres",
-    },
-    {
-      id: 2,
-      name: "Off-Road Mud Tyre",
-      unitPrice: 125.25,
-      quantity: 2,
-      category: "Truck & SUV Tyres",
-    },
-    {
-      id: 3,
-      name: "High-Performance Summer Tyre",
-      unitPrice: 89.99,
-      quantity: 8,
-      category: "Passenger Car Tyres",
-    },
-  ],
-};
 
 export const PdfLayout: React.FC<PdfProps> = ({ record }) =>  {
   const [todatdate,settodaydate]=useState("");
@@ -139,7 +66,7 @@ export const PdfLayout: React.FC<PdfProps> = ({ record }) =>  {
             </View>
             <View style={styles.infoRow}>
               <Text style={styles.infoLabel}>Created Date:</Text>
-              <Text style={styles.infoValue}>{record?.createdAt}</Text>
+              <Text style={styles.infoValue}>{record?.date}</Text>
             </View>
             <View style={styles.infoRow}>
               <Text style={styles.infoLabel}>Note:</Text>

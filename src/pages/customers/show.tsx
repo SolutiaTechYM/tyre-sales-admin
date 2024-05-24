@@ -23,7 +23,7 @@ export const CustomerShow: React.FC<IResourceComponentsProps> = () => {
   return (
     <Drawer
       open
-      onClose={() => list("users")}
+      onClose={() => list("customers")}
       width={breakpoint.sm ? "736px" : "100%"}
     >
       <Flex
@@ -35,7 +35,7 @@ export const CustomerShow: React.FC<IResourceComponentsProps> = () => {
       >
         <CustomerInfoSummary customer={user} />
         <CustomerInfoList customer={user} />
-        <CustomerOrderHistory customer={user} />
+        {user && <CustomerOrderHistory customer={user} />}
       </Flex>
     </Drawer>
   );

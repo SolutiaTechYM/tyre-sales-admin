@@ -285,7 +285,7 @@ export const ProductListTable = () => {
       />
 
 <Table.Column
-        title={t("products.fields.price")}
+        title={t("Current Price")}
         dataIndex="current_price"
         key="current_price"
         align="right"

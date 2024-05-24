@@ -79,11 +79,7 @@ export const SalesDrawerShow = (props: Props) => {
   };
 
   const columns = [
-    {
-      title: '',
-      dataIndex: 'productID',
-      key: 'productID',
-    },
+
     {
       title: 'Product Code',
       dataIndex: 'productCode',
@@ -95,10 +91,18 @@ export const SalesDrawerShow = (props: Props) => {
       key: 'productName',
     },
     {
-      title: 'Unit Price',
-      dataIndex: 'unitSellingPrice',
-      key: 'unitPrice',
-      render: (value: number) => <NumberField value={value} options={{ style: 'currency', currency: 'lkr' }} />,
+      title: 'Unit Buy Price',
+      dataIndex: 'unitBuyPrice',
+      key: 'unitBuyPrice',
+      render: (value: number) => <NumberField value={value} options={{                 minimumFractionDigits: 2,
+        maximumFractionDigits: 2, }} />,
+    },
+    {
+      title: 'Unit Sell Price',
+      dataIndex: 'unitSellPrice',
+      key: 'unitSellPrice',
+      render: (value: number) => <NumberField value={value} options={{                 minimumFractionDigits: 2,
+        maximumFractionDigits: 2, }} />,
     },
     {
       title: 'Quantity',
@@ -109,7 +113,8 @@ export const SalesDrawerShow = (props: Props) => {
       title: 'Total',
       dataIndex: 'totalPrice',
       key: 'totalPrice',
-      render: (value: number) => <NumberField value={value} options={{ style: 'currency', currency: 'lkr' }} />,
+      render: (value: number) => <NumberField value={value} options={{                 minimumFractionDigits: 2,
+        maximumFractionDigits: 2, }} />,
     },
   ];
 
@@ -138,51 +143,47 @@ export const SalesDrawerShow = (props: Props) => {
         <Typography.Text>
   Due Amount:{" "}
   {sales?.due_amount !== undefined ? (
-    sales.due_amount < 0 ? (
-      <span
-        style={{
-          color: "lightgreen",
-          fontVariantNumeric: "tabular-nums",
-          whiteSpace: "nowrap",
-        }}
-      >
-        Cr{" "}
-        {Math.abs(sales.due_amount).toLocaleString("en-US", {
-          style: "currency",
-          currency: "lkr",
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })}
-      </span>
-    ) : (
-      <span
-        style={{
-          color: "red",
-          fontVariantNumeric: "tabular-nums",
-          whiteSpace: "nowrap",
-        }}
-      >
-        Dr{" "}
-        {sales.due_amount.toLocaleString("en-US", {
-          style: "currency",
-          currency: "lkr",
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })}
-      </span>
-    )
+  sales.due_amount < 0 ? (
+    <span
+      style={{
+        color: "red",
+        fontVariantNumeric: "tabular-nums",
+        whiteSpace: "nowrap",
+      }}
+    >
+      C{" "}
+      {Math.abs(sales.due_amount).toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}
+    </span>
+  ) : sales.due_amount > 0 ? (
+    <span
+      style={{
+        color: "lightgreen",
+        fontVariantNumeric: "tabular-nums",
+        whiteSpace: "nowrap",
+      }}
+    >
+      D{" "}
+      {sales.due_amount.toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}
+    </span>
   ) : (
-    <NumberField
-      value={0}
-      options={{ style: "currency", currency: "lkr" }}
-    />
-  )}
+    "-"
+  )
+) : (
+  <NumberField value={0} options={{ style: "currency", currency: "USD" }} />
+)}
 </Typography.Text>
         <Typography.Text>
             Total Price:{" "}
             <NumberField
                 value={sales?.price || 0}
-                options={{ style: "currency", currency: "lkr", }}
+                options={{ minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,}}
                 style={{
                 fontWeight:"bold"
 
@@ -219,7 +220,7 @@ export const SalesDrawerShow = (props: Props) => {
             padding: "32px",
           }}
         >
-          <Table dataSource={sales?.rowdata} columns={columns} />
+          <Table dataSource={sales?.saleDetails} columns={columns} />
         </Flex>
       </Flex>
 

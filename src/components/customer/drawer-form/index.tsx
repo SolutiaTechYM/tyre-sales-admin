@@ -49,7 +49,7 @@ export const CustomerDrawerForm = (props: Props) => {
   const [form] = useForm();
   const { drawerProps, formProps, close, saveButtonProps, formLoading } =
     useDrawerForm<ICustomer>({
-      resource: "users",
+      resource: "customers",
       id: props?.id, // when undefined, id will be read from the URL.
       action: props.action,
       redirect: false,
@@ -61,7 +61,7 @@ export const CustomerDrawerForm = (props: Props) => {
     });
 
   const { selectProps: categorySelectProps } = useSelect<ICustomer>({
-    resource: "users",
+    resource: "customers",
   });
 
   const onDrawerCLose = () => {

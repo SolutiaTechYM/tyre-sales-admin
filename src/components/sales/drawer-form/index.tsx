@@ -51,6 +51,7 @@ export const SaleDrawerForm = (props: Props) => {
   const [showModal, setShowModal] = useState(false);
   const [totalPrice, settotalPrice] = useState(0);
   const [stockunitprice, setstockunitprice] = useState(12345);
+  const [customerid, setstockunitprice] = useState(12345);
 
 
   const { drawerProps, formProps, close, saveButtonProps, formLoading } =
@@ -71,7 +72,7 @@ export const SaleDrawerForm = (props: Props) => {
   // }, [quantity, unitPrice, formProps.form]);
 
   const { selectProps: supplierSelectProps } = useSelect<ICustomer>({
-    resource: "users",
+    resource: "customers",
     optionLabel: "name", // Add this line
   });
   const { selectProps: productSelectProps } = useSelect<IProduct>({
@@ -79,10 +80,11 @@ export const SaleDrawerForm = (props: Props) => {
     optionLabel: "name", // Add this line
     optionValue: "id", // Add this line
   });
+  
   const { selectProps: stockSelectProps } = useSelect<IStock>({
     resource: "stocks",
     optionLabel: "id", // Add this line
-    optionValue: "unitPrice", // Add this line
+    optionValue: "unitBuyPrice", // Add this line
   });
 
   useEffect(() => {
@@ -401,9 +403,9 @@ export const SaleDrawerForm = (props: Props) => {
           name: selectedProduct?.label?.toString() || "",
           productID: selectedProduct?.value || "",
           stockID: selectedStock?.label?.toString() || "",
-          unitBuyingPrice: selectedStock?.value || "",
+          unitBuyPrice: selectedStock?.value || "",
           quantity: formProps.form.getFieldValue("quantity"),
-          unitSellingPrice: formProps.form.getFieldValue("unitsellingprice"),
+          unitSellPrice: formProps.form.getFieldValue("unitsellingprice"),
           totalPrice: formProps.form.getFieldValue("unitsellingprice") * formProps.form.getFieldValue("quantity"),
         };
 
@@ -414,8 +416,8 @@ export const SaleDrawerForm = (props: Props) => {
         );
 
         if (existingRow) {
-          if (existingRow.unitSellingPrice !== newRow.unitSellingPrice) {
-            showError(`Unit Selling Price cannot be changed. Current price: ${existingRow.unitSellingPrice}`);
+          if (existingRow.unitSellPrice !== newRow.unitSellPrice) {
+            showError(`Unit Selling Price cannot be changed. Current price: ${existingRow.unitSellPrice}`);
           } else {
             const updatedRows = tableData.map((row) =>
               row === existingRow ? { ...row, quantity: row.quantity + newRow.quantity } : row

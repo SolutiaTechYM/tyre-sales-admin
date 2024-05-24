@@ -128,8 +128,8 @@ interface RowDatasale {
   productID: string | number;
   stockID: string | number; // Change the type to string | number
   quantity:  number;
-  unitBuyingPrice: string | number;
-  unitSellingPrice: number;
+  unitBuyPrice: string | number;
+  unitSellPrice: number;
   totalPrice: number;
 }
 
@@ -145,7 +145,7 @@ export interface ISalesShow {
   price:number;
   customer:string;
 
-  rowdata:RowDatasaleshow[];
+  saleDetails:RowDatasaleshow[];
 }
 interface RowDatasaleshow {
   name: string;
@@ -154,8 +154,8 @@ interface RowDatasaleshow {
   productCode:string;
 productName:string;
   quantity:  number;
-  unitBuyingPrice: string | number;
-  unitSellingPrice: number;
+  unitBuyPrice: string | number;
+  unitSellPrice: number;
   totalPrice: number;
 }
 
@@ -357,6 +357,8 @@ export interface ISupplier{
   dueAmount: number;
   lastOrderDate: string;
   createdAt: string;
+  trades:ITrades[];
+
 }
 
 

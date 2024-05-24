@@ -270,7 +270,7 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
               icon={<EyeOutlined />}
               onClick={() => {
                 return go({
-                  to: `${showUrl("users", record.id)}`,
+                  to: `${showUrl("customers", record.id)}`,
                   query: {
                     to: pathname,
                   },

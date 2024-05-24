@@ -139,51 +139,47 @@ export const PurchaseDrawerShow = (props: Props) => {
         <Typography.Text>
   Due Amount:{" "}
   {purchase?.due_amount !== undefined ? (
-    purchase.due_amount < 0 ? (
-      <span
-        style={{
-          color: "lightgreen",
-          fontVariantNumeric: "tabular-nums",
-          whiteSpace: "nowrap",
-        }}
-      >
-        Cr{" "}
-        {Math.abs(purchase.due_amount).toLocaleString("en-US", {
-          style: "currency",
-          currency: "lkr",
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })}
-      </span>
-    ) : (
-      <span
-        style={{
-          color: "red",
-          fontVariantNumeric: "tabular-nums",
-          whiteSpace: "nowrap",
-        }}
-      >
-        Dr{" "}
-        {purchase.due_amount.toLocaleString("en-US", {
-          style: "currency",
-          currency: "lkr",
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })}
-      </span>
-    )
+  purchase.due_amount < 0 ? (
+    <span
+      style={{
+        color: "red",
+        fontVariantNumeric: "tabular-nums",
+        whiteSpace: "nowrap",
+      }}
+    >
+      C{" "}
+      {Math.abs(purchase.due_amount).toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}
+    </span>
+  ) : purchase.due_amount > 0 ? (
+    <span
+      style={{
+        color: "lightgreen",
+        fontVariantNumeric: "tabular-nums",
+        whiteSpace: "nowrap",
+      }}
+    >
+      D{" "}
+      {purchase.due_amount.toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}
+    </span>
   ) : (
-    <NumberField
-      value={0}
-      options={{ style: "currency", currency: "USD" }}
-    />
-  )}
+    "-"
+  )
+) : (
+  <NumberField value={0} options={{ style: "currency", currency: "USD" }} />
+)}
 </Typography.Text>
         <Typography.Text>
             Total Price:{" "}
             <NumberField
                 value={purchase?.price || 0}
-                options={{ style: "currency", currency: "lkr", }}
+                options={{          minimumFractionDigits: 2,
+                  maximumFractionDigits: 2, }}
                 style={{
                 fontWeight:"bold"
 
