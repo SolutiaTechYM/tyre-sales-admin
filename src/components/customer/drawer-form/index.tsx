@@ -96,7 +96,7 @@ export const CustomerDrawerForm = (props: Props) => {
   const image = images?.[0] || null;
   const previewImageURL = image?.url || image?.response?.url;
   
-  const title = props.action === "edit" ? null : t("products.actions.add");
+  const title = props.action === "edit" ? null : t("Add new Customer");
 
   return (
     <Drawer
