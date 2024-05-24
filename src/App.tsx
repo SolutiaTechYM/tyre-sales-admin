@@ -63,9 +63,11 @@ import { SupplierCreate, SupplierEdit, SupplierList } from "./pages/suppliers";
 
 import { CustomerCreate } from "./pages/customers/create";
 import { CustomerEdit } from "./pages/customers/edit";
-import { AccountsList } from "./pages/accounts";
-import { AccountsCreate } from "./pages/accounts/create";
+// import { AccountsList } from "./pages/accounts";
+// import { AccountsCreate } from "./pages/accounts/create";
 import { SaleCreate, SaleList, SalesShow } from "./pages/sales";
+import { PaymentList } from "./pages/payments";
+import { PaymentCreate } from "./pages/payments/create";
 
 
 const App: React.FC = () => {

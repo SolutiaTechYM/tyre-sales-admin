@@ -1,34 +1,14 @@
 import { SaveButton, useDrawerForm } from "@refinedev/antd";
-import {
-  BaseKey,
-  useApiUrl,
-  useGetToPath,
-  useGo,
-  useTranslate,
-} from "@refinedev/core";
-import InputMask from "react-input-mask";
-
+import { BaseKey, useApiUrl, useGetToPath, useGo, useList, useTranslate } from "@refinedev/core";
 import { getValueFromEvent, useSelect } from "@refinedev/antd";
 import { useForm } from "antd/lib/form/Form";
-import {
-  Form,
-  Input,
-  InputNumber,
-  Select,
-  Upload,
-  Grid,
-  Button,
-  Flex,
-  Avatar,
-  Segmented,
-  Spin,
-  DatePicker,
-} from "antd";
-import {  ITransaction, ICategory, ICustomer } from "../../../interfaces";
+import { Form, Input, Select, Table, Button, Flex, Spin } from "antd";
+import { ITransaction, ICustomerOrSupplier, ITransactionDetail, ISupplier, ICustomer, IPurchase, ISalesShow } from "../../../interfaces";
 import { useSearchParams } from "react-router-dom";
 import { Drawer } from "../../drawer";
-import { UploadOutlined } from "@ant-design/icons";
-import { useStyles } from "./styled";
+import { useState, useEffect } from "react";
+import { Empty } from 'antd';
+import { log } from "console";
 
 type Props = {
   id?: BaseKey;
@@ -43,178 +23,188 @@ export const PaymentDrawerForm = (props: Props) => {
   const go = useGo();
   const t = useTranslate();
   const apiUrl = useApiUrl();
-  const breakpoint = Grid.useBreakpoint();
-  const { styles, theme } = useStyles();
-
   const [form] = useForm();
-  const { drawerProps, formProps, close, saveButtonProps, formLoading } =
-    useDrawerForm<ITransaction>({
-      resource: "payments",
-      id: props?.id, // when undefined, id will be read from the URL.
-      action: props.action,
-      redirect: false,
-      onMutationSuccess: () => {
-        console.log("Form data:", form.getFieldsValue());
-        props.onMutationSuccess?.();
-      },
-      // form,
-    });
-
-  const { selectProps: categorySelectProps } = useSelect<ICustomer>({
-    resource: "users",
+  const { drawerProps, formProps, close, saveButtonProps, formLoading } = useDrawerForm<ITransaction>({
+    resource: "payments",
+    id: props?.id,
+    action: props.action,
+    redirect: false,
+    onMutationSuccess: () => {
+      console.log("Form data:", form.getFieldsValue());
+      props.onMutationSuccess?.();
+    },
   });
 
-  const onDrawerCLose = () => {
-    close();
+  
+  const [selectedTransactionType, setSelectedTransactionType] = useState<"capital" | "purchase" | "sell" | undefined>(undefined);
+  const [selectedcustomerid, setselectedcustomerid] = useState<number | undefined>();
 
+  const [selectedsellerid, setselectedsellerid] = useState();
+
+  const { selectProps: supplierSelectProps } = useSelect<ISupplier>({
+    resource: "suppliers",
+    optionValue:"id",
+    optionLabel: "name",
+  });
+
+  const { selectProps: customerSelectProps } = useSelect<ICustomer>({
+    resource: "users",
+    optionValue:"id",
+    optionLabel: "name",
+  });
+
+  const { data: sellData, isLoading: isSellLoading } = useList<ISalesShow>({
+    resource: "sales",
+  });
+
+  const { data: purchaseData, isLoading: isPurchaseLoading } = useList<IPurchase>({
+    resource: "purchases",
+  });
+
+  const [filteredSellData, setFilteredSellData] = useState<ISalesShow[]>([]);
+  const [filteredPurchaseData, setFilteredPurchaseData] = useState<IPurchase[]>([]);
+
+  useEffect(() => {
+    console.log(selectedcustomerid);
+    
+    if (sellData && selectedcustomerid) {
+      setFilteredSellData(sellData.data.filter(item => item.custmoer === selectedcustomerid));
+    
+      console.log("filteredSellData");
+      
+    } else {
+      setFilteredSellData([]);
+    }
+  }, [selectedcustomerid]);
+
+  useEffect(() => {
+    if (purchaseData && form.getFieldValue("supplierId")) {
+      setFilteredPurchaseData(purchaseData.filter((item: { supplier: any; }) => item.supplier === form.getFieldValue("supplierId")));
+    } else {
+      setFilteredPurchaseData([]);
+    }
+  }, [purchaseData, form.getFieldValue("supplierId")]);
+
+  const onDrawerClose = () => {
+    close();
     if (props?.onClose) {
       props.onClose();
       return;
     }
-
     go({
-      to:
-        searchParams.get("to") ??
-        getToPath({
-          action: "list",
-        }) ??
-        "",
-      query: {
-        to: undefined,
-      },
-      options: {
-        keepQuery: true,
-      },
+      to: searchParams.get("to") ?? getToPath({ action: "list" }) ?? "",
+      query: { to: undefined },
+      options: { keepQuery: true },
       type: "replace",
     });
   };
 
+  const title = props.action === "edit" ? null : t("Add Payment");
 
-  
-  const title = props.action === "edit" ? null : t("Add Capital");
+  const transactionTypeOptions = [
+    { label: "Capital", value: "capital" },
+    { label: "Purchase", value: "purchase" },
+    { label: "Sell", value: "sell" },
+  ];
+
+
+  const renderTransactionForm = () => {
+    switch (selectedTransactionType) {
+      case "capital":
+        return (
+          <Form.Item name="amount" label="Amount" rules={[{ required: true, message: "Please enter an amount" }]}>
+            <Input type="number" />
+          </Form.Item>
+        );
+      case "sell":
+        return (
+          <>
+            <Form.Item name="customerId" label="Customer" rules={[{ required: true, message: "Please select a customer" }]} >
+              <Select {...customerSelectProps}  onChange={(value) => setselectedcustomerid(value as unknown as number)}/>
+            </Form.Item>
+            <Form.Item>
+              <Table
+                dataSource={filteredSellData.map(item => ({
+                  id: item.id,
+                  dueAmount: item.due_amount,
+                  payment: form.getFieldValue(`transactions.${item.id}.payment`) || 0,
+                }))}
+                rowKey="id"
+                bordered
+                pagination={false}
+              >
+                <Table.Column title="ID" dataIndex="id" key="id" />
+                <Table.Column title="Due Amount" dataIndex="dueAmount" key="dueAmount" />
+                <Table.Column
+                  title="Payment"
+                  dataIndex="payment"
+                  key="payment"
+                  render={(value, record: { id: BaseKey; dueAmount: number; payment: number }) => (
+                    <Form.Item name={["transactions", record.id, "payment"]}>
+                      <Input type="number" defaultValue={record.payment} />
+                    </Form.Item>
+                  )}
+                />
+              </Table>
+            </Form.Item>
+          </>
+        );
+      case "purchase":
+        return (
+          <>
+            <Form.Item name="supplierId" label="Supplier" rules={[{ required: true, message: "Please select a supplier" }]} >
+              <Select {...supplierSelectProps}/>
+            </Form.Item>
+            <Form.Item>
+              <Table
+                dataSource={filteredPurchaseData.map(item => ({
+                  id: item.id,
+                  dueAmount: item.due_amount,
+                  payment: form.getFieldValue(`transactions.${item.id}.payment`) || 0,
+                }))}
+                rowKey="id"
+                bordered
+                pagination={false}
+              >
+                <Table.Column title="ID" dataIndex="id" key="id" />
+                <Table.Column title="Due Amount" dataIndex="dueAmount" key="dueAmount" />
+                <Table.Column
+                  title="Payment"
+                  dataIndex="payment"
+                  key="payment"
+                  render={(value, record: { id: BaseKey; dueAmount: number; payment: number }) => (
+                    <Form.Item name={["transactions", record.id, "payment"]}>
+                      <Input type="number" defaultValue={record.payment} />
+                    </Form.Item>
+                  )}
+                />
+              </Table>
+            </Form.Item>
+          </>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
-    <Drawer
-      {...drawerProps}
-      open={true}
-      title={title}
-      width={breakpoint.sm ? "378px" : "100%"}
-      zIndex={1001}
-      onClose={onDrawerCLose}
-    >
+    <Drawer {...drawerProps} open={true} title={title} width="500px" zIndex={1001} onClose={onDrawerClose}>
       <Spin spinning={formLoading}>
         <Form {...formProps} layout="vertical">
-
-          <Flex vertical>
-            <Form.Item
-              label={t("Date")}
-              name="date"
-              className={styles.formItem}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input placeholder="please enter name " type="date"/>
-            </Form.Item>
-            <Form.Item
-              label={t("Type")}
-              name="type"
-              className={styles.formItem}
-              initialValue={"Capital"}
-           
-            >
-               <Input  disabled/>
-               
-           {/* <InputMask mask="(999) 999 99 99"> */}
-            {/* 
-                                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                                    // @ts-ignore */}
-            {/* {(props: InputProps) => (
-              <Input
-                {...props}
-                placeholder="please enter Phone number"
-              />
-            )}
-          </InputMask> */}
-
-            </Form.Item>
-
-            <Form.Item
-              label={t("Value")}
-              name="value"
-              className={styles.formItem}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-         <InputNumber prefix={"LKR"} style={{ width: "150px" }} type="number"/>
-            </Form.Item>
-
-            {/* <Form.Item
-              label={t("Company")}
-              name="Company"
-              className={styles.formItem}
-             rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-            <Input
-   
-              placeholder="optional"
+          <Form.Item name="type" label="Transaction Type" rules={[{ required: true, message: "Please select a transaction type" }]}>
+            <Select
+              options={transactionTypeOptions}
+              onChange={(value) => setSelectedTransactionType(value as "capital" | "purchase" | "sell")}
             />
-            </Form.Item> */}
-
-
-            {/* <Form.Item
-              label={t("createdAt")}
-              name="createdAt"
-              className={styles.formItem}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-             <DatePicker style={{ width: "100%" }} />
-            </Form.Item> */}
-
-            {/* <Form.Item
-              label={t("products.fields.category")}
-              name={["category", "id"]}
-              className={styles.formItem}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Select {...categorySelectProps} />
-            </Form.Item> */}
-         
-            <Flex
-              align="center"
-              justify="space-between"
-              style={{
-                padding: "16px 16px 0px 16px",
-              }}
-            >
-              <Button onClick={onDrawerCLose}>Cancel</Button>
-              <SaveButton
-                {...saveButtonProps}
-                htmlType="submit"
-                type="primary"
-                icon={null}
-              >
-                Save
-              </SaveButton>
-            </Flex>
+          </Form.Item>
+          {renderTransactionForm()}
+          <Flex align="center" justify="space-between" style={{ padding: "16px 16px 0px 16px" }}>
+            <Button onClick={onDrawerClose}>Cancel</Button>
+            <SaveButton {...saveButtonProps} htmlType="submit" type="primary" icon={null}>
+              Save
+            </SaveButton>
           </Flex>
+        
         </Form>
       </Spin>
     </Drawer>

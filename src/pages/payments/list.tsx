@@ -92,7 +92,7 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
           size="large"
           onClick={() => {
             return go({
-              to: `${createUrl("accounts")}`,
+              to: `${createUrl("payments")}`,
               query: {
                 to: pathname,
               },
@@ -103,7 +103,7 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
             });
           }}
         >
-          Add Capital
+          Add Payments
         </CreateButton>
       ]}
     >

@@ -266,7 +266,28 @@ export interface IFile {
 // }
 
 
+// Customer and Supplier interfaces
+interface ICustomerOrSupplier {
+  id: string;
+  name: string;
+}
 
+// Transaction interface
+interface ITransaction {
+  id: string;
+  type: "capital" | "purchase" | "sell";
+  amount?: number; // Required for "capital" type
+  customerId?: string; // Required for "sell" type
+  supplierId?: string; // Required for "purchase" type
+  transactions?: ITransactionDetail[];
+}
+
+// Transaction detail interface
+interface ITransactionDetail {
+  id: string;
+  dueAmount: number;
+  payment: number;
+}
 export interface ITransaction {
   type: "purchase" | "sale";
   id: number;
