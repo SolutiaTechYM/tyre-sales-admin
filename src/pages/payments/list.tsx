@@ -92,7 +92,7 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
           size="large"
           onClick={() => {
             return go({
-              to: `${createUrl("payments")}`,
+              to: `${createUrl("transactions")}`,
               query: {
                 to: pathname,
               },

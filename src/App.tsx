@@ -216,14 +216,14 @@ const API_URL = " https://tyre-sales-admin-backend.onrender.com";
               //   },
               // },
                {
-                name: "payments",
-                list: "/payments",
-                create: "/payments/new",
-                edit: "/payments/:id/edit",
+                name: "transactions",
+                list: "/transactions",
+                create: "/transactions/new",
+                edit: "/transactions/:id/edit",
 
-                show: "/payments/:id",
+                show: "/transactions/:id",
                 meta: {
-                  label: "Payments",
+                  // label: "Payments",
                   icon: <FundOutlined />,
 
                 },
@@ -330,7 +330,7 @@ const API_URL = " https://tyre-sales-admin-backend.onrender.com";
                 </Route>
 
                 <Route
-                  path="/payments"
+                  path="/transactions"
                   element={
                     <PaymentList>
                       <Outlet />

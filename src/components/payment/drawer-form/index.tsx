@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import { Empty } from 'antd';
 import { log } from "console";
 
+
 type Props = {
   id?: BaseKey;
   action: "create" | "edit";
@@ -25,7 +26,7 @@ export const PaymentDrawerForm = (props: Props) => {
   const apiUrl = useApiUrl();
   const [form] = useForm();
   const { drawerProps, formProps, close, saveButtonProps, formLoading } = useDrawerForm<ITransaction>({
-    resource: "payments",
+    resource: "transactions",
     id: props?.id,
     action: props.action,
     redirect: false,
@@ -39,7 +40,7 @@ export const PaymentDrawerForm = (props: Props) => {
   const [selectedTransactionType, setSelectedTransactionType] = useState<"capital" | "purchase" | "sell" | undefined>(undefined);
   const [selectedcustomerid, setselectedcustomerid] = useState<number | undefined>();
 
-  const [selectedsellerid, setselectedsellerid] = useState();
+  const [selectedsupplierid, setselectedsupplierid] = useState<number | undefined>();
 
   const { selectProps: supplierSelectProps } = useSelect<ISupplier>({
     resource: "suppliers",
@@ -53,37 +54,52 @@ export const PaymentDrawerForm = (props: Props) => {
     optionLabel: "name",
   });
 
-  const { data: sellData, isLoading: isSellLoading } = useList<ISalesShow>({
-    resource: "sales",
-  });
 
-  const { data: purchaseData, isLoading: isPurchaseLoading } = useList<IPurchase>({
-    resource: "purchases",
-  });
 
   const [filteredSellData, setFilteredSellData] = useState<ISalesShow[]>([]);
   const [filteredPurchaseData, setFilteredPurchaseData] = useState<IPurchase[]>([]);
 
-  useEffect(() => {
-    console.log(selectedcustomerid);
-    
-    if (sellData && selectedcustomerid) {
-      setFilteredSellData(sellData.data.filter(item => item.custmoer === selectedcustomerid));
-    
-      console.log("filteredSellData");
+
+  const fetchPurchaseData = async (supplierId: number) => {
+    try {
       
-    } else {
-      setFilteredSellData([]);
+      const response = await fetch(`${apiUrl}/transactions/purchases/${supplierId}`);
+      const data = await response.json();
+      setFilteredPurchaseData(data);
+    } catch (error) {
+      console.error('Error fetching purchase data:', error);
+    }
+  };
+
+  const fetchSellData = async (customerId: number) => {
+    try {
+
+      const response = await fetch(`${apiUrl}/transactions/sales/${customerId}`, {
+        method: "GET"})
+
+      const data = await response.json();
+      setFilteredSellData(data);
+    } catch (error) {
+      console.error('Error fetching sell data:', error);
+    }
+  };
+
+  useEffect(() => {
+    
+    if (selectedsupplierid) {
+      
+      fetchPurchaseData(selectedsupplierid);
+    }
+  }, [selectedsupplierid]);
+
+  useEffect(() => {
+    if (selectedcustomerid) {
+
+      fetchSellData(selectedcustomerid);
     }
   }, [selectedcustomerid]);
 
-  useEffect(() => {
-    if (purchaseData && form.getFieldValue("supplierId")) {
-      setFilteredPurchaseData(purchaseData.filter((item: { supplier: any; }) => item.supplier === form.getFieldValue("supplierId")));
-    } else {
-      setFilteredPurchaseData([]);
-    }
-  }, [purchaseData, form.getFieldValue("supplierId")]);
+ 
 
   const onDrawerClose = () => {
     close();
@@ -153,7 +169,7 @@ export const PaymentDrawerForm = (props: Props) => {
         return (
           <>
             <Form.Item name="supplierId" label="Supplier" rules={[{ required: true, message: "Please select a supplier" }]} >
-              <Select {...supplierSelectProps}/>
+              <Select {...supplierSelectProps}  onChange={(value) => setselectedsupplierid(value as unknown as number)}/>
             </Form.Item>
             <Form.Item>
               <Table
