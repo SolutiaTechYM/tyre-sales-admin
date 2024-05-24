@@ -338,7 +338,7 @@ export const ProductListTable = () => {
       /> */}
 
 
-<Table.Column
+{/* <Table.Column
         title={"Quantity"}
         dataIndex="quantity"
         key="quantity"
@@ -355,7 +355,7 @@ export const ProductListTable = () => {
             </Typography.Text>
           );
         }}
-      />
+      /> */}
 
       <Table.Column
         title={t("table.actions")}

@@ -151,15 +151,15 @@ const currentQuanitity=10
               ),
               value: <Typography.Text>{product?.category?.title}</Typography.Text>,
             },
-            {
-              label: (
-                <Typography.Text type="secondary">
-                  {t("Quantity")}
-                </Typography.Text>
-              ),
-              value: <Typography.Text>{currentQuanitity}</Typography.Text>,
+            // {
+            //   label: (
+            //     <Typography.Text type="secondary">
+            //       {t("Quantity")}
+            //     </Typography.Text>
+            //   ),
+            //   value: <Typography.Text>{currentQuanitity}</Typography.Text>,
 
-            },
+            // },
           ]}
           renderItem={(item) => {
             return (
@@ -219,7 +219,7 @@ const currentQuanitity=10
           padding: "32px",
         }}>
 
-      <ProductStock product={product} />
+{product && <ProductStock product={product} />}
       </Flex>
 
     </Drawer>

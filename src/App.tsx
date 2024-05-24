@@ -59,7 +59,7 @@ import {
   PurchaseShow,
 } from "./pages/purchases";
 
-import { SupplierCreate, SupplierEdit, SupplierList } from "./pages/suppliers";
+import { SupplierCreate, SupplierEdit, SupplierList, SupplierShow } from "./pages/suppliers";
 
 import { CustomerCreate } from "./pages/customers/create";
 import { CustomerEdit } from "./pages/customers/edit";
@@ -285,6 +285,19 @@ const API_URL = " https://tyre-sales-admin-backend.onrender.com";
                 </Route> */}
 
                 {/* xx */}
+                
+                <Route path="/suppliers" 
+                                  element={
+                                    <SupplierList>
+                                      <Outlet />
+                                    </SupplierList>
+                                  }>
+                  <Route path="new" element={<SupplierCreate/>} />
+                  <Route path=":id" element={<SupplierShow />} />
+
+                  <Route path=":id/edit" element={<SupplierEdit/>} />
+                </Route>
+
 
                 <Route
                   path="/products"
@@ -352,12 +365,6 @@ const API_URL = " https://tyre-sales-admin-backend.onrender.com";
                   <Route path=":id/edit" element={<StoreEdit />} />
                 </Route>
 
-
-                <Route path="/suppliers">
-                  <Route index element={<SupplierList/>} />
-                  <Route path="new" element={<SupplierCreate/>} />
-                  <Route path=":id/edit" element={<SupplierEdit/>} />
-                </Route>
 
 
                 {/* <Route path="/categories" element={<CategoryList />} /> */}

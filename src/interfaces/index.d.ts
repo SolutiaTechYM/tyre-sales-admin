@@ -176,7 +176,7 @@ export interface IProduct {
       title?: string;
   };
   current_price: number;
-  quantity?: number;
+  stocks: IStock[];
 }
 
 
@@ -195,10 +195,11 @@ export interface IInvoice {
 
 
 export interface IStock {
-  id: number;
+  id: number | any;
   quantity: number;
-  unitPrice: number;
-  recievedData:String;
+  unitBuyPrice: number;
+  date:string;
+  supplier:string;
   
 }
 

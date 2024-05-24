@@ -228,15 +228,11 @@ export const ProductDrawerForm = (props: Props) => {
               label={t("products.fields.price")}
               name="current_price"
               className={styles.formItem}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
+
             >
               <InputNumber prefix={"LKR"} style={{ width: "150px" }} type="number" />
             </Form.Item>
-
+{/* 
             <Form.Item
               label={t("Quantity")}
               name="quantity"
@@ -244,7 +240,7 @@ export const ProductDrawerForm = (props: Props) => {
              
             >
           <InputNumber style={{ width: "150px" }} defaultValue={0} readOnly />
-            </Form.Item>
+            </Form.Item> */}
 
 
     

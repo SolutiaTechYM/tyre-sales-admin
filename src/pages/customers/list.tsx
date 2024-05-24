@@ -225,9 +225,9 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
         />
 
 <Table.Column
-          key="balance"
-          dataIndex="balance"
-          title="Balance"
+          key="due_amount"
+          dataIndex="dueAmount"
+          title="Due Amount"
         />
         {/* <Table.Column
           key="isActive"
