@@ -2,7 +2,7 @@ import { useDrawerForm } from "@refinedev/antd";
 import { BaseKey, useApiUrl, useGetToPath, useGo, useTranslate } from "@refinedev/core";
 import { useSelect } from "@refinedev/antd";
 import { useForm } from "antd/lib/form/Form";
-import { Form, Input, Select, Table, Button, Flex, Spin, message } from "antd";
+import { Form, Input, Select, Table, Button, Flex, Spin, message, notification } from "antd";
 import { ITransaction, ISupplier, ICustomer, IPaymentTable } from "../../../interfaces";
 import { useSearchParams } from "react-router-dom";
 import { Drawer } from "../../drawer";
@@ -40,6 +40,18 @@ export const PaymentDrawerForm = (props: Props) => {
   const [capitalAmount, setCapitalAmount] = useState<number | undefined>();
   const [sellPayments, setSellPayments] = useState<{ [id: string]: number }>({});
   const [purchasePayments, setPurchasePayments] = useState<{ [id: string]: number }>({});
+
+
+  const showsuccessNotification = (msg: string) => {
+    notification.success({
+      message: "success",
+      description: msg,
+      duration: 3,
+      style: {
+        zIndex: 1000,
+      },
+    });
+  };
 
   const { selectProps: supplierSelectProps } = useSelect<ISupplier>({
     resource: "suppliers",
@@ -231,7 +243,15 @@ export const PaymentDrawerForm = (props: Props) => {
       switch (selectedTransactionType) {
         case "capital":
           if (!capitalAmount) {
-            message.error("Please enter an amount for capital transaction");
+            // message.error("Please enter an amount for capital transaction");
+            notification.error({
+              message: "Error",
+              description: "Please enter an amount for capital transaction",
+              duration: 3,
+              style: {
+                zIndex: 1000,
+              },
+            });
             return;
           }
           // Make a POST request to save the capital transaction
@@ -246,8 +266,18 @@ export const PaymentDrawerForm = (props: Props) => {
             }),
           });
           if (!capitalResponse.ok) {
+            notification.error({
+              message: "Error",
+              description: "Failed to save capital transaction",
+              duration: 3,
+              style: {
+                zIndex: 1000,
+              },
+            });
             throw new Error("Failed to save capital transaction");
+
           }
+          showsuccessNotification("Capital transaction saved successfully");
           console.log("Capital transaction saved successfully");
           onDrawerClose();
 
@@ -257,9 +287,15 @@ export const PaymentDrawerForm = (props: Props) => {
             (payment) => payment > 0
           );
           if (!selectedCustomerId || !hasNonZeroSellPayment) {
-            message.error(
-              "Please select a customer and enter at least one payment for the sell transaction"
-            );
+
+            notification.error({
+              message: "Error",
+              description: "Please select a Customer and at least one Payment",
+              duration: 3,
+              style: {
+                zIndex: 1000,
+              },
+            });
             return;
           }
           // Make a POST request to save the sell transaction
@@ -275,8 +311,18 @@ export const PaymentDrawerForm = (props: Props) => {
             }),
           });
           if (!sellResponse.ok) {
+            notification.error({
+              message: "Error",
+              description: "Failed to save sell transaction",
+              duration: 3,
+              style: {
+                zIndex: 1000,
+              },
+            });
             throw new Error("Failed to save sell transaction");
           }
+          showsuccessNotification("Sell transaction saved successfully");
+
           console.log("Sell transaction saved successfully");
           onDrawerClose();
 
@@ -286,9 +332,14 @@ export const PaymentDrawerForm = (props: Props) => {
             (payment) => payment > 0
           );
           if (!selectedSupplierId || !hasNonZeroPurchasePayment) {
-            message.error(
-              "Please select a supplier and enter at least one payment for the purchase transaction"
-            );
+            notification.error({
+              message: "Error",
+              description: "Please select a Supplier and at least one Payment",
+              duration: 3,
+              style: {
+                zIndex: 1000,
+              },
+            });
             return;
           }
           // Make a POST request to save the purchase transaction
@@ -304,15 +355,40 @@ export const PaymentDrawerForm = (props: Props) => {
             }),
           });
           if (!purchaseResponse.ok) {
+            notification.error({
+              message: "Error",
+              description: "Failed to save purchase transaction",
+              duration: 3,
+              style: {
+                zIndex: 1000,
+              },
+            });
             throw new Error("Failed to save purchase transaction");
           }
+          showsuccessNotification("Purchase transaction saved successfully");
+
           console.log("Purchase transaction saved successfully");
           onDrawerClose();
           break;
         default:
-          return;
+          notification.error({
+            message: "Error",
+            description: "select a Transaction Type",
+            duration: 3,
+            style: {
+              zIndex: 1000,
+            },
+          });
       }
     } catch (error) {
+      notification.error({
+        message: "Error",
+        description: String(error),
+        duration: 3,
+        style: {
+          zIndex: 1000,
+        },
+      });
       console.error("Error saving transaction:", error);
     }
   };
