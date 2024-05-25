@@ -137,11 +137,11 @@ export const PdfLayout: React.FC<PdfProps> = ({ record }) =>  {
             </View>
             <View style={styles.infoRow}>
               <Text style={styles.infoLabel}>Customer Name:</Text>
-              <Text style={styles.infoValue}>{record?.custmoer}</Text>
+              <Text style={styles.infoValue}>{record?.customer}</Text>
             </View>
             <View style={styles.infoRow}>
               <Text style={styles.infoLabel}>Created Date:</Text>
-              <Text style={styles.infoValue}>{record?.createdAt}</Text>
+              <Text style={styles.infoValue}>{record?.date}</Text>
             </View>
             <View style={styles.infoRow}>
               <Text style={styles.infoLabel}>Note:</Text>
@@ -172,7 +172,7 @@ export const PdfLayout: React.FC<PdfProps> = ({ record }) =>  {
                 Tot.price
               </Text>
             </View>
-            {record?.rowdata.map((product,index) => (
+            {record?.saleDetails.map((product,index) => (
               <View key={product.productID} style={styles.tableRow}>
                 <Text style={[styles.tableCol, { width: "5%" }]}>
                   {index+1}
@@ -186,7 +186,7 @@ export const PdfLayout: React.FC<PdfProps> = ({ record }) =>  {
 
                 </Text>
                 <Text style={[styles.tableCol, { width: "15%" }]}>
-                {product.unitSellingPrice}
+                {product.unitSellPrice}
 
                 </Text>
                 <Text style={[styles.tableCol, { width: "15%" }]}>
