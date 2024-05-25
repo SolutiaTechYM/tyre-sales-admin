@@ -50,6 +50,8 @@ export const SupplierDrawerForm = (props: Props) => {
       redirect: false,
       onMutationSuccess: () => {
         props.onMutationSuccess?.();
+        onDrawerCLose();
+
       },
     });
 
@@ -172,18 +174,21 @@ export const SupplierDrawerForm = (props: Props) => {
               <Input />
             </Form.Item>
             <Form.Item
-              label={t("suppliers.fields.phone")}
-              name="phone"
-              className={styles.formItem}
-              rules={[
-                {
-                  len: 10,
-                  required: true,
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
+  label={t("Contact")}
+  name="phone"
+  className={styles.formItem}
+  rules={[
+    {
+      required: true,
+    },
+    {
+      pattern: /^[0-9]{10}$/,
+      message: "Please enter a valid 10-digit phone number",
+    },
+  ]}
+>
+  <Input placeholder="please enter Phone number" maxLength={10} />
+</Form.Item>
             <Form.Item
               label={t("suppliers.fields.address")}
               name="address"

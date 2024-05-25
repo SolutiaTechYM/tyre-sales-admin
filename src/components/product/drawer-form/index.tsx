@@ -50,6 +50,7 @@ export const ProductDrawerForm = (props: Props) => {
       redirect: false,
       onMutationSuccess: () => {
         props.onMutationSuccess?.();
+        onDrawerCLose();
       },
     });
 

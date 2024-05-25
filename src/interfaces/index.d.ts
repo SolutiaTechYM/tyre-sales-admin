@@ -49,7 +49,7 @@ export interface ICustomer {
   dueAmount: number;
   lastOrderDate: string;
   createdAt: string;
-  avatar: IFile & { thumbnailUrl?: string };
+  avatar: IFile & { thumbnailUrl?: string }[];
   trades:ITrades[];
 }
 
@@ -309,12 +309,25 @@ interface ITransactionDetail {
   dueAmount: number;
   payment: number;
 }
-export interface ITransaction {
-  type: "purchase" | "sale";
+// export interface ITransaction {
+//   type: "purchase" | "sale";
+//   id: number;
+//   date: string;
+//   value: number;
+//   dueamount: number;
+// }
+
+export interface ITransactionlist {
   id: number;
   date: string;
   value: number;
-  dueamount: number;
+  type: TradeType;
+  description?: string;
+  connection: {
+      id?: number,
+      name: string
+  };
+  tradeID: number
 }
 
 

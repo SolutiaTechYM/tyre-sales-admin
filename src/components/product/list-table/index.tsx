@@ -64,8 +64,8 @@ export const ProductListTable = () => {
   });
 
   useEffect(() => {
-    console.log(showUrl);
-  }, [showUrl]);
+    console.log(tableProps);
+  }, [tableProps]);
 
   const { selectProps: categorySelectProps, queryResult } =
     useSelect<ICategory>({
@@ -89,7 +89,7 @@ export const ProductListTable = () => {
         ),
       }}
     >
-      <Table.Column
+      {/* <Table.Column
         title={
           <Typography.Text
             style={{
@@ -128,7 +128,7 @@ export const ProductListTable = () => {
             />
           </FilterDropdown>
         )}
-      />
+      /> */}
 
       <Table.Column
         title={t("Code")}

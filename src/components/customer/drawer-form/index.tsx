@@ -56,13 +56,15 @@ export const CustomerDrawerForm = (props: Props) => {
       onMutationSuccess: () => {
         console.log("Form data:", form.getFieldsValue());
         props.onMutationSuccess?.();
+        onDrawerCLose();
+
       },
       // form,
     });
 
-  const { selectProps: categorySelectProps } = useSelect<ICustomer>({
-    resource: "customers",
-  });
+  // const { selectProps: categorySelectProps } = useSelect<ICustomer>({
+  //   resource: "users",
+  // });
 
   const onDrawerCLose = () => {
     close();
@@ -95,8 +97,10 @@ export const CustomerDrawerForm = (props: Props) => {
   
   const image = images?.[0] || null;
   const previewImageURL = image?.url || image?.response?.url;
+  console.log(images);
+
   
-  const title = props.action === "edit" ? null : t("Add new Customer");
+  const title = props.action === "edit" ? null : t("products.actions.add");
 
   return (
     <Drawer
@@ -182,29 +186,24 @@ export const CustomerDrawerForm = (props: Props) => {
             >
               <Input placeholder="please enter name "/>
             </Form.Item>
-            <Form.Item
-              label={t("Contact")}
-              name="contact"
-              className={styles.formItem}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-           <InputMask mask="(999) 999 99 99">
-            {/* 
-                                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                                    // @ts-ignore */}
-            {(props: InputProps) => (
-              <Input
-                {...props}
-                placeholder="please enter Phone number"
-              />
-            )}
-          </InputMask>
 
-            </Form.Item>
+            <Form.Item
+  label={t("Contact")}
+  name="contact"
+  className={styles.formItem}
+  rules={[
+    {
+      required: true,
+    },
+    {
+      pattern: /^[0-9]{10}$/,
+      message: "Please enter a valid 10-digit phone number",
+    },
+  ]}
+>
+  <Input placeholder="please enter Phone number" maxLength={10} />
+</Form.Item>
+
 
             <Form.Item
               label={t("Address")}
@@ -220,7 +219,7 @@ export const CustomerDrawerForm = (props: Props) => {
 
             <Form.Item
               label={t("Company")}
-              name="Company"
+              name="company"
               className={styles.formItem}
              
             >

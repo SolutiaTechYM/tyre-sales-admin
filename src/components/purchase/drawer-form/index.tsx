@@ -78,6 +78,17 @@ export const PurchaseDrawerForm = (props: Props) => {
     optionValue: "id", // Add this line
   });
 
+  const showsuccessNotification = (msg: string) => {
+    notification.success({
+      message: "success",
+      description: msg,
+      duration: 3,
+      style: {
+        zIndex: 1000,
+      },
+    });
+  };
+
   useEffect(() => {
     console.log(tableData.length);
     if (tableData.length === 0) {
@@ -403,7 +414,7 @@ export const PurchaseDrawerForm = (props: Props) => {
                         chooseasupplier();
                         return;
                       }
-                      if (payment) {
+                      if (payment>-1) {
                         const supplierId =
                           formProps.form.getFieldValue("suppliername");
                         const response = await fetch(`${apiUrl}/purchases`, {
@@ -423,10 +434,28 @@ export const PurchaseDrawerForm = (props: Props) => {
                         if (response.ok) {
                           // Handle successful response
                           console.log("Purchase details saved successfully");
-                          onDrawerCLose(); // Close the drawer
+                          showsuccessNotification("Purchase details saved successfully");
+                          // onDrawerCLose(); // Close the drawer
+                          formProps.form.resetFields();
+            setTableData([]);
+            settotalPrice(0);
+            go({
+              to: getToPath({
+                action: "list",
+              }) ?? "",
+              query: {
+                to: undefined,
+              },
+              options: {
+                keepQuery: true,
+              },
+              type: "replace",
+            });
+
                         } else {
                           // Handle error response
                           console.error("Failed to save purchase details");
+                          showError("Failed to save purchase details");
                         }
                       } else {
                         showError("Please Enter Payment Amount");

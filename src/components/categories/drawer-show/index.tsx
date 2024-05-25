@@ -121,10 +121,10 @@ export const CategoryDrawerShow = (props: Props) => {
             {
               label: (
                 <Typography.Text type="secondary">
-                  {t("Title")}
+                  {t("Quantity")}
                 </Typography.Text>
               ),
-              value: <Typography.Text>{category?.title}</Typography.Text>,
+              value: <Typography.Text>{category?.quantity}</Typography.Text>,
             },
             {
               label: (

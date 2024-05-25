@@ -1,5 +1,5 @@
 import React from "react";
-import { IUser } from "../../../interfaces";
+import { ICustomer } from "../../../interfaces";
 import {
   PhoneOutlined,
   EnvironmentOutlined,
@@ -12,20 +12,45 @@ import {
 import { List, Typography, Space, theme, Card } from "antd";
 import dayjs from "dayjs";
 import { UserStatus } from "../userStatus";
-import { useTranslate } from "@refinedev/core";
+import { useGetToPath, useGo, useTranslate } from "@refinedev/core";
 import {
   CreateButton,
+  DeleteButton,
   EditButton,
 
 } from "@refinedev/antd";
+import { useSearchParams } from "react-router-dom";
 
 type Props = {
-  customer?: IUser;
+  customer?: ICustomer;
 };
 
 export const CustomerInfoList = ({ customer }: Props) => {
   const { token } = theme.useToken();
   const t = useTranslate();
+  const getToPath = useGetToPath();
+  const [searchParams] = useSearchParams();
+  const go = useGo();
+
+  const handleDrawerClose = () => {
+
+
+    go({
+      to:
+        searchParams.get("to") ??
+        getToPath({
+          action: "list",
+        }) ??
+        "",
+      query: {
+        to: undefined,
+      },
+      options: {
+        keepQuery: true,
+      },
+      type: "replace",
+    });
+  };
 
   return (
     <Card
@@ -81,7 +106,16 @@ export const CustomerInfoList = ({ customer }: Props) => {
           );
         }}
       />
-       <div style={{ display:"flex",justifyContent:"right"}}>
+
+       <div style={{ display:"flex",justifyContent:"space-between"}}>
+       <DeleteButton
+          type="text"
+          recordItemId={customer?.id}
+          resource="customers"
+          onSuccess={() => {
+            handleDrawerClose();
+          }}
+        />
       <EditButton
                   recordItemId={customer?.id}
                 />

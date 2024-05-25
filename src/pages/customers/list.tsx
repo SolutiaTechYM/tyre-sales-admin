@@ -92,7 +92,7 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
           size="large"
           onClick={() => {
             return go({
-              to: `${createUrl("users")}`,
+              to: `${createUrl("customers")}`,
               query: {
                 to: pathname,
               },
@@ -114,7 +114,7 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
         pagination={{
           ...tableProps.pagination,
           showTotal: (total) => (
-            <PaginationTotal total={total} entityName="users" />
+            <PaginationTotal total={total} entityName="customers" />
           ),
         }}
       >
@@ -231,13 +231,7 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
           sorter
         />
         
-<Table.Column
-          key="lastOrderDate"
-          dataIndex="lastOrderDate"
-          title="last Order Date"
-          
-          sorter
-        />
+
 
 <Table.Column
           key="due_amount"

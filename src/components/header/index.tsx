@@ -128,57 +128,57 @@ export const Header: React.FC = () => {
   //   },
   // });
 
-  const { refetch: refetchStores } = useList<IStore>({
-    resource: "stores",
-    config: {
-      filters: [{ field: "q", operator: "contains", value }],
-    },
-    queryOptions: {
-      enabled: false,
-      onSuccess: (data) => {
-        const storeOptionGroup = data.data.map((item) =>
-          renderItem(item.title, "", `/stores/edit/${item.id}`),
-        );
-        if (storeOptionGroup.length > 0) {
-          setOptions((prevOptions) => [
-            ...prevOptions,
-            {
-              label: renderTitle(t("stores.stores")),
-              options: storeOptionGroup,
-            },
-          ]);
-        }
-      },
-    },
-  });
+  // const { refetch: refetchStores } = useList<IStore>({
+  //   resource: "stores",
+  //   config: {
+  //     filters: [{ field: "q", operator: "contains", value }],
+  //   },
+  //   queryOptions: {
+  //     enabled: false,
+  //     onSuccess: (data) => {
+  //       const storeOptionGroup = data.data.map((item) =>
+  //         renderItem(item.title, "", `/stores/edit/${item.id}`),
+  //       );
+  //       if (storeOptionGroup.length > 0) {
+  //         setOptions((prevOptions) => [
+  //           ...prevOptions,
+  //           {
+  //             label: renderTitle(t("stores.stores")),
+  //             options: storeOptionGroup,
+  //           },
+  //         ]);
+  //       }
+  //     },
+  //   },
+  // });
 
-  const { refetch: refetchCouriers } = useList<ICourier>({
-    resource: "couriers",
-    config: {
-      filters: [{ field: "q", operator: "contains", value }],
-    },
-    queryOptions: {
-      enabled: false,
-      onSuccess: (data) => {
-        const courierOptionGroup = data.data.map((item) =>
-          renderItem(
-            `${item.name} ${item.surname}`,
-            item.avatar[0].url,
-            `/couriers/show/${item.id}`,
-          ),
-        );
-        if (courierOptionGroup.length > 0) {
-          setOptions((prevOptions) => [
-            ...prevOptions,
-            {
-              label: renderTitle(t("couriers.couriers")),
-              options: courierOptionGroup,
-            },
-          ]);
-        }
-      },
-    },
-  });
+  // const { refetch: refetchCouriers } = useList<ICourier>({
+  //   resource: "couriers",
+  //   config: {
+  //     filters: [{ field: "q", operator: "contains", value }],
+  //   },
+  //   queryOptions: {
+  //     enabled: false,
+  //     onSuccess: (data) => {
+  //       const courierOptionGroup = data.data.map((item) =>
+  //         renderItem(
+  //           `${item.name} ${item.surname}`,
+  //           item.avatar[0].url,
+  //           `/couriers/show/${item.id}`,
+  //         ),
+  //       );
+  //       if (courierOptionGroup.length > 0) {
+  //         setOptions((prevOptions) => [
+  //           ...prevOptions,
+  //           {
+  //             label: renderTitle(t("couriers.couriers")),
+  //             options: courierOptionGroup,
+  //           },
+  //         ]);
+  //       }
+  //     },
+  //   },
+  // });
 
 
 
@@ -193,8 +193,8 @@ export const Header: React.FC = () => {
   useEffect(() => {
     setOptions([]);
     // refetchOrders();
-    refetchCouriers();
-    refetchStores();
+    // refetchCouriers();
+    // refetchStores();
   }, [value]);
 
   const menuItems: MenuProps["items"] = [...(i18n.languages || [])]

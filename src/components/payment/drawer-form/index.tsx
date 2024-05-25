@@ -34,7 +34,7 @@ export const PaymentDrawerForm = (props: Props) => {
     },
   });
 
-  const [selectedTransactionType, setSelectedTransactionType] = useState<"capital" | "purchase" | "sell" | undefined>(undefined);
+  const [selectedTransactionType, setSelectedTransactionType] = useState<"capital" | "purchase" | "sale" | undefined>(undefined);
   const [selectedCustomerId, setSelectedCustomerId] = useState<number | undefined>();
   const [selectedSupplierId, setSelectedSupplierId] = useState<number | undefined>();
   const [capitalAmount, setCapitalAmount] = useState<number | undefined>();
@@ -84,7 +84,7 @@ export const PaymentDrawerForm = (props: Props) => {
       const data = await response.json();
       setFilteredSellData(data);
     } catch (error) {
-      console.error('Error fetching sell data:', error);
+      console.error('Error fetching sale data:', error);
     }
   };
 
@@ -125,25 +125,40 @@ export const PaymentDrawerForm = (props: Props) => {
   const transactionTypeOptions = [
     { label: "Capital", value: "capital" },
     { label: "Purchase", value: "purchase" },
-    { label: "Sell", value: "sell" },
+    { label: "sale", value: "sale" },
   ];
 
-  const handleTransactionTypeChange = (value: "capital" | "purchase" | "sell") => {
+  const handleTransactionTypeChange = (value: "capital" | "purchase" | "sale") => {
     setSelectedTransactionType(value);
     // setCapitalAmount(undefined);
     setSellPayments({});
     setPurchasePayments({});
   };
   
+  
   const renderTransactionForm = () => {
     switch (selectedTransactionType) {
       case "capital":
         return (
-          <Form.Item name="amount" label="Amount" rules={[{ required: true, message: "Please enter an amount" }]}>
-            <Input type="number" onChange={(e) => setCapitalAmount(parseFloat(e.target.value))} />
-          </Form.Item>
+<Form.Item
+  name="amount"
+  label="Amount"
+  rules={[{ required: true, message: "Please enter an amount" }]}
+>
+  <Input
+    type="number"
+    min={0}
+    step="any"
+    onKeyPress={(e) => {
+      if (e.key === '-') {
+        e.preventDefault();
+      }
+    }}
+    onChange={(e) => setCapitalAmount(parseFloat(e.target.value))}
+  />
+</Form.Item>
         );
-      case "sell":
+      case "sale":
         return (
           <>
             <Form.Item name="customerId" label="Customer" rules={[{ required: true, message: "Please select a customer" }]}>
@@ -175,6 +190,7 @@ export const PaymentDrawerForm = (props: Props) => {
                     key="payment"
                     render={(value, record: { id: BaseKey; payment: number }) => (
                       <Input
+                      min={0}
                         type="number"
                         value={value}
                         onChange={(e) => setSellPayments({ ...sellPayments, [record.id]: parseFloat(e.target.value) })}
@@ -183,7 +199,7 @@ export const PaymentDrawerForm = (props: Props) => {
                   />
                 </Table>
               ) : (
-                <Empty description="No sell data available" />
+                <Empty description="No sale data available" />
               )}
             </Form.Item>
           </>
@@ -282,7 +298,7 @@ export const PaymentDrawerForm = (props: Props) => {
           onDrawerClose();
 
           break;
-        case "sell":
+        case "sale":
           const hasNonZeroSellPayment = Object.values(sellPayments).some(
             (payment) => payment > 0
           );
@@ -305,7 +321,7 @@ export const PaymentDrawerForm = (props: Props) => {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              type: "sell",
+              type: "sale",
               customerId: selectedCustomerId,
               payments: sellPayments,
             }),
@@ -313,17 +329,17 @@ export const PaymentDrawerForm = (props: Props) => {
           if (!sellResponse.ok) {
             notification.error({
               message: "Error",
-              description: "Failed to save sell transaction",
+              description: "Failed to save sale transaction",
               duration: 3,
               style: {
                 zIndex: 1000,
               },
             });
-            throw new Error("Failed to save sell transaction");
+            throw new Error("Failed to save sale transaction");
           }
-          showsuccessNotification("Sell transaction saved successfully");
+          showsuccessNotification("sale transaction saved successfully");
 
-          console.log("Sell transaction saved successfully");
+          console.log("sale transaction saved successfully");
           onDrawerClose();
 
           break;
@@ -394,13 +410,13 @@ export const PaymentDrawerForm = (props: Props) => {
   };
 
   return (
-    <Drawer {...drawerProps} open={true} title={title} width="500px" zIndex={1001} onClose={onDrawerClose}>
+    <Drawer {...drawerProps} open={true} title={title} width="70%" zIndex={1001} onClose={onDrawerClose}>
       <Spin spinning={formLoading}>
-        <Form {...formProps} layout="vertical">
+        <Form {...formProps} layout="vertical" style={{ padding: '20px' }}>
           <Form.Item name="type" label="Transaction Type" rules={[{ required: true, message: "Please select a transaction type" }]}>
             <Select
               options={transactionTypeOptions}
-              onChange={(value) => handleTransactionTypeChange(value as "capital" | "purchase" | "sell")}
+              onChange={(value) => handleTransactionTypeChange(value as "capital" | "purchase" | "sale")}
               
             />
           </Form.Item>

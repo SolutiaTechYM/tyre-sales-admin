@@ -57,9 +57,9 @@ export const CategoryTable: React.FC<IResourceComponentsProps> = () => {
           }}
         />
         <Table.Column<ICategory>
-          key="Quantity"
+          key="quantity"
           dataIndex="quantity"
-          title={t("quantity")}
+          title={t("Quantity")}
           
         />
           <Table.Column<ICategory>

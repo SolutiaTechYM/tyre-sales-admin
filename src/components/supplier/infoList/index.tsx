@@ -12,12 +12,14 @@ import {
 import { List, Typography, Space, theme, Card } from "antd";
 import dayjs from "dayjs";
 // import { UserStatus } from "../userStatus";
-import { useTranslate } from "@refinedev/core";
+import { useGetToPath, useGo, useTranslate } from "@refinedev/core";
 import {
   CreateButton,
+  DeleteButton,
   EditButton,
 
 } from "@refinedev/antd";
+import { useSearchParams } from "react-router-dom";
 
 type Props = {
   supplier?: ISupplier;
@@ -26,6 +28,29 @@ type Props = {
 export const SupplierInfoList = ({ supplier }: Props) => {
   const { token } = theme.useToken();
   const t = useTranslate();
+  const getToPath = useGetToPath();
+  const [searchParams] = useSearchParams();
+  const go = useGo();
+
+  const handleDrawerClose = () => {
+
+
+    go({
+      to:
+        searchParams.get("to") ??
+        getToPath({
+          action: "list",
+        }) ??
+        "",
+      query: {
+        to: undefined,
+      },
+      options: {
+        keepQuery: true,
+      },
+      type: "replace",
+    });
+  };
 
   return (
     <Card
@@ -81,7 +106,15 @@ export const SupplierInfoList = ({ supplier }: Props) => {
           );
         }}
       />
-       <div style={{ display:"flex",justifyContent:"right"}}>
+       <div style={{ display:"flex",justifyContent:"space-between"}}>
+       <DeleteButton
+          type="text"
+          recordItemId={supplier?.id}
+          resource="suppliers"
+          onSuccess={() => {
+            handleDrawerClose();
+          }}
+        />
       <EditButton
                   recordItemId={supplier?.id}
                 />

@@ -81,7 +81,7 @@ export const CategoryDrawerForm = (props: Props) => {
   };
 
 
-  const title = props.action === "edit" ? null : t("products.actions.add");
+  const title = props.action === "edit" ? null : t("Add new Category");
 
   return (
     <Drawer

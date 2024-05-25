@@ -26,7 +26,7 @@ import {
   Button,
 } from "antd";
 
-import { ITransaction, ICustomer, IUserFilterVariables } from "../../interfaces";
+import { ITransactionlist, ICustomer, IUserFilterVariables } from "../../interfaces";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { PaginationTotal } from "../../components";
 import { PropsWithChildren } from "react";
@@ -67,7 +67,7 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
     syncWithLocation: true,
   });
 
-  const { isLoading, triggerExport } = useExport<ITransaction>({
+  const { isLoading, triggerExport } = useExport<ITransactionlist>({
     //print all
     sorters,
     filters,
@@ -103,7 +103,7 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
             });
           }}
         >
-          Add Payments
+          Add Transaction
         </CreateButton>
       ]}
     >
@@ -152,8 +152,24 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
           )}
         />
 
+<Table.Column
+  key="connection"
+  dataIndex="connection"
+  sorter
+  title={t("Connection")}
+  render={(connection) => connection?.name}
+/>
 
 <Table.Column
+        key="type"
+          dataIndex="type"
+          sorter
+
+          title={t("Type")}
+
+       
+      />
+      <Table.Column
         key="date"
           dataIndex="date"
           sorter
@@ -165,7 +181,7 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
 
 
         
-<Table.Column<ITransaction>
+{/* <Table.Column
   title={t("Type")}
   dataIndex={["transactionType", "title"]}
   key="transactionType.id"
@@ -208,7 +224,7 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
       </Typography.Text>
     );
   }}
-/>
+/> */}
         
 
 
@@ -221,9 +237,9 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
           sorter
         />
         <Table.Column
-          key="dueamount"
-          dataIndex="dueamount"
-          title="Due Amount"
+          key="description"
+          dataIndex="description"
+          title="Description"
           
           sorter
         />

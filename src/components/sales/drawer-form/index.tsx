@@ -163,6 +163,17 @@ export const SaleDrawerForm = (props: Props) => {
     });
   };
 
+  const showsuccessNotification = (msg: string) => {
+    notification.success({
+      message: "success",
+      description: msg,
+      duration: 3,
+      style: {
+        zIndex: 1000,
+      },
+    });
+  };
+
   const showErrorNotification = () => {
     notification.error({
       message: "Error",
@@ -524,7 +535,7 @@ export const SaleDrawerForm = (props: Props) => {
                         chooseacustomer();
                         return;
                       }
-                      if (payment) {
+                      if (payment>-1) {
                         const customerId =
                           formProps.form.getFieldValue("customername");
                         const response = await fetch(`${apiUrl}/sales`, {
@@ -544,7 +555,7 @@ export const SaleDrawerForm = (props: Props) => {
                         if (response.ok) {
                           // Handle successful response
                           console.log("Purchase details saved successfully");
-                          // onDrawerCLose(); // Close the drawer
+                          showsuccessNotification("Purchase details saved successfully");
                           formProps.form.resetFields();
             setTableData([]);
             settotalPrice(0);
@@ -560,9 +571,13 @@ export const SaleDrawerForm = (props: Props) => {
               },
               type: "replace",
             });
+
+                          // onDrawerCLose(); // Close the drawer
+
                         } else {
                           // Handle error response
                           console.error("Failed to save purchase details");
+                          showError("Failed to save purchase details");
                         }
                       } else {
                         showError("Please Enter Payment Amount");
