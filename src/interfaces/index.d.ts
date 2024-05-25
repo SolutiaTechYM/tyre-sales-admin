@@ -151,6 +151,18 @@ productName:string;
   totalPrice: number;
 }
 
+export interface IPaymentTable {
+  // id: number;
+  // createdAt: string;
+  id: number;
+  date: string;
+  description: string;
+  dueAmount:number;
+  value:number;
+  
+
+}
+
 
 // export interface IProduct {
 //   id: number;

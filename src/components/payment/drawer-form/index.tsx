@@ -1,15 +1,13 @@
-import { SaveButton, useDrawerForm } from "@refinedev/antd";
-import { BaseKey, useApiUrl, useGetToPath, useGo, useList, useTranslate } from "@refinedev/core";
-import { getValueFromEvent, useSelect } from "@refinedev/antd";
+import { useDrawerForm } from "@refinedev/antd";
+import { BaseKey, useApiUrl, useGetToPath, useGo, useTranslate } from "@refinedev/core";
+import { useSelect } from "@refinedev/antd";
 import { useForm } from "antd/lib/form/Form";
-import { Form, Input, Select, Table, Button, Flex, Spin } from "antd";
-import { ITransaction, ICustomerOrSupplier, ITransactionDetail, ISupplier, ICustomer, IPurchase, ISalesShow } from "../../../interfaces";
+import { Form, Input, Select, Table, Button, Flex, Spin, message } from "antd";
+import { ITransaction, ISupplier, ICustomer, IPaymentTable } from "../../../interfaces";
 import { useSearchParams } from "react-router-dom";
 import { Drawer } from "../../drawer";
 import { useState, useEffect } from "react";
 import { Empty } from 'antd';
-import { log } from "console";
-
 
 type Props = {
   id?: BaseKey;
@@ -36,34 +34,31 @@ export const PaymentDrawerForm = (props: Props) => {
     },
   });
 
-  
   const [selectedTransactionType, setSelectedTransactionType] = useState<"capital" | "purchase" | "sell" | undefined>(undefined);
-  const [selectedcustomerid, setselectedcustomerid] = useState<number | undefined>();
-
-  const [selectedsupplierid, setselectedsupplierid] = useState<number | undefined>();
+  const [selectedCustomerId, setSelectedCustomerId] = useState<number | undefined>();
+  const [selectedSupplierId, setSelectedSupplierId] = useState<number | undefined>();
+  const [capitalAmount, setCapitalAmount] = useState<number | undefined>();
+  const [sellPayments, setSellPayments] = useState<{ [id: string]: number }>({});
+  const [purchasePayments, setPurchasePayments] = useState<{ [id: string]: number }>({});
 
   const { selectProps: supplierSelectProps } = useSelect<ISupplier>({
     resource: "suppliers",
-    optionValue:"id",
+    optionValue: "id",
     optionLabel: "name",
   });
 
   const { selectProps: customerSelectProps } = useSelect<ICustomer>({
-    resource: "users",
-    optionValue:"id",
+    resource: "customers",
+    optionValue: "id",
     optionLabel: "name",
   });
 
-
-
-  const [filteredSellData, setFilteredSellData] = useState<ISalesShow[]>([]);
-  const [filteredPurchaseData, setFilteredPurchaseData] = useState<IPurchase[]>([]);
-
+  const [filteredSellData, setFilteredSellData] = useState<IPaymentTable[]>([]);
+  const [filteredPurchaseData, setFilteredPurchaseData] = useState<IPaymentTable[]>([]);
 
   const fetchPurchaseData = async (supplierId: number) => {
     try {
-      
-      const response = await fetch(`${apiUrl}/transactions/purchases/${supplierId}`);
+      const response = await fetch(`${apiUrl}/transactions/trades/supplier/${supplierId}`);
       const data = await response.json();
       setFilteredPurchaseData(data);
     } catch (error) {
@@ -73,10 +68,7 @@ export const PaymentDrawerForm = (props: Props) => {
 
   const fetchSellData = async (customerId: number) => {
     try {
-
-      const response = await fetch(`${apiUrl}/transactions/sales/${customerId}`, {
-        method: "GET"})
-
+      const response = await fetch(`${apiUrl}/transactions/trades/customer/${customerId}`, { method: "GET" });
       const data = await response.json();
       setFilteredSellData(data);
     } catch (error) {
@@ -85,21 +77,22 @@ export const PaymentDrawerForm = (props: Props) => {
   };
 
   useEffect(() => {
-    
-    if (selectedsupplierid) {
-      
-      fetchPurchaseData(selectedsupplierid);
+    if (selectedSupplierId) {
+      fetchPurchaseData(selectedSupplierId);
     }
-  }, [selectedsupplierid]);
+    // setCapitalAmount(undefined);
+    setSellPayments({});
+    setPurchasePayments({});
+  }, [selectedSupplierId]);
 
   useEffect(() => {
-    if (selectedcustomerid) {
-
-      fetchSellData(selectedcustomerid);
+    if (selectedCustomerId) {
+      fetchSellData(selectedCustomerId);
     }
-  }, [selectedcustomerid]);
-
- 
+    // setCapitalAmount(undefined);
+  setSellPayments({});
+  setPurchasePayments({});
+  }, [selectedCustomerId]);
 
   const onDrawerClose = () => {
     close();
@@ -123,83 +116,204 @@ export const PaymentDrawerForm = (props: Props) => {
     { label: "Sell", value: "sell" },
   ];
 
-
+  const handleTransactionTypeChange = (value: "capital" | "purchase" | "sell") => {
+    setSelectedTransactionType(value);
+    // setCapitalAmount(undefined);
+    setSellPayments({});
+    setPurchasePayments({});
+  };
+  
   const renderTransactionForm = () => {
     switch (selectedTransactionType) {
       case "capital":
         return (
           <Form.Item name="amount" label="Amount" rules={[{ required: true, message: "Please enter an amount" }]}>
-            <Input type="number" />
+            <Input type="number" onChange={(e) => setCapitalAmount(parseFloat(e.target.value))} />
           </Form.Item>
         );
       case "sell":
         return (
           <>
-            <Form.Item name="customerId" label="Customer" rules={[{ required: true, message: "Please select a customer" }]} >
-              <Select {...customerSelectProps}  onChange={(value) => setselectedcustomerid(value as unknown as number)}/>
+            <Form.Item name="customerId" label="Customer" rules={[{ required: true, message: "Please select a customer" }]}>
+              <Select {...customerSelectProps} onChange={(value) => setSelectedCustomerId(value as unknown as number)} />
             </Form.Item>
             <Form.Item>
-              <Table
-                dataSource={filteredSellData.map(item => ({
-                  id: item.id,
-                  dueAmount: item.due_amount,
-                  payment: form.getFieldValue(`transactions.${item.id}.payment`) || 0,
-                }))}
-                rowKey="id"
-                bordered
-                pagination={false}
-              >
-                <Table.Column title="ID" dataIndex="id" key="id" />
-                <Table.Column title="Due Amount" dataIndex="dueAmount" key="dueAmount" />
-                <Table.Column
-                  title="Payment"
-                  dataIndex="payment"
-                  key="payment"
-                  render={(value, record: { id: BaseKey; dueAmount: number; payment: number }) => (
-                    <Form.Item name={["transactions", record.id, "payment"]}>
-                      <Input type="number" defaultValue={record.payment} />
-                    </Form.Item>
-                  )}
-                />
-              </Table>
+              {filteredSellData.length > 0 ? (
+                <Table
+                  dataSource={filteredSellData.map(item => ({
+                    id: item.id,
+                    dueAmount: item.dueAmount,
+                    value: item.value,
+                    date: item.date,
+                    description: item.description,
+                    payment: sellPayments[item.id] || 0,
+                  }))}
+                  rowKey="id"
+                  bordered
+                  pagination={false}
+                >
+                  <Table.Column title="ID" dataIndex="id" key="id" />
+                  <Table.Column title="Description" dataIndex="description" key="description" />
+                  <Table.Column title="Date" dataIndex="date" key="date" />
+                  <Table.Column title="Total Price" dataIndex="value" key="value" />
+                  <Table.Column title="Due Amount" dataIndex="dueAmount" key="dueAmount" />
+                  <Table.Column
+                    title="Payment"
+                    dataIndex="payment"
+                    key="payment"
+                    render={(value, record: { id: BaseKey; payment: number }) => (
+                      <Input
+                        type="number"
+                        value={value}
+                        onChange={(e) => setSellPayments({ ...sellPayments, [record.id]: parseFloat(e.target.value) })}
+                      />
+                    )}
+                  />
+                </Table>
+              ) : (
+                <Empty description="No sell data available" />
+              )}
             </Form.Item>
           </>
         );
       case "purchase":
         return (
           <>
-            <Form.Item name="supplierId" label="Supplier" rules={[{ required: true, message: "Please select a supplier" }]} >
-              <Select {...supplierSelectProps}  onChange={(value) => setselectedsupplierid(value as unknown as number)}/>
+            <Form.Item name="supplierId" label="Supplier" rules={[{ required: true, message: "Please select a supplier" }]}>
+              <Select {...supplierSelectProps} onChange={(value) => setSelectedSupplierId(value as unknown as number)} />
             </Form.Item>
             <Form.Item>
-              <Table
-                dataSource={filteredPurchaseData.map(item => ({
-                  id: item.id,
-                  dueAmount: item.due_amount,
-                  payment: form.getFieldValue(`transactions.${item.id}.payment`) || 0,
-                }))}
-                rowKey="id"
-                bordered
-                pagination={false}
-              >
-                <Table.Column title="ID" dataIndex="id" key="id" />
-                <Table.Column title="Due Amount" dataIndex="dueAmount" key="dueAmount" />
-                <Table.Column
-                  title="Payment"
-                  dataIndex="payment"
-                  key="payment"
-                  render={(value, record: { id: BaseKey; dueAmount: number; payment: number }) => (
-                    <Form.Item name={["transactions", record.id, "payment"]}>
-                      <Input type="number" defaultValue={record.payment} />
-                    </Form.Item>
-                  )}
-                />
-              </Table>
+              {filteredPurchaseData.length > 0 ? (
+                <Table
+                  dataSource={filteredPurchaseData.map(item => ({
+                    id: item.id,
+                    dueAmount: item.dueAmount,
+                    value: item.value,
+                    date: item.date,
+                    description: item.description,
+                    payment: purchasePayments[item.id] || 0,
+                  }))}
+                  rowKey="id"
+                  bordered
+                  pagination={false}
+                >
+                  <Table.Column title="ID" dataIndex="id" key="id" />
+                  <Table.Column title="Description" dataIndex="description" key="description" />
+                  <Table.Column title="Date" dataIndex="date" key="date" />
+                  <Table.Column title="Total Price" dataIndex="value" key="value" />
+                  <Table.Column title="Due Amount" dataIndex="dueAmount" key="dueAmount" />
+                  <Table.Column
+                    title="Payment"
+                    dataIndex="payment"
+                    key="payment"
+                    render={(value, record: { id: BaseKey; payment: number }) => (
+                      <Input
+                        type="number"
+                        value={value}
+                        onChange={(e) => setPurchasePayments({ ...purchasePayments, [record.id]: parseFloat(e.target.value) })}
+                      />
+                    )}
+                  />
+                </Table>
+              ) : (
+                <Empty description="No purchase data available" />
+              )}
             </Form.Item>
           </>
         );
       default:
         return null;
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      switch (selectedTransactionType) {
+        case "capital":
+          if (!capitalAmount) {
+            message.error("Please enter an amount for capital transaction");
+            return;
+          }
+          // Make a POST request to save the capital transaction
+          const capitalResponse = await fetch(`${apiUrl}/transactions`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              type: "capital",
+              amount: capitalAmount,
+            }),
+          });
+          if (!capitalResponse.ok) {
+            throw new Error("Failed to save capital transaction");
+          }
+          console.log("Capital transaction saved successfully");
+          onDrawerClose();
+
+          break;
+        case "sell":
+          const hasNonZeroSellPayment = Object.values(sellPayments).some(
+            (payment) => payment > 0
+          );
+          if (!selectedCustomerId || !hasNonZeroSellPayment) {
+            message.error(
+              "Please select a customer and enter at least one payment for the sell transaction"
+            );
+            return;
+          }
+          // Make a POST request to save the sell transaction
+          const sellResponse = await fetch(`${apiUrl}/transactions`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              type: "sell",
+              customerId: selectedCustomerId,
+              payments: sellPayments,
+            }),
+          });
+          if (!sellResponse.ok) {
+            throw new Error("Failed to save sell transaction");
+          }
+          console.log("Sell transaction saved successfully");
+          onDrawerClose();
+
+          break;
+        case "purchase":
+          const hasNonZeroPurchasePayment = Object.values(purchasePayments).some(
+            (payment) => payment > 0
+          );
+          if (!selectedSupplierId || !hasNonZeroPurchasePayment) {
+            message.error(
+              "Please select a supplier and enter at least one payment for the purchase transaction"
+            );
+            return;
+          }
+          // Make a POST request to save the purchase transaction
+          const purchaseResponse = await fetch(`${apiUrl}/transactions`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              type: "purchase",
+              supplierId: selectedSupplierId,
+              payments: purchasePayments,
+            }),
+          });
+          if (!purchaseResponse.ok) {
+            throw new Error("Failed to save purchase transaction");
+          }
+          console.log("Purchase transaction saved successfully");
+          onDrawerClose();
+          break;
+        default:
+          return;
+      }
+    } catch (error) {
+      console.error("Error saving transaction:", error);
     }
   };
 
@@ -210,17 +324,17 @@ export const PaymentDrawerForm = (props: Props) => {
           <Form.Item name="type" label="Transaction Type" rules={[{ required: true, message: "Please select a transaction type" }]}>
             <Select
               options={transactionTypeOptions}
-              onChange={(value) => setSelectedTransactionType(value as "capital" | "purchase" | "sell")}
+              onChange={(value) => handleTransactionTypeChange(value as "capital" | "purchase" | "sell")}
+              
             />
           </Form.Item>
           {renderTransactionForm()}
           <Flex align="center" justify="space-between" style={{ padding: "16px 16px 0px 16px" }}>
             <Button onClick={onDrawerClose}>Cancel</Button>
-            <SaveButton {...saveButtonProps} htmlType="submit" type="primary" icon={null}>
+            <Button onClick={handleSave} type="primary">
               Save
-            </SaveButton>
+            </Button>
           </Flex>
-        
         </Form>
       </Spin>
     </Drawer>
