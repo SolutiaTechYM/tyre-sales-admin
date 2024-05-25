@@ -101,8 +101,8 @@ export const SaleDetailsEditableTable = ({
         />
         <Table.Column
           title={t("Stock")}
-          dataIndex="stock"
-          key="stock"
+          dataIndex="stockID"
+          key="stockID"
           // align="center"
 
           // sorter
@@ -114,8 +114,8 @@ export const SaleDetailsEditableTable = ({
         />
                 <Table.Column
           title={t("U.Buying Price")}
-          dataIndex="unitBuyingPrice"
-          key="unitBuyingPrice"
+          dataIndex="unitBuyPrice"
+          key="unitBuyPrice"
           align="right"
 
           
@@ -142,8 +142,8 @@ export const SaleDetailsEditableTable = ({
         />
         <Table.Column
           title={t("U.Selling Price")}
-          dataIndex="unitSellingPrice"
-          key="unitSellingPrice"
+          dataIndex="unitSellPrice"
+          key="unitSellPrice"
           align="right"
 
           

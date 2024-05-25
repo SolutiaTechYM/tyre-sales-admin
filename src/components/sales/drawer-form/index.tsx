@@ -52,7 +52,10 @@ export const SaleDrawerForm = (props: Props) => {
   const [totalPrice, settotalPrice] = useState(0);
   const [stockunitprice, setstockunitprice] = useState(12345);
   const [selectedproductid, setselectedproductid] = useState<number | undefined>();
+  const [selectedstockid, setselectedstockid] = useState<number | undefined>();
 
+
+  const [stockdata, setstockdata] = useState<IStock[]>([]);
 
 
   const { drawerProps, formProps, close, saveButtonProps, formLoading } =
@@ -81,12 +84,47 @@ export const SaleDrawerForm = (props: Props) => {
     optionLabel: "name", // Add this line
     optionValue: "id", // Add this line
   });
+
+  useEffect(() => {
+    
+    if (selectedproductid) {
+      
+      fetchStockData(selectedproductid);
+    }
+  }, [selectedproductid]);
+
+
+  const fetchStockData = async (productid: number) => {
+    try {
+
+      const response = await fetch(`${apiUrl}/products/${productid}`, {
+        method: "GET"})
+
+      const data = await response.json();
+      const jsonstockdata=data['stocks'];
+      
+      setstockdata(jsonstockdata);
+  // console.log(stockdata);
+
+    } catch (error) {
+      console.error('Error fetching sell data:', error);
+    }
+  };
   
-  const { selectProps: stockSelectProps } = useSelect<IStock>({
-    resource: "stocks",
-    optionLabel: "id", // Add this line
-    optionValue: "unitBuyPrice", // Add this line
-  });
+  // console.log(stockdata);
+
+  const stockOptions = stockdata.map((stock) => ({
+    label: `${stock.id} - ${stock.quantity}units`,
+    value: stock.id,
+    unitPrice: stock.unitBuyPrice,
+  }));
+  
+  const flattenedStockOptions = stockOptions.flat();
+
+  // const { selectProps: stockSelectProps } = useSelect({
+  //   options: flattenedStockOptions,
+
+  // });
 
   useEffect(() => {
     console.log(tableData.length);
@@ -271,7 +309,7 @@ export const SaleDrawerForm = (props: Props) => {
     <Form.Item
       label={t("purchases.fields.details.name")}
       name="proname"
-      style={{ minWidth: '300px' }}
+      style={{ minWidth: '250px' }}
       className={styles.subFormItem}
       rules={[
         {
@@ -284,7 +322,7 @@ export const SaleDrawerForm = (props: Props) => {
     <Form.Item
       label={t("Stock")}
       name="stockid"
-      style={{ minWidth: '100px' }}
+      style={{ minWidth: '150px' }}
       className={styles.subFormItem}
       rules={[
         {
@@ -292,7 +330,8 @@ export const SaleDrawerForm = (props: Props) => {
         },
       ]}
     >
-      <Select {...productSelectProps} />
+      <Select
+    options={flattenedStockOptions} onChange={(value) => setselectedstockid(value as unknown as number)}/>
     </Form.Item>
     <Form.Item
       label={t("purchases.fields.details.qty")}
@@ -306,26 +345,30 @@ export const SaleDrawerForm = (props: Props) => {
     >
       <InputNumber style={{ width: "150px" }} />
     </Form.Item>
+    
     <Form.Item
   label={t("Unit Buying Price")}
   className={styles.subFormItem}
+  // name="unitbuyingprice"
 >
-  {formProps.form.getFieldValue("stockid") ? (
+  {selectedstockid ? (
     <InputNumber
       type="number"
       prefix={"LKR"}
-      style={{ width: "150px" }}
+      style={{ width: "150px" ,color:"orange"}}
       value={
-        (stockSelectProps.options || []).find(
-          (option) => option.value === formProps.form.getFieldValue("stockid")
+        flattenedStockOptions.find(
+          (option) => option.value === selectedstockid
         )?.unitPrice || 0
       }
       disabled
     />
   ) : (
-    <InputNumber type="number" prefix={"LKR"} style={{ width: "150px" }} disabled />
+    <InputNumber type="number" prefix={"LKR"} style={{ width: "150px" }} disabled  />
   )}
 </Form.Item>
+
+
     <Form.Item
       label={t("Unit Selling Price")}
       name="unitsellingprice"
@@ -388,23 +431,25 @@ export const SaleDrawerForm = (props: Props) => {
     onClick={() => {
       // Check if all fields are not empty
       if (
-        formProps.form.getFieldValue("proname") &&
+        selectedproductid &&
         formProps.form.getFieldValue("quantity") &&
         formProps.form.getFieldValue("unitsellingprice") &&
-        formProps.form.getFieldValue("stockid")
+        selectedstockid
       ) {
         const selectedProduct = (productSelectProps.options || []).find(
           (option) => option.value === formProps.form.getFieldValue("proname")
         );
-        const selectedStock = (stockSelectProps.options || []).find(
-          (option) => option.value === formProps.form.getFieldValue("stockid")
-        );
+        // const selectedStock = (stockSelectProps.options || []).find(
+        //   (option) => option.value === formProps.form.getFieldValue("stockid")
+        // );
 
         const newRow = {
           name: selectedProduct?.label?.toString() || "",
-          productID: selectedProduct?.value || "",
-          stockID: selectedStock?.label?.toString() || "",
-          unitBuyPrice: selectedStock?.value || "",
+          productID: selectedproductid  || "",
+          stockID: selectedstockid ,
+          unitBuyPrice: flattenedStockOptions.find(
+            (option) => option.value === selectedstockid
+          )?.unitPrice || 0,
           quantity: formProps.form.getFieldValue("quantity"),
           unitSellPrice: formProps.form.getFieldValue("unitsellingprice"),
           totalPrice: formProps.form.getFieldValue("unitsellingprice") * formProps.form.getFieldValue("quantity"),
