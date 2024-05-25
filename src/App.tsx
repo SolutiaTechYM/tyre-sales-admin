@@ -63,9 +63,11 @@ import { SupplierCreate, SupplierEdit, SupplierList, SupplierShow } from "./page
 
 import { CustomerCreate } from "./pages/customers/create";
 import { CustomerEdit } from "./pages/customers/edit";
-import { AccountsList } from "./pages/accounts";
-import { AccountsCreate } from "./pages/accounts/create";
+// import { AccountsList } from "./pages/accounts";
+// import { AccountsCreate } from "./pages/accounts/create";
 import { SaleCreate, SaleList, SalesShow } from "./pages/sales";
+import { PaymentList } from "./pages/payments";
+import { PaymentCreate } from "./pages/payments/create";
 
 
 const App: React.FC = () => {
@@ -214,14 +216,14 @@ const API_URL = " https://tyre-sales-admin-backend.onrender.com";
               //   },
               // },
                {
-                name: "accounts",
-                list: "/accounts",
-                create: "/accounts/new",
-                edit: "/accounts/:id/edit",
+                name: "transactions",
+                list: "/transactions",
+                create: "/transactions/new",
+                edit: "/transactions/:id/edit",
 
-                show: "/accounts/:id",
+                show: "/transactions/:id",
                 meta: {
-                  label: "Accounts",
+                  // label: "Payments",
                   icon: <FundOutlined />,
 
                 },
@@ -341,17 +343,17 @@ const API_URL = " https://tyre-sales-admin-backend.onrender.com";
                 </Route>
 
                 <Route
-                  path="/accounts"
+                  path="/transactions"
                   element={
-                    <AccountsList>
+                    <PaymentList>
                       <Outlet />
-                    </AccountsList>
+                    </PaymentList>
                   }
                 >
 
 
                   {/* <Route path=":id" element={<CustomerShow />} /> */}
-                  <Route path="new" element={<AccountsCreate />} />
+                  <Route path="new" element={<PaymentCreate />} />
                   {/* <Route path=":id/edit" element={<CustomerEdit />} /> */}
 
 

@@ -26,13 +26,13 @@ import {
   Button,
 } from "antd";
 
-import { ITransaction, IUser, IUserFilterVariables } from "../../interfaces";
+import { ITransaction, ICustomer, IUserFilterVariables } from "../../interfaces";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { PaginationTotal } from "../../components";
 import { PropsWithChildren } from "react";
 import { useLocation } from "react-router-dom";
 
-export const AccountsList = ({ children }: PropsWithChildren) => {
+export const PaymentList = ({ children }: PropsWithChildren) => {
   const go = useGo();
   const { pathname } = useLocation();
   const { showUrl } = useNavigation();
@@ -43,7 +43,7 @@ export const AccountsList = ({ children }: PropsWithChildren) => {
   const transactionTypes = ["capital", "purchase", "sell"];
 
   const {   tableProps, filters, sorters } = useTable<
-    IUser,
+    ICustomer,
     HttpError,
     IUserFilterVariables
   >({
@@ -92,7 +92,7 @@ export const AccountsList = ({ children }: PropsWithChildren) => {
           size="large"
           onClick={() => {
             return go({
-              to: `${createUrl("accounts")}`,
+              to: `${createUrl("transactions")}`,
               query: {
                 to: pathname,
               },
@@ -103,7 +103,7 @@ export const AccountsList = ({ children }: PropsWithChildren) => {
             });
           }}
         >
-          Add Capital
+          Add Payments
         </CreateButton>
       ]}
     >
