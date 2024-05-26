@@ -14,6 +14,11 @@
 //   total: number;
 //   totalDelivered: number;
 // }
+export enum TradeType {
+  PURCHASE,
+  SALE,
+  CAPITAL,
+}
 
 export interface ISalesChart {
   date: string;
@@ -294,9 +299,9 @@ interface ICustomerOrSupplier {
 }
 
 // Transaction interface
-interface ITransaction {
+export interface ITransaction {
   id: string;
-  type: "capital" | "purchase" | "sell";
+  type: TradeType;
   amount?: number; // Required for "capital" type
   customerId?: string; // Required for "sell" type
   supplierId?: string; // Required for "purchase" type
@@ -330,53 +335,63 @@ export interface ITransactionlist {
   tradeID: number
 }
 
-
-export interface IStore {
-  id: number;
-  title: string;
-  isActive: boolean;
-  createdAt: string;
-  gsm: string;
-  email: string;
-  address: IAddress;
-  products: IProduct[];
+export interface ITransactionCreate {
+  type: TradeType;
+  transactions: ITransactionCreateDetail[];
 }
+
+export interface ITransactionCreateDetail {
+  tradeID?: number;
+  amount: number;
+}
+
+
+// export interface IStore {
+//   id: number;
+//   title: string;
+//   isActive: boolean;
+//   createdAt: string;
+//   gsm: string;
+//   email: string;
+//   address: IAddress;
+//   products: IProduct[];
+// }
 
 // export interface ICourierStatus {
 //   id: number;
 //   text: "Available" | "Offline" | "On delivery";
 // }
 
-export interface ICourier {
-  id: number;
-  name: string;
-  surname: string;
-  email: string;
-  gender: string;
-  gsm: string;
-  createdAt: string;
-  accountNumber: string;
-  licensePlate: string;
-  address: string;
-  avatar: IFile[];
-  store: IStore;
-  status: ICourierStatus;
-  vehicle: IVehicle;
-}
+// export interface ICourier {
+//   id: number;
+//   name: string;
+//   surname: string;
+//   email: string;
+//   gender: string;
+//   gsm: string;
+//   createdAt: string;
+//   accountNumber: string;
+//   licensePlate: string;
+//   address: string;
+//   avatar: IFile[];
+//   store: IStore;
+//   status: ICourierStatus;
+//   vehicle: IVehicle;
+// }
 
-export interface IOrder {
-  id: number;
-  user: IUser;
-  createdAt: string;
-  products: IProduct[];
-  status: IOrderStatus;
-  adress: IAddress;
-  store: IStore;
-  courier: ICourier;
-  events: IEvent[];
-  orderNumber: number;
-  amount: number;
-}
+// export interface IOrder {
+//   id: number;
+//   user: IUser;
+//   createdAt: string;
+//   products: IProduct[];
+//   status: IOrderStatus;
+//   adress: IAddress;
+//   store: IStore;
+//   courier: ICourier;
+//   events: IEvent[];
+//   orderNumber: number;
+//   amount: number;
+// }
 // export interface ICustomer {
 //   id: number;
 //   name: string;
@@ -465,13 +480,13 @@ export interface ICategory {
 //   status?: string;
 // }
 
-export interface IUserFilterVariables {
-  q: string;
-  status: boolean;
-  createdAt: [Dayjs, Dayjs];
-  gender: string;
-  isActive: boolean;
-}
+// export interface IUserFilterVariables {
+//   q: string;
+//   status: boolean;
+//   createdAt: [Dayjs, Dayjs];
+//   gender: string;
+//   isActive: boolean;
+// }
 
 // export interface IReview {
 //   id: number;
@@ -497,3 +512,5 @@ export interface ITrendingProducts {
   product: IProduct;
   orderCount: number;
 }
+
+
