@@ -2,8 +2,8 @@ import { useDrawerForm } from "@refinedev/antd";
 import { BaseKey, useApiUrl, useGetToPath, useGo, useTranslate } from "@refinedev/core";
 import { useSelect } from "@refinedev/antd";
 import { useForm } from "antd/lib/form/Form";
-import { Form, Input, Select, Table, Button, Flex, Spin, message, notification } from "antd";
-import { ITransaction, ISupplier, ICustomer, IPaymentTable } from "../../../interfaces";
+import { Form, Input, Select, Table, Button, Flex, Spin, notification } from "antd";
+import { ITransaction, ISupplier, ICustomer, IPaymentTable, ITransactionCreate, ITransactionCreateDetail, TradeType } from "../../../interfaces";
 import { useSearchParams } from "react-router-dom";
 import { Drawer } from "../../drawer";
 import { useState, useEffect } from "react";
@@ -38,8 +38,8 @@ export const PaymentDrawerForm = (props: Props) => {
   const [selectedCustomerId, setSelectedCustomerId] = useState<number | undefined>();
   const [selectedSupplierId, setSelectedSupplierId] = useState<number | undefined>();
   const [capitalAmount, setCapitalAmount] = useState<number | undefined>();
-  const [sellPayments, setSellPayments] = useState<{ [id: string]: number }>({});
-  const [purchasePayments, setPurchasePayments] = useState<{ [id: string]: number }>({});
+  const [sellPayments, setSellPayments] = useState<{[id:string]:number}>({});
+  const [purchasePayments, setPurchasePayments] = useState<{[id:string]:number}>({});
 
 
   const showsuccessNotification = (msg: string) => {
@@ -125,7 +125,7 @@ export const PaymentDrawerForm = (props: Props) => {
   const transactionTypeOptions = [
     { label: "Capital", value: "capital" },
     { label: "Purchase", value: "purchase" },
-    { label: "sale", value: "sale" },
+    { label: "Sale", value: "sale" },
   ];
 
   const handleTransactionTypeChange = (value: "capital" | "purchase" | "sale") => {
@@ -188,12 +188,12 @@ export const PaymentDrawerForm = (props: Props) => {
                     title="Payment"
                     dataIndex="payment"
                     key="payment"
-                    render={(value, record: { id: BaseKey; payment: number }) => (
+                    render={(value, record: { id: number; payment: number }) => (
                       <Input
-                      min={0}
+                        min={0}
                         type="number"
                         value={value}
-                        onChange={(e) => setSellPayments({ ...sellPayments, [record.id]: parseFloat(e.target.value) })}
+                        onChange={(e) => setSellPayments({...sellPayments, [record.id]: parseFloat(e.target.value)})}
                       />
                     )}
                   />
@@ -234,11 +234,11 @@ export const PaymentDrawerForm = (props: Props) => {
                     title="Payment"
                     dataIndex="payment"
                     key="payment"
-                    render={(value, record: { id: BaseKey; payment: number }) => (
+                    render={(value, record: { id: number; payment: number }) => (
                       <Input
                         type="number"
                         value={value}
-                        onChange={(e) => setPurchasePayments({ ...purchasePayments, [record.id]: parseFloat(e.target.value) })}
+                        onChange={(e) => setPurchasePayments({...purchasePayments, [record.id]: parseFloat(e.target.value)})}
                       />
                     )}
                   />
@@ -271,15 +271,16 @@ export const PaymentDrawerForm = (props: Props) => {
             return;
           }
           // Make a POST request to save the capital transaction
+          const capitalBody:ITransactionCreate = {
+            type: TradeType.CAPITAL,
+            transactions: [{amount:capitalAmount}]
+          }
           const capitalResponse = await fetch(`${apiUrl}/transactions`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-              type: "capital",
-              amount: capitalAmount,
-            }),
+            body: JSON.stringify(capitalBody),
           });
           if (!capitalResponse.ok) {
             notification.error({
@@ -299,9 +300,7 @@ export const PaymentDrawerForm = (props: Props) => {
 
           break;
         case "sale":
-          const hasNonZeroSellPayment = Object.values(sellPayments).some(
-            (payment) => payment > 0
-          );
+          const hasNonZeroSellPayment = Object.values(sellPayments).some((payment) => payment > 0);
           if (!selectedCustomerId || !hasNonZeroSellPayment) {
 
             notification.error({
@@ -315,16 +314,16 @@ export const PaymentDrawerForm = (props: Props) => {
             return;
           }
           // Make a POST request to save the sell transaction
+          const saleBody:ITransactionCreate = {
+            type: TradeType.SALE,
+            transactions: Object.entries(sellPayments).map(([id, payment]) => ({tradeID:parseInt(id), amount:payment}))
+          }
           const sellResponse = await fetch(`${apiUrl}/transactions`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-              type: "sale",
-              customerId: selectedCustomerId,
-              payments: sellPayments,
-            }),
+            body: JSON.stringify(saleBody),
           });
           if (!sellResponse.ok) {
             notification.error({
@@ -344,9 +343,7 @@ export const PaymentDrawerForm = (props: Props) => {
 
           break;
         case "purchase":
-          const hasNonZeroPurchasePayment = Object.values(purchasePayments).some(
-            (payment) => payment > 0
-          );
+          const hasNonZeroPurchasePayment = Object.values(purchasePayments).some((payment) => payment > 0);
           if (!selectedSupplierId || !hasNonZeroPurchasePayment) {
             notification.error({
               message: "Error",
@@ -359,16 +356,16 @@ export const PaymentDrawerForm = (props: Props) => {
             return;
           }
           // Make a POST request to save the purchase transaction
+          const purchaseBody:ITransactionCreate = {
+            type: TradeType.PURCHASE,
+            transactions: Object.entries(purchasePayments).map(([id, payment]) => ({tradeID:parseInt(id), amount:payment}))
+          }
           const purchaseResponse = await fetch(`${apiUrl}/transactions`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-              type: "purchase",
-              supplierId: selectedSupplierId,
-              payments: purchasePayments,
-            }),
+            body: JSON.stringify(purchaseBody),
           });
           if (!purchaseResponse.ok) {
             notification.error({
