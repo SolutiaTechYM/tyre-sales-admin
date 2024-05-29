@@ -13,7 +13,7 @@ export const RecentOrders: React.FC = () => {
   const { styles } = useStyles();
 
   const { tableProps } = useTable<IOrder>({
-    resource: "orders",
+    resource: "misc/recentSales",
     initialSorter: [
       {
         field: "createdAt",
@@ -21,13 +21,13 @@ export const RecentOrders: React.FC = () => {
       },
     ],
     initialPageSize: 10,
-    permanentFilter: [
-      {
-        field: "status.text",
-        operator: "eq",
-        value: "Pending",
-      },
-    ],
+    // permanentFilter: [
+    //   {
+    //     field: "status.text",
+    //     operator: "eq",
+    //     value: "Pending",
+    //   },
+    // ],
     syncWithLocation: false,
   });
 
@@ -46,7 +46,7 @@ export const RecentOrders: React.FC = () => {
       rowKey="id"
     >
       <Table.Column<IOrder>
-        dataIndex="orderNumber"
+        dataIndex="id"
         className={styles.column}
         render={(_, record) => (
           <Typography.Link
@@ -57,7 +57,7 @@ export const RecentOrders: React.FC = () => {
               color: token.colorTextHeading,
             }}
           >
-            #{record.orderNumber}
+            #{record.id}
           </Typography.Link>
         )}
       />
@@ -78,7 +78,7 @@ export const RecentOrders: React.FC = () => {
                   fontSize: 14,
                 }}
               >
-                {record?.user?.firstName} {record?.user?.lastName}
+                {record?.customer?.name}
               </Typography.Text>
               <Typography.Text
                 ellipsis
@@ -87,7 +87,7 @@ export const RecentOrders: React.FC = () => {
                 }}
                 type="secondary"
               >
-                {record?.user?.addresses?.[0]?.text}
+                {record?.customer?.address}
               </Typography.Text>
             </Space>
           );
@@ -142,19 +142,19 @@ export const RecentOrders: React.FC = () => {
               }}
               options={{
                 style: "currency",
-                currency: "USD",
+                currency: "LKR",
               }}
             />
           );
         }}
       />
-      <Table.Column<IOrder>
+      {/* <Table.Column<IOrder>
         fixed="right"
         key="actions"
         className={styles.column}
         align="end"
         render={(_, record) => <OrderActions record={record} />}
-      />
+      /> */}
     </Table>
   );
 };
