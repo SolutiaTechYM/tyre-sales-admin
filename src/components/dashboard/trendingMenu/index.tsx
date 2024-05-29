@@ -56,7 +56,7 @@ export const TrendingMenu: React.FC = () => {
                     xl: 120,
                     xxl: 120,
                   }}
-                  src={item.product?.images[0]?.url}
+                  src={item.product?.images?.[0]?.url}
                 />
                 <div
                   style={{
@@ -103,7 +103,7 @@ export const TrendingMenu: React.FC = () => {
                       style: "currency",
                       notation: "standard",
                     }}
-                    value={item.orderCount * item.product.price}
+                    value={item.orderCount * item.product.current_price}
                   />
                 </Flex>
                 <Typography.Text
