@@ -379,19 +379,19 @@ export interface ITransactionCreateDetail {
 //   vehicle: IVehicle;
 // }
 
-// export interface IOrder {
-//   id: number;
-//   user: IUser;
-//   createdAt: string;
-//   products: IProduct[];
-//   status: IOrderStatus;
-//   adress: IAddress;
-//   store: IStore;
-//   courier: ICourier;
-//   events: IEvent[];
-//   orderNumber: number;
-//   amount: number;
-// }
+export interface IOrder {
+  id: number;
+  customer: ICustomer;
+  createdAt: string;
+  products: IProduct[];
+  // status: IOrderStatus;
+  // adress: IAddress;
+  // store: IStore;
+  // courier: ICourier;
+  // events: IEvent[];
+  orderNumber: number;
+  amount: number;
+}
 // export interface ICustomer {
 //   id: number;
 //   name: string;
