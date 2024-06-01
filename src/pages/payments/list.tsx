@@ -26,7 +26,7 @@ import {
   Button,
 } from "antd";
 
-import { ITransactionlist, ICustomer, IUserFilterVariables } from "../../interfaces";
+import { ITransactionlist, ICustomer } from "../../interfaces";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { PaginationTotal } from "../../components";
 import { PropsWithChildren } from "react";
@@ -44,8 +44,8 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
 
   const {   tableProps, filters, sorters } = useTable<
     ICustomer,
-    HttpError,
-    IUserFilterVariables
+    HttpError
+    // IUserFilterVariables
   >({
     filters: {
       initial: [
