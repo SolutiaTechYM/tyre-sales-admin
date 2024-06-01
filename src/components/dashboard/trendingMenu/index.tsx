@@ -99,8 +99,8 @@ export const TrendingMenu: React.FC = () => {
                   <NumberField
                     type="secondary"
                     options={{
-                      currency: "USD",
-                      style: "currency",
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
                       notation: "standard",
                     }}
                     value={item.orderCount * item.product.current_price}

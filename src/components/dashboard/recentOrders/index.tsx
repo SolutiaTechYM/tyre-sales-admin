@@ -141,8 +141,8 @@ export const RecentOrders: React.FC = () => {
                 whiteSpace: "nowrap",
               }}
               options={{
-                style: "currency",
-                currency: "LKR",
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
               }}
             />
           );

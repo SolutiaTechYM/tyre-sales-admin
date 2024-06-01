@@ -39,7 +39,7 @@ export const DailyRevenue = ({ data, height }: Props) => {
     yAxis: {
       label: {
         formatter: (v) => {
-          return `$${Number(v) / 1000}k`;
+          return `${Number(v) / 1000}k`;
         },
       },
     },
@@ -48,8 +48,8 @@ export const DailyRevenue = ({ data, height }: Props) => {
         return {
           name: t("dashboard.revenue.title"),
           value: new Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: "USD",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
           }).format(data.value),
         };
       },

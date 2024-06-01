@@ -224,8 +224,8 @@ export const DashboardPage: React.FC = () => {
                     <NumberField
                       value={revenue.trend}
                       options={{
-                        style: "currency",
-                        currency: "USD",
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
                       }}
                     />
                     {revenue.trend > 0 ? <TrendUpIcon /> : <TrendDownIcon />}
