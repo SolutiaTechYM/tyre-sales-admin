@@ -364,6 +364,7 @@ export const ProductListTable = () => {
         key="actions"
         fixed="right"
         align="center"
+        width="100px"
         render={(_, record: IProduct) => {
           return (
             <Button

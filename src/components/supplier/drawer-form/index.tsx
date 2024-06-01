@@ -50,7 +50,21 @@ export const SupplierDrawerForm = (props: Props) => {
       redirect: false,
       onMutationSuccess: () => {
         props.onMutationSuccess?.();
-        onDrawerCLose();
+        go({
+          to:
+            searchParams.get("to") ??
+            getToPath({
+              action: "list",
+            }) ??
+            "",
+          query: {
+            to: undefined,
+          },
+          options: {
+            keepQuery: true,
+          },
+          type: "replace",
+        });
 
       },
     });
@@ -175,21 +189,32 @@ export const SupplierDrawerForm = (props: Props) => {
               <Input />
             </Form.Item>
             <Form.Item
-  label={t("Contact")}
-  name="phone"
-  className={styles.formItem}
-  rules={[
-    {
-      required: true,
-    },
-    {
-      pattern: /^[0-9]{10}$/,
-      message: "Please enter a valid 10-digit phone number",
-    },
-  ]}
->
-  <Input placeholder="please enter Phone number" maxLength={10} />
-</Form.Item>
+              label={t("Contact")}
+              name="phone"
+              className={styles.formItem}
+              rules={[
+                {
+                  required: true,
+                },
+                {
+                  pattern: /^[0-9]{10}$/,
+                  message: "Please enter a valid 10-digit phone number",
+                },
+              ]}
+            >
+              <Input placeholder="please enter Phone number" maxLength={10} />
+            </Form.Item>
+
+
+            <Form.Item
+              label={t("Contact Person")}
+              name="contact_person"
+              className={styles.formItem}
+
+            >
+              <Input />
+            </Form.Item>
+
             <Form.Item
               label={t("suppliers.fields.address")}
               name="address"

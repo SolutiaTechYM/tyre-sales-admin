@@ -31,9 +31,11 @@ import { useLocation } from "react-router-dom";
 export const SaleDetailsEditableTable = ({
   data,
   setData,
+  onRemove,
 }: {
   data: RowDatasale[];
   setData: (data: RowDatasale[]) => void;
+  onRemove: (rowIndex: number) => void;
 }) => {
   const { token } = theme.useToken();
   const t = useTranslate();
@@ -42,10 +44,15 @@ export const SaleDetailsEditableTable = ({
   const { showUrl } = useNavigation();
 
   const handleDeleteRow = (index: number) => {
-    const newData = [...data];
-    newData.splice(index, 1);
-    setData(newData);
+    onRemove(index); 
   };
+
+
+  // const handleDeleteRow = (index: number) => {
+  //   const newData = [...data];
+  //   newData.splice(index, 1);
+  //   setData(newData);
+  // };
 
 
 
@@ -166,7 +173,7 @@ export const SaleDetailsEditableTable = ({
         sorter
         render={(value) => (
           <Typography.Text style={{ whiteSpace: "nowrap" }}>
-            {value}
+             {parseFloat(value).toFixed(2)}
           </Typography.Text>
         )}
       />

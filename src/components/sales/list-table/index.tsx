@@ -70,7 +70,7 @@ export const SaleListTable = () => {
       pagination={{
         ...tableProps.pagination,
         showTotal: (total) => (
-          <PaginationTotal total={total} entityName="sales" />
+          <PaginationTotal total={total} entityName="sales" customText="Sales" />
         ),
       }}
     >

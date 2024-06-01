@@ -226,7 +226,7 @@ export const SupplierList = ({ children }: PropsWithChildren) => {
           }}
         />
         <Table.Column
-          title={t("suppliers.fields.phone")}
+          title={t("Contact")}
           dataIndex="phone"
           key="phone"
           filterIcon={(filtered) => (

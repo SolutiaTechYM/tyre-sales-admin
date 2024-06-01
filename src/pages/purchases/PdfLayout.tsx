@@ -28,7 +28,7 @@ export const PdfLayout: React.FC<PdfProps> = ({ record }) =>  {
   }, []);
 
   return (
-    <PDFViewer style={styles.viewer}>
+    <PDFViewer style={styles.viewer} >
       <Document>
         <Page style={styles.page} size="A4">
        

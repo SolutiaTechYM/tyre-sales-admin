@@ -115,10 +115,15 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
         pagination={{
           ...tableProps.pagination,
           showTotal: (total) => (
-            <PaginationTotal total={total} entityName="users" />
-          ),
-        }}
-      >
+            <PaginationTotal
+            total={total}
+            entityName="transactions"
+            customText="Transactions" // Add this line
+          />
+        ),
+
+      }}
+    >
         <Table.Column
           key="id"
           dataIndex="id"

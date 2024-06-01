@@ -51,12 +51,18 @@ export const SaleDrawerForm = (props: Props) => {
   const [showModal, setShowModal] = useState(false);
   const [totalPrice, settotalPrice] = useState(0);
   const [stockunitprice, setstockunitprice] = useState(12345);
-  const [selectedproductid, setselectedproductid] = useState<number | undefined>();
+  // const [selectedproductid, setselectedproductid] = useState<number | undefined>();
   const [selectedstockid, setselectedstockid] = useState<number | undefined>();
 
 
   const [stockdata, setstockdata] = useState<IStock[]>([]);
 
+  const [selectedProductStocks, setSelectedProductStocks] = useState<{ [key: number]: IStock[] }>({});
+  // const [selectedProductStocks, setSelectedProductStocks] = useState({});
+  // const [fetchedProductIds, setFetchedProductIds] = useState([]);
+
+  const [selectedproductid, setselectedproductid] = useState<number | undefined>(undefined);
+  const [fetchedProductIds, setFetchedProductIds] = useState<number[]>([]);
 
   const { drawerProps, formProps, close, saveButtonProps, formLoading } =
     useDrawerForm<ISales>({
@@ -86,40 +92,46 @@ export const SaleDrawerForm = (props: Props) => {
   });
 
   useEffect(() => {
-    
-    if (selectedproductid) {
-      
+    if (selectedproductid && !fetchedProductIds.includes(selectedproductid)) {
       fetchStockData(selectedproductid);
+      setFetchedProductIds((prevIds) => [...prevIds, selectedproductid]);
     }
-  }, [selectedproductid]);
+  }, [selectedproductid, fetchedProductIds]);
 
 
   const fetchStockData = async (productid: number) => {
     try {
-
       const response = await fetch(`${apiUrl}/products/${productid}`, {
-        method: "GET"})
+        method: "GET",
+      });
 
       const data = await response.json();
-      const jsonstockdata=data['stocks'];
-      
-      setstockdata(jsonstockdata);
-  // console.log(stockdata);
+      const jsonStockData = data['stocks'];
 
+      // Store the stock data for the selected product
+      setSelectedProductStocks((prevStocks) => ({
+        ...prevStocks,
+        [productid]: jsonStockData,
+      }));
     } catch (error) {
-      console.error('Error fetching sell data:', error);
+      console.error('Error fetching stock data:', error);
     }
   };
-  
+
   // console.log(stockdata);
 
-  const stockOptions = stockdata.map((stock) => ({
-    label: `${stock.id} - ${stock.quantity}units`,
-    value: stock.id,
-    unitPrice: stock.unitBuyPrice,
-  }));
-  
-  const flattenedStockOptions = stockOptions.flat();
+  const getStockOptionsForProduct = (productId: number) => {
+    const stocksForProduct = selectedProductStocks[productId] || [];
+    const filteredStocks = stocksForProduct.filter(stock => stock.quantity > 0);
+    return filteredStocks.map((stock: IStock) => ({
+      label: `${stock.quantity} units - ${stock.unitBuyPrice}`,
+      value: stock.id,
+      unitPrice: stock.unitBuyPrice,
+    }));
+  };
+
+
+  // const flattenedStockOptions = stockOptions.flat();
 
   // const { selectProps: stockSelectProps } = useSelect({
   //   options: flattenedStockOptions,
@@ -216,6 +228,123 @@ export const SaleDrawerForm = (props: Props) => {
     });
   };
 
+
+
+  const handleAddToTable = () => {
+    if (
+      selectedproductid &&
+      formProps.form.getFieldValue("quantity") &&
+      formProps.form.getFieldValue("unitsellingprice") &&
+      selectedstockid
+    ) {
+      const selectedProduct = (productSelectProps.options || []).find(
+        (option) => option.value === formProps.form.getFieldValue("proname")
+      );
+      const selectedStock = selectedProductStocks[selectedproductid].find(
+        (stock: IStock) => stock.id === selectedstockid
+      );
+  
+      const enteredQuantity = formProps.form.getFieldValue("quantity");
+      const enteredUnitSellPrice = formProps.form.getFieldValue("unitsellingprice");
+  
+      // Check if entered quantity is less than or equal to the stock quantity
+      if (enteredQuantity > selectedStock?.quantity) {
+        notification.error({
+          message: "Error",
+          description: "Entered quantity must be less than or equal to the stock quantity.",
+          duration: 3,
+          style: {
+            zIndex: 1000,
+          },
+        });
+        return;
+      }
+  
+      // Check if entered unit selling price is greater than the unit buying price
+      if (enteredUnitSellPrice <= selectedStock?.unitBuyPrice) {
+        notification.error({
+          message: "Error",
+          description: "Unit selling price must be greater than the unit buying price.",
+          duration: 3,
+          style: {
+            zIndex: 1000,
+          },
+        });
+        return;
+      }
+  
+      const newRow = {
+        name: selectedProduct?.label?.toString() || "",
+        productID: selectedproductid || "",
+        stockID: selectedstockid,
+        unitBuyPrice: selectedStock?.unitBuyPrice || 0,
+        quantity: enteredQuantity,
+        unitSellPrice: enteredUnitSellPrice,
+        totalPrice: enteredUnitSellPrice * enteredQuantity,
+      };
+  
+      // Update the selected stock quantity
+      const updatedStocks = selectedProductStocks[selectedproductid].map(
+        (stock) => {
+          if (stock.id === selectedstockid) {
+            return {
+              ...stock,
+              quantity: stock.quantity - enteredQuantity,
+            };
+          }
+          return stock;
+        }
+      );
+  
+      setSelectedProductStocks((prevStocks) => ({
+        ...prevStocks,
+        [selectedproductid]: updatedStocks,
+      }));
+  
+      setTableData([...tableData, newRow]);
+  
+      formProps.form.setFieldsValue({
+        proname: "",
+        unitsellingprice: "",
+        stockid: "",
+        unitprice: "",
+        quantity: "",
+      });
+      setselectedstockid(undefined);
+    } else {
+      showErrorNotification();
+    }
+  };
+
+  const handleRemoveFromTable = (rowIndex: number) => {
+    const removedRow = tableData[rowIndex];
+    const updatedTableData = [...tableData];
+    updatedTableData.splice(rowIndex, 1);
+    setTableData(updatedTableData);
+
+    // Update the selected stock quantity
+    const updatedStocks = selectedProductStocks[removedRow.productID].map(
+      (stock: IStock) => {
+        if (stock.id === removedRow.stockID) {
+          return {
+            ...stock,
+            quantity: stock.quantity + removedRow.quantity,
+          };
+        }
+        return stock;
+      }
+    );
+
+    setSelectedProductStocks((prevStocks) => ({
+      ...prevStocks,
+      [removedRow.productID]: updatedStocks,
+    }));
+  };
+
+
+
+
+
   const images = Form.useWatch("images", formProps.form);
   const image = images?.[0] || null;
   const previewImageURL = image?.url || image?.response?.url;
@@ -247,44 +376,44 @@ export const SaleDrawerForm = (props: Props) => {
             </Form.Item>
 
             <Form.Item
-                    label={t("purchases.fields.note")}
-                    name="description"
-                    className={styles.formItem}
-                  >
-                    <Input.TextArea rows={2} />
-                  </Form.Item>
+              label={t("purchases.fields.note")}
+              name="description"
+              className={styles.formItem}
+            >
+              <Input.TextArea rows={2} />
+            </Form.Item>
 
-                  <Form.Item
-                      label={t("Grand Total")}
-                      // name="totalPrice"
-                      className={styles.formItem}
-                    >
-                      <InputNumber
-                        
-                        style={{ width: "150px", color: "red" }}
-                        disabled
-                        value={totalPrice}
-                      />
-                    </Form.Item>
-
-                    <Form.Item
-                      label={t("Payment")}
-                      name="payment"
-                      className={styles.formItem}
-                      rules={[
-                        {
-                          required: true,
-                        },
-                      ]}
-                    >
-                      <InputNumber 
-                          step="any"
-                          onKeyPress={(e) => {
-                            if (e.key === '-') {
-                              e.preventDefault();
-                            }
-                          }} style={{ width: "150px" }} />
-                    </Form.Item>
+            <Form.Item
+  label={t("Grand Total")}
+  // name="totalPrice"
+  className={styles.formItem}
+>
+  <InputNumber
+    style={{ width: "150px", color: "red" }}
+    disabled
+    value={totalPrice}
+    decimalSeparator="."
+    precision={2}
+  />
+</Form.Item>
+            <Form.Item
+              label={t("Payment")}
+              name="payment"
+              className={styles.formItem}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <InputNumber
+                step="any"
+                onKeyPress={(e) => {
+                  if (e.key === '-') {
+                    e.preventDefault();
+                  }
+                }} style={{ width: "150px" }} />
+            </Form.Item>
 
             {/* <Form.Item name="add" className={styles.formItem}>
               <Button
@@ -308,105 +437,105 @@ export const SaleDrawerForm = (props: Props) => {
                 padding: "32px",
               }}
             >
-              <Flex justify="space-between" style={{marginBottom:'15px'}}>
-              <h3 style={{marginBottom:'20px'}}>Add Products to Sale</h3>
-              <Button
-                type="primary"
-                onClick={() => {
-                  setShowModal(!showModal);
-                }}
-              >
-                Choose Products
-              </Button>
-              
+              <Flex justify="space-between" style={{ marginBottom: '15px' }}>
+                <h3 style={{ marginBottom: '20px' }}>Add Products to Sale</h3>
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    setShowModal(!showModal);
+                  }}
+                >
+                  Choose Products
+                </Button>
+
               </Flex>
-                
+
               {showModal && (
-  <Flex gap={25} style={{ marginBottom: '15px',flexWrap: 'wrap' }} >
-    <Form.Item
-      label={t("purchases.fields.details.name")}
-      name="proname"
-      style={{ minWidth: '250px' }}
-      className={styles.subFormItem}
-      rules={[
-        {
-          required: true,
-        },
-      ]}
-    >
-      <Select {...productSelectProps}  onChange={(value) => setselectedproductid(value as unknown as number)}/>
-    </Form.Item>
-    <Form.Item
-      label={t("Stock")}
-      name="stockid"
-      style={{ minWidth: '150px' }}
-      className={styles.subFormItem}
-      rules={[
-        {
-          required: true,
-        },
-      ]}
-    >
-      <Select
-    options={flattenedStockOptions} onChange={(value) => setselectedstockid(value as unknown as number)}/>
-    </Form.Item>
-    <Form.Item
-      label={t("purchases.fields.details.qty")}
-      name="quantity"
-      className={styles.subFormItem}
-      rules={[
-        {
-          required: true,
-        },
-      ]}
-    >
-      <InputNumber style={{ width: "150px" }} />
-    </Form.Item>
-    
-    <Form.Item
-  label={t("Unit Buying Price")}
-  className={styles.subFormItem}
-  // name="unitbuyingprice"
->
-  {selectedstockid ? (
-    <InputNumber
-      type="number"
-      step={0.01}
-      
-      style={{ width: "150px" ,color:"orange"}}
-      value={
-        flattenedStockOptions.find(
-          (option) => option.value === selectedstockid
-        )?.unitPrice || 0
-      }
-      disabled
-    />
-  ) : (
-    <InputNumber type="number"  style={{ width: "150px" }} disabled  />
-  )}
-</Form.Item>
+                <Flex gap={25} style={{ marginBottom: '15px', flexWrap: 'wrap' }} >
+                  <Form.Item
+                    label={t("purchases.fields.details.name")}
+                    name="proname"
+                    style={{ minWidth: '150px' }}
+                    className={styles.subFormItem}
+                    rules={[
+                      {
+                        required: true,
+                      },
+                    ]}
+                  >
+                    <Select {...productSelectProps} onChange={(value) => setselectedproductid(value as unknown as number)} />
+                  </Form.Item>
+                  <Form.Item
+                    label={t("Stock")}
+                    name="stockid"
+                    style={{ minWidth: '250px' }}
+                    className={styles.subFormItem}
+                    rules={[
+                      {
+                        required: true,
+                      },
+                    ]}
+                  >
+                    <Select
+                      options={selectedproductid ? getStockOptionsForProduct(selectedproductid) : []}
+                      onChange={(value) => setselectedstockid(value as unknown as number)}
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    label={t("purchases.fields.details.qty")}
+                    name="quantity"
+                    className={styles.subFormItem}
+                    rules={[
+                      {
+                        required: true,
+                      },
+                    ]}
+                  >
+                    <InputNumber style={{ width: "150px" }} />
+                  </Form.Item>
+
+                  <Form.Item
+                    label={t("Unit Buying Price")}
+                    className={styles.subFormItem}
+                  >
+                    {selectedstockid && selectedProductStocks[selectedproductid!]?.length > 0 ? (
+                      <InputNumber
+                        type="number"
+                        step={0.01}
+                        style={{ width: "150px", color: "orange" }}
+                        value={
+                          selectedProductStocks[selectedproductid!].find(
+                            (stock: IStock) => stock.id === selectedstockid
+                          )?.unitBuyPrice || 0
+                        }
+                        disabled
+                      />
+                    ) : (
+                      <InputNumber type="number" style={{ width: "150px" }} disabled />
+                    )}
+                  </Form.Item>
 
 
-    <Form.Item
-      label={t("Unit Selling Price")}
-      name="unitsellingprice"
-      className={styles.subFormItem}
-      rules={[
-        {
-          required: true,
-        },
-      ]}
-    >
-      <InputNumber type="number"
-          step="any"
-          onKeyPress={(e) => {
-            if (e.key === '-') {
-              e.preventDefault();
-            }
-          }}
-          style={{ width: "150px" }} />
-    </Form.Item>
-    {/* <Form.Item label={' '} name="add">
+                  <Form.Item
+                    label={t("Unit Selling Price")}
+                    name="unitsellingprice"
+                    className={styles.subFormItem}
+                    rules={[
+                      {
+                        required: true,
+                      },
+                    ]}
+                  >
+                    <InputNumber type="number"
+                      step="any"
+                      onKeyPress={(e) => {
+                        if (e.key === '-') {
+                          e.preventDefault();
+                        }
+                      }}
+                      style={{ width: "150px" }} />
+                  </Form.Item>
+                  {/* <Form.Item label={' '} name="add">
       <Button
         onClick={() => {
           // Check if all fields are not empty
@@ -451,75 +580,20 @@ export const SaleDrawerForm = (props: Props) => {
       </Button>
     </Form.Item> */}
 
-<Form.Item label={' '} name="add">
-  <Button
-    onClick={() => {
-      // Check if all fields are not empty
-      if (
-        selectedproductid &&
-        formProps.form.getFieldValue("quantity") &&
-        formProps.form.getFieldValue("unitsellingprice") &&
-        selectedstockid
-      ) {
-        const selectedProduct = (productSelectProps.options || []).find(
-          (option) => option.value === formProps.form.getFieldValue("proname")
-        );
-        // const selectedStock = (stockSelectProps.options || []).find(
-        //   (option) => option.value === formProps.form.getFieldValue("stockid")
-        // );
-
-        const newRow = {
-          name: selectedProduct?.label?.toString() || "",
-          productID: selectedproductid  || "",
-          stockID: selectedstockid ,
-          unitBuyPrice: flattenedStockOptions.find(
-            (option) => option.value === selectedstockid
-          )?.unitPrice || 0,
-          quantity: formProps.form.getFieldValue("quantity"),
-          unitSellPrice: formProps.form.getFieldValue("unitsellingprice"),
-          totalPrice: formProps.form.getFieldValue("unitsellingprice") * formProps.form.getFieldValue("quantity"),
-        };
-
-        const existingRow = tableData.find(
-          (row) =>
-            row.productID === newRow.productID &&
-            row.stockID === newRow.stockID 
-        );
-
-        if (existingRow) {
-          if (existingRow.unitSellPrice !== newRow.unitSellPrice) {
-            showError(`Unit Selling Price cannot be changed. Current price: ${existingRow.unitSellPrice}`);
-          } else {
-            const updatedRows = tableData.map((row) =>
-              row === existingRow ? { ...row, quantity: row.quantity + newRow.quantity } : row
-            );
-            setTableData(updatedRows);
-          }
-        } else {
-          setTableData([...tableData, newRow]);
-        }
-
-        formProps.form.setFieldsValue({
-          proname: "",
-          unitsellingprice: "",
-          stockid: "",
-          unitprice: "",
-          quantity: "",
-        });
-      } else {
-        showErrorNotification();
-      }
-    }}
-  >
-    Add
-  </Button>
-</Form.Item>
-  </Flex>
-)}
+                  <Form.Item label={' '} name="add">
+                    <Button
+                      onClick={handleAddToTable}
+                    >
+                      Add
+                    </Button>
+                  </Form.Item>
+                </Flex>
+              )}
 
               <SaleDetailsEditableTable
                 data={tableData}
                 setData={setTableData}
+                onRemove={handleRemoveFromTable}
               />
             </Flex>
 
@@ -545,11 +619,11 @@ export const SaleDrawerForm = (props: Props) => {
                       const customer = formProps.form.getFieldValue("customername");
                       const description = formProps.form.getFieldValue("description");
 
-                      if(!customer) {
+                      if (!customer) {
                         chooseacustomer();
                         return;
                       }
-                      if (payment>-1) {
+                      if (payment > -1) {
                         const customerId =
                           formProps.form.getFieldValue("customername");
                         const response = await fetch(`${apiUrl}/sales`, {
@@ -571,20 +645,20 @@ export const SaleDrawerForm = (props: Props) => {
                           console.log("Purchase details saved successfully");
                           showsuccessNotification("Purchase details saved successfully");
                           formProps.form.resetFields();
-            setTableData([]);
-            settotalPrice(0);
-            go({
-              to: getToPath({
-                action: "list",
-              }) ?? "",
-              query: {
-                to: undefined,
-              },
-              options: {
-                keepQuery: true,
-              },
-              type: "replace",
-            });
+                          setTableData([]);
+                          settotalPrice(0);
+                          go({
+                            to: getToPath({
+                              action: "list",
+                            }) ?? "",
+                            query: {
+                              to: undefined,
+                            },
+                            options: {
+                              keepQuery: true,
+                            },
+                            type: "replace",
+                          });
 
                           // onDrawerCLose(); // Close the drawer
 

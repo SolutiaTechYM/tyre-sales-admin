@@ -57,6 +57,8 @@ export const CategoryTable: React.FC<IResourceComponentsProps> = () => {
           }}
         />
         <Table.Column<ICategory>
+        width="100px"
+
           key="quantity"
           dataIndex="quantity"
           title={t("Quantity")}
@@ -64,6 +66,8 @@ export const CategoryTable: React.FC<IResourceComponentsProps> = () => {
         />
           <Table.Column<ICategory>
           fixed="right"
+        width="100px"
+
           title={t("table.actions")}
           render={(_, record) => (
             <Button
