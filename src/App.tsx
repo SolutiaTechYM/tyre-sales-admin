@@ -68,6 +68,7 @@ import { CustomerEdit } from "./pages/customers/edit";
 import { SaleCreate, SaleList, SalesShow } from "./pages/sales";
 import { PaymentList } from "./pages/payments";
 import { PaymentCreate } from "./pages/payments/create";
+import { customAxiosInstance } from "./utils/custom-axios";
 
 
 const App: React.FC = () => {
@@ -78,8 +79,7 @@ const App: React.FC = () => {
   // const API_URL = "https://api.finefoods.refine.dev";
 const API_URL = " https://tyre-sales-admin-backend.onrender.com";
 
- 
-  const dataProvider = jsonServerDataProvider(API_URL);
+  const dataProvider = jsonServerDataProvider(API_URL, customAxiosInstance);
 
   const { t, i18n } = useTranslation();
 
