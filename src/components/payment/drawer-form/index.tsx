@@ -193,6 +193,12 @@ export const PaymentDrawerForm = (props: Props) => {
                         min={0}
                         type="number"
                         value={value}
+                        step="any"
+                        onKeyPress={(e) => {
+                          if (e.key === '-') {
+                            e.preventDefault();
+                          }
+                        }}
                         onChange={(e) => setSellPayments({...sellPayments, [record.id]: parseFloat(e.target.value)})}
                       />
                     )}
@@ -238,6 +244,13 @@ export const PaymentDrawerForm = (props: Props) => {
                       <Input
                         type="number"
                         value={value}
+                        step="any"
+                        min={0}
+                        onKeyPress={(e) => {
+                          if (e.key === '-') {
+                            e.preventDefault();
+                          }
+                        }}
                         onChange={(e) => setPurchasePayments({...purchasePayments, [record.id]: parseFloat(e.target.value)})}
                       />
                     )}
@@ -296,7 +309,18 @@ export const PaymentDrawerForm = (props: Props) => {
           }
           showsuccessNotification("Capital transaction saved successfully");
           console.log("Capital transaction saved successfully");
-          onDrawerClose();
+          go({
+            to: getToPath({
+              action: "list",
+            }) ?? "",
+            query: {
+              to: undefined,
+            },
+            options: {
+              keepQuery: true,
+            },
+            type: "replace",
+          });
 
           break;
         case "sale":
@@ -339,7 +363,18 @@ export const PaymentDrawerForm = (props: Props) => {
           showsuccessNotification("sale transaction saved successfully");
 
           console.log("sale transaction saved successfully");
-          onDrawerClose();
+          go({
+            to: getToPath({
+              action: "list",
+            }) ?? "",
+            query: {
+              to: undefined,
+            },
+            options: {
+              keepQuery: true,
+            },
+            type: "replace",
+          });
 
           break;
         case "purchase":
@@ -381,7 +416,18 @@ export const PaymentDrawerForm = (props: Props) => {
           showsuccessNotification("Purchase transaction saved successfully");
 
           console.log("Purchase transaction saved successfully");
-          onDrawerClose();
+          go({
+            to: getToPath({
+              action: "list",
+            }) ?? "",
+            query: {
+              to: undefined,
+            },
+            options: {
+              keepQuery: true,
+            },
+            type: "replace",
+          });
           break;
         default:
           notification.error({
