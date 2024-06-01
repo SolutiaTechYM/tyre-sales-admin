@@ -26,7 +26,7 @@ import {
   Button,
 } from "antd";
 
-import {  ICustomer, IUserFilterVariables } from "../../interfaces";
+import { ICustomer } from "../../interfaces";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { PaginationTotal, UserStatus } from "../../components";
 import { PropsWithChildren } from "react";
@@ -41,10 +41,10 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
   const { createUrl } = useNavigation();
 
 
-  const {   tableProps, filters, sorters } = useTable<
-  ICustomer,
-    HttpError,
-    IUserFilterVariables
+  const { tableProps, filters, sorters } = useTable<
+    ICustomer,
+    HttpError
+  // IUserFilterVariables
   >({
     filters: {
       initial: [
@@ -144,7 +144,7 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
           filterDropdown={(props) => (
             <FilterDropdown {...props}>
               <InputNumber
-                addonBefore="#"
+                // addonBefore="#"
                 style={{ width: "100%" }}
                 placeholder={t("orders.filter.id.placeholder")}
               />
@@ -156,43 +156,43 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
           key="avatar"
           dataIndex={"avatar"}
           title={t("users.fields.avatar.label")}
-          render={(value) => <Avatar src={value?.url} />}
+          render={(value) => <Avatar src={value[0]?.url} />}
         />
 
-<Table.Column
-        key="name"
+        <Table.Column
+          key="name"
           dataIndex="name"
           sorter
 
           title={t("users.fields.name")}
-        filterIcon={(filtered) => (
-          <SearchOutlined
-            style={{
-              color: filtered ? token.colorPrimary : undefined,
-            }}
-          />
-        )}
-        defaultFilteredValue={getDefaultFilter( "name",
-        filters,
-        "contains",)}
-        filterDropdown={(props) => (
-          <FilterDropdown {...props}>
-            <Input style={{ width: "100%" }}
-                placeholder={t("users.filter.name.placeholder")} />
-          </FilterDropdown>
-        )}
-        render={(value: string) => {
-          return (
-            <Typography.Text
+          filterIcon={(filtered) => (
+            <SearchOutlined
               style={{
-                whiteSpace: "nowrap",
+                color: filtered ? token.colorPrimary : undefined,
               }}
-            >
-              {value}
-            </Typography.Text>
-          );
-        }}
-      />
+            />
+          )}
+          defaultFilteredValue={getDefaultFilter("name",
+            filters,
+            "contains",)}
+          filterDropdown={(props) => (
+            <FilterDropdown {...props}>
+              <Input style={{ width: "100%" }}
+                placeholder={t("users.filter.name.placeholder")} />
+            </FilterDropdown>
+          )}
+          render={(value: string) => {
+            return (
+              <Typography.Text
+                style={{
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {value}
+              </Typography.Text>
+            );
+          }}
+        />
 
         <Table.Column
           key="Contact"
@@ -212,28 +212,28 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
           key="address"
           dataIndex="address"
           title="Address"
-          
+
           sorter
         />
-                <Table.Column
+        <Table.Column
           key="lastOrderDate"
           dataIndex="lastOrderDate"
-          title="lastOrderDate"
-          
+          title="Last Order Date"
+
           sorter
         />
 
-<Table.Column
+        <Table.Column
           key="company"
           dataIndex="company"
           title="Company"
-          
-          sorter
+
+        // sorter
         />
-        
 
 
-<Table.Column
+
+        <Table.Column
           key="due_amount"
           dataIndex="dueAmount"
           title="Due Amount"

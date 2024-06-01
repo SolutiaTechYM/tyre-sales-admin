@@ -410,7 +410,7 @@ export interface IOrder {
 
 export interface ISupplier{
   id: number;
-  avatar: IFile & { thumbnailUrl?: string };
+  avatar: IFile & { thumbnailUrl?: string }[];
   name: string;
   phone: string;
   contact_person: string;
