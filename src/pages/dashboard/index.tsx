@@ -1,4 +1,12 @@
-import { Row, Col, theme, Dropdown, MenuProps, Button, Flex } from "antd";
+import {
+  Row, Col, theme, Dropdown, MenuProps, Button, Flex, Table, Space,
+  Grid,
+  Card,
+  Typography,
+} from "antd";
+
+import { Divider } from "antd";
+
 import { useTranslation } from "react-i18next";
 
 import {
@@ -26,9 +34,14 @@ import { useMemo, useState } from "react";
 import { List, NumberField } from "@refinedev/antd";
 import { useApiUrl, useCustom } from "@refinedev/core";
 import dayjs from "dayjs";
-import { ISalesChart } from "../../interfaces";
+import { ISalesChart, ISummary } from "../../interfaces";
 
 type DateFilter = "lastWeek" | "lastMonth";
+
+const { Text } = Typography;
+
+const { useBreakpoint } = Grid;
+
 
 const DATE_FILTERS: Record<
   DateFilter,
@@ -51,6 +64,8 @@ export const DashboardPage: React.FC = () => {
   const { token } = theme.useToken();
   const { t } = useTranslation();
   const API_URL = useApiUrl();
+  const screens = useBreakpoint();
+
 
   const [selecetedDateFilter, setSelectedDateFilter] = useState<DateFilter>(
     DATE_FILTERS.lastWeek.value,
@@ -191,6 +206,15 @@ export const DashboardPage: React.FC = () => {
     };
   }, [newCustomersData]);
 
+
+  const { data: iepdData } = useCustom<ISummary>({
+    url: `${API_URL}/misc/headerdata`,
+    method: "get",
+    
+  });
+
+  const headerdata=iepdData?.data;
+
   return (
     <List
       title={t("dashboard.overview.title")}
@@ -290,6 +314,90 @@ export const DashboardPage: React.FC = () => {
             </Col>
           </Row>
         </Col>
+
+
+
+        <Col xl={24} lg={24} md={24} sm={24} xs={24}>
+          <CardWithContent
+            bodyStyles={{
+              padding: "1px 0px 0px 0px",
+            }}
+            icon={
+              <DollarCircleOutlined
+                style={{
+                  fontSize: 14,
+                  color: token.colorPrimary,
+                }}
+              />
+            }
+            title={t("Today Overview")}
+          >
+            {/* <RecentOrders /> */}
+
+            <Row justify={screens.md ? "space-between" : "center"} >
+              <Col xs={24} sm={8} md={5} style={{ margin: 10 }}>
+                <Card hoverable>
+                  <Row align="middle">
+                    <div>
+                      <Text>Income</Text>
+                      <Divider type="vertical" />
+                    </div>
+                    <Text type="success" style={{ fontSize: screens.sm ? "14px" : "14px" }}>
+                      {headerdata?.income}
+                    </Text>
+                  </Row>
+                </Card>
+              </Col>
+
+              <Col xs={24} sm={8} md={5} style={{ margin: 10 }}>
+                <Card hoverable>
+                  <Row align="middle">
+                    <div>
+                      <Text >Expense</Text>
+                      <Divider type="vertical" />
+                    </div>
+                    <Text type="danger" style={{ fontSize: screens.sm ? "14px" : "14px" }}>
+                      {headerdata?.expense}
+                    </Text>
+                  </Row>
+                </Card>
+              </Col>
+
+              <Col xs={24} sm={8} md={5} style={{ margin: 10 }}>
+                <Card hoverable>
+                  <Row align="middle">
+                    <div>
+                      <Text >Profit</Text>
+                      <Divider type="vertical" />
+                    </div>
+                    <Text style={{ fontSize: screens.sm ? "14px" : "14px", color: "#3c89e8" }}>
+                      {headerdata?.profit}
+                    </Text>
+                  </Row>
+                </Card>
+              </Col>
+
+              <Col xs={24} sm={8} md={5} style={{ margin: 10 }}>
+                <Card hoverable>
+                  <Row align="middle">
+                    <div>
+                      <Text >Due Amount</Text>
+                      <Divider type="vertical" />
+                    </div>
+                    <Text type="warning" style={{ fontSize: screens.sm ? "14px" : "14px" }}>
+                      {headerdata?.dueamount}
+                    </Text>
+                  </Row>
+                </Card>
+              </Col>
+            </Row>
+
+
+
+          </CardWithContent>
+        </Col>
+
+
 
         <Col xl={15} lg={15} md={24} sm={24} xs={24}>
           <CardWithContent

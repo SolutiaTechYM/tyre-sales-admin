@@ -39,7 +39,7 @@ import debounce from "lodash/debounce";
 
 import { useConfigProvider } from "../../context";
 import { IconMoon, IconSun } from "../../components/icons";
-import { IOrder, IStore, ICourier, IIdentity, ISummary } from "../../interfaces";
+import { IOrder,  IIdentity, ISummary } from "../../interfaces";
 import { useStyles } from "./styled";
 import { head } from "lodash";
 
@@ -182,13 +182,7 @@ export const Header: React.FC = () => {
 
 
 
-  const { data: iepdData } = useCustom<ISummary>({
-    url: `${API_URL}/misc/headerdata`,
-    method: "get",
-    
-  });
 
-  const headerdata=iepdData?.data;
 
   useEffect(() => {
     setOptions([]);
@@ -220,7 +214,7 @@ export const Header: React.FC = () => {
       <Row
         align="middle"
         style={{
-          justifyContent: screens.sm ? "space-between" : "end",
+          justifyContent: screens.sm ? "end" : "end",
         }}
       >
         {/* <Col xs={0} sm={8} md={7}>
@@ -240,62 +234,6 @@ export const Header: React.FC = () => {
         
         </Col> */}
   
-
-        <Space size={screens.md ? 20 : 0} align="center">
-
-          
-         
-        <Card hoverable size="small">
-  <Row align="middle">
-    {screens.md ?  (<div>
-      <Text>Income</Text>
-    <Divider type="vertical" /></div>
-
-    ):null}
-    <Text type="success" style={{ fontSize: screens.sm ? "14px" : "10px" }}>
-      LKR {headerdata?.income}
-    </Text>
-  </Row>
-</Card>
-
-<Card hoverable size="small">
-  <Row align="middle">
-    {screens.md ? (<div>
-      <Text >Expense</Text>
-    
-    <Divider type="vertical" /></div>
-    ):null}
-    <Text type="danger" style={{ fontSize: screens.sm ? "14px" : "10px" }}>
-      LKR {headerdata?.expense}
-    </Text>
-  </Row>
-</Card>
-<Card hoverable size="small">
-  <Row align="middle">
-    {screens.md ? (<div>
-      <Text >Profit</Text>
-    
-    <Divider type="vertical" /></div>
-    ):null}
-    <Text style={{ fontSize: screens.sm ? "14px" : "10px" ,color:"#3c89e8"}}>
-      LKR {headerdata?.profit}
-    </Text>
-  </Row>
-</Card>
-<Card hoverable size="small">
-  <Row align="middle">
-    {screens.md ? (<div>
-      <Text >Due Amount</Text>
-    
-    <Divider type="vertical" /></div>
-    ):null}
-    <Text type="warning" style={{ fontSize: screens.sm ? "14px" : "10px" }}>
-      LKR {headerdata?.dueamount}
-    </Text>
-  </Row>
-</Card>
-
-</Space>
 
 
      

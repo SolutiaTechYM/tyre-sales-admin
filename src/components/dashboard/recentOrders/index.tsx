@@ -51,13 +51,13 @@ export const RecentOrders: React.FC = () => {
         render={(_, record) => (
           <Typography.Link
             strong
-            onClick={() => show("orders", record.id)}
+            // onClick={() => show("orders", record.id)}
             style={{
               whiteSpace: "nowrap",
               color: token.colorTextHeading,
             }}
           >
-            #{record.id}
+            {record.id}
           </Typography.Link>
         )}
       />
