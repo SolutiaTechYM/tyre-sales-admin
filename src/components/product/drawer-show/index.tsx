@@ -127,22 +127,22 @@ const currentQuanitity=10
         />
         <List
           dataSource={[
-            {
-              label: (
-                <Typography.Text type="secondary">
-                  {t("products.fields.price")}
-                </Typography.Text>
-              ),
-              value: (
-                <NumberField
-                  value={product?.current_price || 0}
-                  options={{
-                    style: "currency",
-                    currency: "LKR",
-                  }}
-                />
-              ),
-            },
+            // {
+            //   label: (
+            //     <Typography.Text type="secondary">
+            //       {t("products.fields.price")}
+            //     </Typography.Text>
+            //   ),
+            //   value: (
+            //     <NumberField
+            //       value={product?.current_price || 0}
+            //       options={{
+            //         style: "currency",
+            //         currency: "LKR",
+            //       }}
+            //     />
+            //   ),
+            // },
             {
               label: (
                 <Typography.Text type="secondary">
