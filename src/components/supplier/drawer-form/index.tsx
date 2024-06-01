@@ -84,7 +84,8 @@ export const SupplierDrawerForm = (props: Props) => {
     });
   };
 
-  const images = Form.useWatch("images", formProps.form);
+  const images = Form.useWatch("avatar", formProps.form);
+
   const image = images?.[0] || null;
   const previewImageURL = image?.url || image?.response?.url;
   const title = props.action === "edit" ? null : t("suppliers.actions.add");

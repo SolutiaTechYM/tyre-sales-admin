@@ -136,7 +136,7 @@ export const PurchaseDetailsEditableTable = ({
           sorter
           render={(value) => (
             <Typography.Text style={{ whiteSpace: "nowrap" }}>
-              {value}
+             {parseFloat(value).toFixed(2)}
             </Typography.Text>
           )}
         />
@@ -150,7 +150,7 @@ export const PurchaseDetailsEditableTable = ({
         sorter
         render={(value) => (
           <Typography.Text style={{ whiteSpace: "nowrap" }}>
-            {value}
+            {parseFloat(value).toFixed(2)}
           </Typography.Text>
         )}
       />

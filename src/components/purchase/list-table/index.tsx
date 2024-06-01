@@ -247,7 +247,8 @@ export const PurchaseListTable = () => {
                   width: "80px",
                   fontVariantNumeric: "tabular-nums",
                   whiteSpace: "nowrap",
-                  color: "lightgreen"
+                  color: "lightgreen",
+                  fontWeight: "bold",
                 }}
               >
                 <div style={{display:"flex",justifyContent:"space-between"}}>
@@ -268,7 +269,8 @@ export const PurchaseListTable = () => {
                   width: "80px",
                   fontVariantNumeric: "tabular-nums",
                   whiteSpace: "nowrap",
-                  color: "red"
+                  color: "red",
+                  fontWeight: "bold",
                 }}
               >
                                 <div style={{display:"flex",justifyContent:"space-between"}}>

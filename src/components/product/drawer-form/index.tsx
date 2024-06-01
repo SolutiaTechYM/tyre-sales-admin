@@ -50,7 +50,22 @@ export const ProductDrawerForm = (props: Props) => {
       redirect: false,
       onMutationSuccess: () => {
         props.onMutationSuccess?.();
-        onDrawerCLose();
+        // onDrawerCLose();
+        go({
+          to:
+            searchParams.get("to") ??
+            getToPath({
+              action: "list",
+            }) ??
+            "",
+          query: {
+            to: undefined,
+          },
+          options: {
+            keepQuery: true,
+          },
+          type: "replace",
+        });
       },
     });
 
@@ -85,7 +100,7 @@ export const ProductDrawerForm = (props: Props) => {
 
   const images = Form.useWatch("images", formProps.form);
   console.log(formProps.form);
-  
+
   console.log(images);
 
   const image = images?.[0] || null;
@@ -169,8 +184,8 @@ export const ProductDrawerForm = (props: Props) => {
           </Form.Item>
           <Flex vertical>
 
-            
-          <Form.Item
+
+            <Form.Item
               label={t("Code")}
               name="code"
               className={styles.formItem}
@@ -231,9 +246,16 @@ export const ProductDrawerForm = (props: Props) => {
               className={styles.formItem}
 
             >
-              <InputNumber prefix={"LKR"} style={{ width: "150px" }} type="number" />
+              <InputNumber
+                step="any"
+                min={0}
+                onKeyPress={(e) => {
+                  if (e.key === '-') {
+                    e.preventDefault();
+                  }
+                }} style={{ width: "150px" }} type="number" />
             </Form.Item>
-{/* 
+            {/* 
             <Form.Item
               label={t("Quantity")}
               name="quantity"
@@ -244,7 +266,7 @@ export const ProductDrawerForm = (props: Props) => {
             </Form.Item> */}
 
 
-    
+
             <Flex
               align="center"
               justify="space-between"

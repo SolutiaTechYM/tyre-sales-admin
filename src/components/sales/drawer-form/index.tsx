@@ -260,7 +260,7 @@ export const SaleDrawerForm = (props: Props) => {
                       className={styles.formItem}
                     >
                       <InputNumber
-                        prefix={"LKR"}
+                        
                         style={{ width: "150px", color: "red" }}
                         disabled
                         value={totalPrice}
@@ -277,7 +277,13 @@ export const SaleDrawerForm = (props: Props) => {
                         },
                       ]}
                     >
-                      <InputNumber prefix={"LKR"} style={{ width: "150px" }} />
+                      <InputNumber 
+                          step="any"
+                          onKeyPress={(e) => {
+                            if (e.key === '-') {
+                              e.preventDefault();
+                            }
+                          }} style={{ width: "150px" }} />
                     </Form.Item>
 
             {/* <Form.Item name="add" className={styles.formItem}>
@@ -365,7 +371,8 @@ export const SaleDrawerForm = (props: Props) => {
   {selectedstockid ? (
     <InputNumber
       type="number"
-      prefix={"LKR"}
+      step={0.01}
+      
       style={{ width: "150px" ,color:"orange"}}
       value={
         flattenedStockOptions.find(
@@ -375,7 +382,7 @@ export const SaleDrawerForm = (props: Props) => {
       disabled
     />
   ) : (
-    <InputNumber type="number" prefix={"LKR"} style={{ width: "150px" }} disabled  />
+    <InputNumber type="number"  style={{ width: "150px" }} disabled  />
   )}
 </Form.Item>
 
@@ -390,7 +397,14 @@ export const SaleDrawerForm = (props: Props) => {
         },
       ]}
     >
-      <InputNumber type="number" prefix={"LKR"} style={{ width: "150px" }} />
+      <InputNumber type="number"
+          step="any"
+          onKeyPress={(e) => {
+            if (e.key === '-') {
+              e.preventDefault();
+            }
+          }}
+          style={{ width: "150px" }} />
     </Form.Item>
     {/* <Form.Item label={' '} name="add">
       <Button

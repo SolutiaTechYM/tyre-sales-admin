@@ -299,10 +299,12 @@ export const ProductListTable = () => {
                 width: "80px",
                 fontVariantNumeric: "tabular-nums",
                 whiteSpace: "nowrap",
+                fontWeight: "bold",
+
               }}
               options={{
-                style: "currency",
-                currency: "LKR",
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
               }}
             />
           );

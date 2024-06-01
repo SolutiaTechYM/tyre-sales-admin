@@ -40,25 +40,25 @@ export const SaleDetailsEditableTable = ({
   const go = useGo();
   const { pathname } = useLocation();
   const { showUrl } = useNavigation();
-  
+
   const handleDeleteRow = (index: number) => {
     const newData = [...data];
     newData.splice(index, 1);
     setData(newData);
   };
-  
-  
 
-    return (
-      <Table
-        dataSource={data}
-        rowKey="id"
-        scroll={{ x: true }}
-        pagination={{
-          hideOnSinglePage: true,
-        }}
-      >
-        {/* <Table.Column
+
+
+  return (
+    <Table
+      dataSource={data}
+      rowKey="id"
+      scroll={{ x: true }}
+      pagination={{
+        hideOnSinglePage: true,
+      }}
+    >
+      {/* <Table.Column
            title={t("Supplier Name")}
 
           dataIndex="suppliername"
@@ -73,94 +73,11 @@ export const SaleDetailsEditableTable = ({
           )}
         /> */}
 
-        <Table.Column
-          title={t("ID")}
-          dataIndex="productID"
-          key="productID"
-          // align="center"
-          sorter
-          render={(value) => (
-            <Typography.Text style={{ whiteSpace: "nowrap" }}>
-              {value}
-            </Typography.Text>
-          )}
-        />
-        
-        <Table.Column
-          title={t("Product Name")}
-          dataIndex="name"
-          key="name"
-          // align="center"
-
-          sorter
-          render={(value) => (
-            <Typography.Text style={{ whiteSpace: "nowrap" }}>
-              {value}
-            </Typography.Text>
-          )}
-        />
-        <Table.Column
-          title={t("Stock")}
-          dataIndex="stockID"
-          key="stockID"
-          // align="center"
-
-          // sorter
-          render={(value) => (
-            <Typography.Text style={{ whiteSpace: "nowrap" }}>
-              {value}
-            </Typography.Text>
-          )}
-        />
-                <Table.Column
-          title={t("U.Buying Price")}
-          dataIndex="unitBuyPrice"
-          key="unitBuyPrice"
-          align="right"
-
-          
-          sorter
-          render={(value) => (
-            <Typography.Text style={{ whiteSpace: "nowrap" }}>
-              {value}
-            </Typography.Text>
-          )}
-        />
-        <Table.Column
-          title={t("purchases.fields.details.qty")}
-          dataIndex="quantity"
-          key="quantity"
-          align="right"
-
-          
-          sorter
-          render={(qty) => (
-            <Typography.Text style={{ whiteSpace: "nowrap" }}>
-              {qty}
-            </Typography.Text>
-          )}
-        />
-        <Table.Column
-          title={t("U.Selling Price")}
-          dataIndex="unitSellPrice"
-          key="unitSellPrice"
-          align="right"
-
-          
-          sorter
-          render={(value) => (
-            <Typography.Text style={{ whiteSpace: "nowrap" }}>
-              {value}
-            </Typography.Text>
-          )}
-        />
-        <Table.Column
-        title={t("Total Price")}
-        dataIndex="totalPrice"
-        key="totalPrice"
-        align="right"
-
-        
+      <Table.Column
+        title={t("ID")}
+        dataIndex="productID"
+        key="productID"
+        // align="center"
         sorter
         render={(value) => (
           <Typography.Text style={{ whiteSpace: "nowrap" }}>
@@ -168,7 +85,92 @@ export const SaleDetailsEditableTable = ({
           </Typography.Text>
         )}
       />
-       {/* <Table.Column
+
+      <Table.Column
+        title={t("Product Name")}
+        dataIndex="name"
+        key="name"
+        // align="center"
+
+        sorter
+        render={(value) => (
+          <Typography.Text style={{ whiteSpace: "nowrap" }}>
+            {value}
+          </Typography.Text>
+        )}
+      />
+      <Table.Column
+        title={t("Stock")}
+        dataIndex="stockID"
+        key="stockID"
+        // align="center"
+
+        // sorter
+        render={(value) => (
+          <Typography.Text style={{ whiteSpace: "nowrap" }}>
+            {value}
+          </Typography.Text>
+        )}
+      />
+      <Table.Column
+        title={t("U.Buying Price")}
+        dataIndex="unitBuyPrice"
+        key="unitBuyPrice"
+        align="right"
+
+
+        sorter
+        render={(value) => (
+          <Typography.Text style={{ whiteSpace: "nowrap" }}>
+            {parseFloat(value).toFixed(2)}
+
+          </Typography.Text>
+        )}
+      />
+      <Table.Column
+        title={t("purchases.fields.details.qty")}
+        dataIndex="quantity"
+        key="quantity"
+        align="right"
+
+
+        sorter
+        render={(qty) => (
+          <Typography.Text style={{ whiteSpace: "nowrap" }}>
+            {qty}
+          </Typography.Text>
+        )}
+      />
+      <Table.Column
+        title={t("U.Selling Price")}
+        dataIndex="unitSellPrice"
+        key="unitSellPrice"
+        align="right"
+
+
+        sorter
+        render={(value) => (
+          <Typography.Text style={{ whiteSpace: "nowrap" }}>
+            {parseFloat(value).toFixed(2)}
+
+          </Typography.Text>
+        )}
+      />
+      <Table.Column
+        title={t("Total Price")}
+        dataIndex="totalPrice"
+        key="totalPrice"
+        align="right"
+
+
+        sorter
+        render={(value) => (
+          <Typography.Text style={{ whiteSpace: "nowrap" }}>
+            {value}
+          </Typography.Text>
+        )}
+      />
+      {/* <Table.Column
         title={t("Credit")}
         dataIndex="credit"
         key="credit"
@@ -182,20 +184,20 @@ export const SaleDetailsEditableTable = ({
           </Typography.Text>
         )}
       /> */}
-        <Table.Column
-          title="Action"
-          key="action"
-          align="center"
-          fixed="right"
-          render={(_, record, index) => (
-            <Button type="primary" onClick={() => handleDeleteRow(index)}>
-              Delete
-            </Button>
-          )}
-        />
-      </Table>
-    );
-  
+      <Table.Column
+        title="Action"
+        key="action"
+        align="center"
+        fixed="right"
+        render={(_, record, index) => (
+          <Button type="primary" onClick={() => handleDeleteRow(index)}>
+            Delete
+          </Button>
+        )}
+      />
+    </Table>
+  );
+
 };
 
 

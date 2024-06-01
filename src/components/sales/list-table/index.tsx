@@ -213,10 +213,11 @@ export const SaleListTable = () => {
                 width: "80px",
                 fontVariantNumeric: "tabular-nums",
                 whiteSpace: "nowrap",
+                fontWeight: "bold",
               }}
               options={{
-                style: "currency",
-                currency: "USD",
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
               }}
             />
           );
@@ -246,6 +247,7 @@ export const SaleListTable = () => {
                   fontVariantNumeric: "tabular-nums",
                   whiteSpace: "nowrap",
                   color: "lightgreen"
+                  ,fontWeight: "bold",
                 }}
               >
                 <div style={{display:"flex",justifyContent:"space-between"}}>
@@ -266,7 +268,8 @@ export const SaleListTable = () => {
                   width: "80px",
                   fontVariantNumeric: "tabular-nums",
                   whiteSpace: "nowrap",
-                  color: "red"
+                  color: "red",
+                  fontWeight: "bold",
                 }}
               >
                                 <div style={{display:"flex",justifyContent:"space-between"}}>

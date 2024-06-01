@@ -13,7 +13,8 @@ import {
   FilterDropdown,
   getDefaultSortOrder,
   ExportButton,
-  CreateButton
+  CreateButton,
+  NumberField
 } from "@refinedev/antd";
 import {
   Table,
@@ -42,10 +43,10 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
 
   const transactionTypes = ["capital", "purchase", "sell"];
 
-  const {   tableProps, filters, sorters } = useTable<
+  const { tableProps, filters, sorters } = useTable<
     ICustomer,
     HttpError
-    // IUserFilterVariables
+  // IUserFilterVariables
   >({
     filters: {
       initial: [
@@ -75,7 +76,7 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
     mapData: (item) => {
       return {
         id: item.id,
-      
+
       };
     },
   });
@@ -85,7 +86,7 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
       breadcrumb={false}
       headerButtons={(props) => [
         <ExportButton onClick={triggerExport} loading={isLoading} />
-,
+        ,
         <CreateButton
           {...props.createButtonProps}
           key="create"
@@ -152,36 +153,36 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
           )}
         />
 
-<Table.Column
-  key="connection"
-  dataIndex="connection"
-  sorter
-  title={t("Connection")}
-  render={(connection) => connection?.name}
-/>
+        <Table.Column
+          key="connection"
+          dataIndex="connection"
+          sorter
+          title={t("Connection")}
+          render={(connection) => connection?.name}
+        />
 
-<Table.Column
-        key="type"
+        <Table.Column
+          key="type"
           dataIndex="type"
           sorter
 
           title={t("Type")}
 
-       
-      />
-      <Table.Column
-        key="date"
+
+        />
+        <Table.Column
+          key="date"
           dataIndex="date"
           sorter
 
           title={t("Date")}
 
-       
-      />
+
+        />
 
 
-        
-{/* <Table.Column
+
+        {/* <Table.Column
   title={t("Type")}
   dataIndex={["transactionType", "title"]}
   key="transactionType.id"
@@ -225,7 +226,7 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
     );
   }}
 /> */}
-        
+
 
 
 
@@ -233,17 +234,37 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
           key="value"
           dataIndex="value"
           title="Value"
+          align="right"
           
+
+          render={(value: number) => {
+            return (
+              <NumberField
+                value={value}
+                style={{
+                  width: "80px",
+                  fontVariantNumeric: "tabular-nums",
+                  whiteSpace: "nowrap",
+                  fontWeight: "bold",
+                }}
+                options={{
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }}
+              />
+            );
+          }}
+
           sorter
         />
         <Table.Column
           key="description"
           dataIndex="description"
           title="Description"
-          
+
           sorter
         />
-{/* 
+        {/* 
 <Table.Column
           key="balance"
           dataIndex="balance"

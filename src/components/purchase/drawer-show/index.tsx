@@ -99,7 +99,10 @@ export const PurchaseDrawerShow = (props: Props) => {
       title: 'Unit Price',
       dataIndex: 'unitPrice',
       key: 'unitPrice',
-      render: (value: number) => <NumberField value={value} options={{ style: 'currency', currency: 'lkr' }} />,
+      render: (value: number) => <NumberField value={value} options={{
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }} />,
     },
     {
       title: 'Quantity',
@@ -110,121 +113,126 @@ export const PurchaseDrawerShow = (props: Props) => {
       title: 'Total',
       dataIndex: 'totalPrice',
       key: 'totalPrice',
-      render: (value: number) => <NumberField value={value} options={{ style: 'currency', currency: 'lkr' }} />,
+      render: (value: number) => <NumberField value={value} options={{
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }} />,
     },
   ];
 
   return (
     <>
-    <Drawer
-      open={true}
-      width={breakpoint.sm ? "1134px" : "100%"}
-      zIndex={1001}
-      onClose={handleDrawerClose}
-    >
-      <Flex
-        vertical
-        style={{
-          backgroundColor: token.colorBgContainer,
-        }}
+      <Drawer
+        open={true}
+        width={breakpoint.sm ? "1134px" : "100%"}
+        zIndex={1001}
+        onClose={handleDrawerClose}
       >
-<Flex style={{ padding: "16px", justifyContent: "space-between" }}>
-    <Flex vertical>
-        <Typography.Title level={5}>
-            Purchase ID : {purchase?.id}
-        </Typography.Title>
-        <Typography.Text type="secondary">
-            {purchase?.description}
-        </Typography.Text>
-        <Typography.Text>
-  Due Amount:{" "}
-  {purchase?.due_amount !== undefined ? (
-  purchase.due_amount < 0 ? (
-    <span
-      style={{
-        color: "red",
-        fontVariantNumeric: "tabular-nums",
-        whiteSpace: "nowrap",
-      }}
-    >
-      C{" "}
-      {Math.abs(purchase.due_amount).toLocaleString("en-US", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })}
-    </span>
-  ) : purchase.due_amount > 0 ? (
-    <span
-      style={{
-        color: "lightgreen",
-        fontVariantNumeric: "tabular-nums",
-        whiteSpace: "nowrap",
-      }}
-    >
-      D{" "}
-      {purchase.due_amount.toLocaleString("en-US", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })}
-    </span>
-  ) : (
-    "-"
-  )
-) : (
-  <NumberField value={0} options={{ style: "currency", currency: "USD" }} />
-)}
-</Typography.Text>
-        <Typography.Text>
-            Total Price:{" "}
-            <NumberField
-                value={purchase?.price || 0}
-                options={{          minimumFractionDigits: 2,
-                  maximumFractionDigits: 2, }}
-                style={{
-                fontWeight:"bold"
-
-                }}
-            />
-        </Typography.Text>
-    </Flex >
-    <Flex vertical>
-        <Typography.Title level={5} style={{color:"red"}}>
-            Print Invoice 
-        </Typography.Title>
-
-    <Button
-            style={{ alignSelf: "center",borderColor:"red" }}
-            size="large"
-            icon={<FilePdfOutlined style={{ color: "red"}} />}
-            onClick={() => {
-              setRecord(purchase);
-              show();
-            }}
-          />
-          </Flex>
-</Flex>
-        <Divider
-          style={{
-            margin: 0,
-            padding: 0,
-          }}
-        />
         <Flex
           vertical
-          gap={32}
           style={{
-            padding: "32px",
+            backgroundColor: token.colorBgContainer,
           }}
         >
-          <Table dataSource={purchase?.purchaseDetails} columns={columns} />
+          <Flex style={{ padding: "16px", justifyContent: "space-between" }}>
+            <Flex vertical>
+              <Typography.Title level={5}>
+                Purchase ID : {purchase?.id}
+              </Typography.Title>
+              <Typography.Text type="secondary">
+                {purchase?.description}
+              </Typography.Text>
+              <Typography.Text>
+                Due Amount:{" "}
+                {purchase?.due_amount !== undefined ? (
+                  purchase.due_amount < 0 ? (
+                    <span
+                      style={{
+                        color: "red",
+                        fontVariantNumeric: "tabular-nums",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      C{" "}
+                      {Math.abs(purchase.due_amount).toLocaleString("en-US", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </span>
+                  ) : purchase.due_amount > 0 ? (
+                    <span
+                      style={{
+                        color: "lightgreen",
+                        fontVariantNumeric: "tabular-nums",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      D{" "}
+                      {purchase.due_amount.toLocaleString("en-US", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </span>
+                  ) : (
+                    "-"
+                  )
+                ) : (
+                  <NumberField value={0} options={{ style: "currency", currency: "USD" }} />
+                )}
+              </Typography.Text>
+              <Typography.Text>
+                Total Price:{" "}
+                <NumberField
+                  value={purchase?.price || 0}
+                  options={{
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }}
+                  style={{
+                    fontWeight: "bold"
+
+                  }}
+                />
+              </Typography.Text>
+            </Flex >
+            <Flex vertical>
+              <Typography.Title level={5} style={{ color: "red" }}>
+                Print Invoice
+              </Typography.Title>
+
+              <Button
+                style={{ alignSelf: "center", borderColor: "red" }}
+                size="large"
+                icon={<FilePdfOutlined style={{ color: "red" }} />}
+                onClick={() => {
+                  setRecord(purchase);
+                  show();
+                }}
+              />
+            </Flex>
+          </Flex>
+          <Divider
+            style={{
+              margin: 0,
+              padding: 0,
+            }}
+          />
+          <Flex
+            vertical
+            gap={32}
+            style={{
+              padding: "32px",
+            }}
+          >
+            <Table dataSource={purchase?.purchaseDetails} columns={columns} />
+          </Flex>
         </Flex>
-      </Flex>
 
 
-    </Drawer>
-    <Modal visible={visible} onCancel={close} width="80%" footer={null} zIndex={99999999}>
-          <PdfLayout  record={record}/>
-        </Modal>
+      </Drawer>
+      <Modal visible={visible} onCancel={close} width="80%" footer={null} zIndex={99999999}>
+        <PdfLayout record={record} />
+      </Modal>
     </>
   );
 };

@@ -212,7 +212,8 @@ export const PurchaseDrawerForm = (props: Props) => {
                       className={styles.formItem}
                     >
                       <InputNumber
-                        prefix={"LKR"}
+                        // prefix={"LKR"}
+                        
                         style={{ width: "150px", color: "red" }}
                         disabled
                         value={totalPrice}
@@ -229,7 +230,14 @@ export const PurchaseDrawerForm = (props: Props) => {
                         },
                       ]}
                     >
-                      <InputNumber prefix={"LKR"} style={{ width: "150px" }} />
+                      <InputNumber
+                          step="any"
+                          onKeyPress={(e) => {
+                            if (e.key === '-') {
+                              e.preventDefault();
+                            }
+                          }}
+                          style={{ width: "150px" }} />
                     </Form.Item>
 
             {/* <Form.Item name="add" className={styles.formItem}>
@@ -306,7 +314,13 @@ export const PurchaseDrawerForm = (props: Props) => {
                     >
                       <InputNumber
                         type="number"
-                        prefix={"LKR"}
+                        // prefix={"LKR"}
+                        step="any"
+                        onKeyPress={(e) => {
+                          if (e.key === '-') {
+                            e.preventDefault();
+                          }
+                        }}
                         style={{ width: "150px" }}
                       />
                     </Form.Item>
