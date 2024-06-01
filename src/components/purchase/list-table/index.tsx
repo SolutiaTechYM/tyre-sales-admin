@@ -58,7 +58,7 @@ export const PurchaseListTable = () => {
     },
   });
 
-  console.log(tableProps);
+  // console.log(tableProps);
   
   return (
     <Table

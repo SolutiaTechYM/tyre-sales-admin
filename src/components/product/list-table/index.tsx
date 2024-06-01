@@ -64,7 +64,7 @@ export const ProductListTable = () => {
   });
 
   useEffect(() => {
-    console.log(tableProps);
+    // console.log(tableProps);
   }, [tableProps]);
 
   const { selectProps: categorySelectProps, queryResult } =
