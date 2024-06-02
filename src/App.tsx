@@ -30,6 +30,7 @@ import { authProvider } from "./authProvider";
 import "dayjs/locale/de";
 
 import { DashboardPage } from "./pages/dashboard";
+// import { OrderList, OrderShow } from "./pages/orders";
 import { AuthPage } from "./pages/auth";
 import { CustomerShow, CustomerList } from "./pages/customers";
 import {

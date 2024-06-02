@@ -119,7 +119,7 @@ export const SupplierListTable = () => {
           return (
             <Avatar
               shape="square"
-              src={avatar?.thumbnailUrl || avatar?.url}
+              src={avatar?.url}
               alt={avatar?.name}
             />
           );

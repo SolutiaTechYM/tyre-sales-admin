@@ -14,7 +14,6 @@ import {
   DailyRevenue,
   DailyOrders,
   NewCustomers,
-  AllOrdersMap,
   OrderTimeline,
   RecentOrders,
   TrendingMenu,
