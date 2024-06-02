@@ -112,7 +112,7 @@ export interface IPurchaseCreate{
   description?: string;
   purchaseDetails: IPurchaseProduct[];
 }
-interface IPurchaseProduct{
+export interface IPurchaseProduct{
   productID: string | number;
   categoryID?: number;
   quantity: number;

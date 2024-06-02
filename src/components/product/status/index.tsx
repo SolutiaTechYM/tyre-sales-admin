@@ -5,7 +5,7 @@ import { IProduct } from "../../../interfaces";
 import { useConfigProvider } from "../../../context";
 
 type Props = {
-  value: IProduct["isActive"];
+  value: IProduct;
 };
 
 export const ProductStatus = ({ value }: Props) => {

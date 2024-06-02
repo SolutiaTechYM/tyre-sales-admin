@@ -1,18 +1,18 @@
 import { NumberField, useTable } from "@refinedev/antd";
-import { IUser, IOrder, IOrderFilterVariables } from "../../../interfaces";
+import { ICustomer, IOrder } from "../../../interfaces";
 import { HttpError, useNavigation, useTranslate } from "@refinedev/core";
 import { Table, Typography } from "antd";
 import { OrderStatus, OrderTableColumnProducts } from "../../order";
 
 type Props = {
-  customer?: IUser;
+  customer?: ICustomer;
 };
 
 export const CustomerOrderHistory = ({ customer }: Props) => {
   const t = useTranslate();
   const { show } = useNavigation();
 
-  const { tableProps } = useTable<IOrder, HttpError, IOrderFilterVariables>({
+  const { tableProps } = useTable<IOrder, HttpError>({
     resource: "orders",
     initialSorter: [
       {

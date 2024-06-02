@@ -14,11 +14,11 @@ export const useOrderCustomKbarActions = (order?: IOrder): void => {
   const t = useTranslate();
   const { mutate } = useUpdate();
 
-  const canAcceptOrder = order?.status.text === "Pending";
-  const canRejectOrder =
-    order?.status.text === "Pending" ||
-    order?.status.text === "Ready" ||
-    order?.status.text === "On The Way";
+  // const canAcceptOrder = order?.status.text === "Pending";
+  // const canRejectOrder =
+  //   order?.status.text === "Pending" ||
+  //   order?.status.text === "Ready" ||
+  //   order?.status.text === "On The Way";
 
   const [actions, setActions] = useState<Action[]>([]);
 
@@ -41,38 +41,38 @@ export const useOrderCustomKbarActions = (order?: IOrder): void => {
 
   useEffect(() => {
     const preActions: Action[] = [];
-    if (canAcceptOrder) {
-      preActions.push(
-        createAction({
-          name: t("buttons.accept"),
-          icon: <CheckCircleOutlined />,
-          section: "actions",
-          perform: () => {
-            handleMutate({
-              id: 2,
-              text: "Ready",
-            });
-          },
-          priority: Priority.HIGH,
-        }),
-      );
-    }
-    if (canRejectOrder) {
-      preActions.push(
-        createAction({
-          name: t("buttons.reject"),
-          icon: <CloseCircleOutlined />,
-          section: "actions",
-          perform: () => {
-            handleMutate({
-              id: 5,
-              text: "Cancelled",
-            });
-          },
-          priority: Priority.HIGH,
-        }),
-      );
-    }
+    // if (canAcceptOrder) {
+    //   preActions.push(
+    //     createAction({
+    //       name: t("buttons.accept"),
+    //       icon: <CheckCircleOutlined />,
+    //       section: "actions",
+    //       perform: () => {
+    //         handleMutate({
+    //           id: 2,
+    //           text: "Ready",
+    //         });
+    //       },
+    //       priority: Priority.HIGH,
+    //     }),
+    //   );
+    // }
+    // if (canRejectOrder) {
+    //   preActions.push(
+    //     createAction({
+    //       name: t("buttons.reject"),
+    //       icon: <CloseCircleOutlined />,
+    //       section: "actions",
+    //       perform: () => {
+    //         handleMutate({
+    //           id: 5,
+    //           text: "Cancelled",
+    //         });
+    //       },
+    //       priority: Priority.HIGH,
+    //     }),
+    //   );
+    // }
     setActions(preActions);
   }, [order]);
   useRegisterActions(actions, [actions]);

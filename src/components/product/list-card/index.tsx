@@ -216,14 +216,14 @@ export const ProductListCard = () => {
                   >
                     View
                   </Tag>
-                  <img
+                  {/* <img
                     src={item.images[0].url}
                     alt={item.images[0].name}
                     style={{
                       aspectRatio: 288 / 160,
                       objectFit: "cover",
                     }}
-                  />
+                  /> */}
                 </>
               }
               actions={[
@@ -241,7 +241,7 @@ export const ProductListCard = () => {
                       )?.title
                     }
                   </Typography.Text>
-                  <ProductStatus key="status" value={item.isActive} />
+                  {/* <ProductStatus key="status" value={item.isActive} /> */}
                 </Flex>,
               ]}
             >
@@ -259,7 +259,7 @@ export const ProductListCard = () => {
                     </Typography.Title>
 
                     <NumberField
-                      value={item.price}
+                      value={item.current_price}
                       style={{
                         paddingLeft: "8px",
                         marginLeft: "auto",
