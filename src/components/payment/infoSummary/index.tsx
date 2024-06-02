@@ -1,14 +1,14 @@
 import { Flex, Avatar, Typography } from "antd";
-import { IUser } from "../../../interfaces";
+import { ICustomer } from "../../../interfaces";
 
 type Props = {
-  customer?: IUser;
+  customer?: ICustomer;
 };
 
 export const CustomerInfoSummary = ({ customer }: Props) => {
   return (
     <Flex align="center" gap={32}>
-      <Avatar size={96} src={customer?.avatar?.[0]?.url} />
+      <Avatar size={96} src={customer?.avatar?.[0]?.thumbnailUrl} />
       <Flex vertical>
         <Typography.Text type="secondary">#{customer?.id}</Typography.Text>
         <Typography.Title
@@ -17,7 +17,7 @@ export const CustomerInfoSummary = ({ customer }: Props) => {
             margin: 0,
           }}
         >
-          {customer?.fullName}
+          {customer?.name}
         </Typography.Title>
       </Flex>
     </Flex>

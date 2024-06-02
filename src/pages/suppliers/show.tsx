@@ -13,7 +13,7 @@ import {
 } from "../../components";
 import { SupplierInfoSummary } from "../../components/supplier/infoSummary";
 import { SupplierInfoList } from "../../components/supplier/infoList";
-import { SupplierOrderHistory } from "../../components/supplier/orderHistory";
+// import { SupplierOrderHistory } from "../../components/supplier/orderHistory";
 
 export const SupplierShow: React.FC<IResourceComponentsProps> = () => {
   const { list } = useNavigation();
@@ -40,7 +40,7 @@ console.log(user);
       >
         <SupplierInfoSummary supplier={user} />
         <SupplierInfoList supplier={user} />
-      {user &&  <SupplierOrderHistory supplier={user} />}
+      {/* {user &&  <SupplierOrderHistory supplier={user} />} */}
       </Flex>
     </Drawer>
   );
