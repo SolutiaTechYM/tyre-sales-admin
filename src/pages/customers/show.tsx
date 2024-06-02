@@ -8,9 +8,9 @@ import { ICustomer } from "../../interfaces";
 import {
   CustomerInfoList,
   CustomerInfoSummary,
-  // CustomerOrderHistory,
   Drawer,
 } from "../../components";
+import { CustomerOrderHistory } from "../../components/customer/orderHistory";
 
 export const CustomerShow: React.FC<IResourceComponentsProps> = () => {
   const { list } = useNavigation();
@@ -35,7 +35,7 @@ export const CustomerShow: React.FC<IResourceComponentsProps> = () => {
       >
         <CustomerInfoSummary customer={user} />
         <CustomerInfoList customer={user} />
-        {/* {user && <CustomerOrderHistory customer={user} />} */}
+        {user && <CustomerOrderHistory customer={user} />}
       </Flex>
     </Drawer>
   );
