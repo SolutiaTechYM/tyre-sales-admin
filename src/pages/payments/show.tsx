@@ -4,7 +4,7 @@ import {
   useNavigation,
 } from "@refinedev/core";
 import { Flex, Grid } from "antd";
-import { IUser } from "../../interfaces";
+import { ICustomer } from "../../interfaces";
 import {
   CustomerInfoList,
   CustomerInfoSummary,
@@ -15,7 +15,7 @@ import {
 export const CustomerShow: React.FC<IResourceComponentsProps> = () => {
   const { list } = useNavigation();
   const breakpoint = Grid.useBreakpoint();
-  const { queryResult } = useShow<IUser>();
+  const { queryResult } = useShow<ICustomer>();
 
   const { data } = queryResult;
   const user = data?.data;
@@ -35,7 +35,7 @@ export const CustomerShow: React.FC<IResourceComponentsProps> = () => {
       >
         <CustomerInfoSummary customer={user} />
         <CustomerInfoList customer={user} />
-        <CustomerOrderHistory customer={user} />
+        {user && <CustomerOrderHistory customer={user} />}
       </Flex>
     </Drawer>
   );
