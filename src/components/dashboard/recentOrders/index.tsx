@@ -2,7 +2,6 @@ import { useNavigation } from "@refinedev/core";
 import { NumberField, useTable } from "@refinedev/antd";
 import { Typography, Table, theme, Space, Flex } from "antd";
 
-import { OrderActions } from "../../../components";
 
 import { IOrder } from "../../../interfaces";
 import { useStyles } from "./styled";

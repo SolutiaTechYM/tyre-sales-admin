@@ -30,7 +30,6 @@ import { authProvider } from "./authProvider";
 import "dayjs/locale/de";
 
 import { DashboardPage } from "./pages/dashboard";
-import { OrderList, OrderShow } from "./pages/orders";
 import { AuthPage } from "./pages/auth";
 import { CustomerShow, CustomerList } from "./pages/customers";
 import {
@@ -252,11 +251,6 @@ const App: React.FC = () => {
                 }
               >
                 <Route index element={<DashboardPage />} />
-
-                <Route path="/orders">
-                  <Route index element={<OrderList />} />
-                  <Route path=":id" element={<OrderShow />} />
-                </Route>
 
                 <Route
                   path="/customers"

@@ -1,5 +1,4 @@
 import React from "react";
-import { IUser } from "../../../interfaces";
 import {
   PhoneOutlined,
   EnvironmentOutlined,
@@ -18,9 +17,10 @@ import {
   EditButton,
 
 } from "@refinedev/antd";
+import { ICustomer } from "../../../interfaces";
 
 type Props = {
-  customer?: IUser;
+  customer?: ICustomer;
 };
 
 export const CustomerInfoList = ({ customer }: Props) => {
