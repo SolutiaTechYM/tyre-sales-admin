@@ -243,12 +243,12 @@ export const SaleDrawerForm = (props: Props) => {
       const selectedStock = selectedProductStocks[selectedproductid].find(
         (stock: IStock) => stock.id === selectedstockid
       );
-  
+
       const enteredQuantity = formProps.form.getFieldValue("quantity");
       const enteredUnitSellPrice = formProps.form.getFieldValue("unitsellingprice");
-  
+
       // Check if entered quantity is less than or equal to the stock quantity
-      if (enteredQuantity > selectedStock?.quantity) {
+      if (enteredQuantity > (selectedStock?.quantity ?? 0)) {
         notification.error({
           message: "Error",
           description: "Entered quantity must be less than or equal to the stock quantity.",
@@ -259,9 +259,9 @@ export const SaleDrawerForm = (props: Props) => {
         });
         return;
       }
-  
+
       // Check if entered unit selling price is greater than the unit buying price
-      if (enteredUnitSellPrice <= selectedStock?.unitBuyPrice) {
+      if (enteredUnitSellPrice <= (selectedStock?.unitBuyPrice ?? 0)) {
         notification.error({
           message: "Error",
           description: "Unit selling price must be greater than the unit buying price.",
@@ -272,17 +272,17 @@ export const SaleDrawerForm = (props: Props) => {
         });
         return;
       }
-  
+
       const newRow = {
         name: selectedProduct?.label?.toString() || "",
-        productID: selectedproductid || "",
+        productID: selectedproductid,
         stockID: selectedstockid,
         unitBuyPrice: selectedStock?.unitBuyPrice || 0,
         quantity: enteredQuantity,
         unitSellPrice: enteredUnitSellPrice,
         totalPrice: enteredUnitSellPrice * enteredQuantity,
       };
-  
+
       // Update the selected stock quantity
       const updatedStocks = selectedProductStocks[selectedproductid].map(
         (stock) => {
@@ -295,14 +295,14 @@ export const SaleDrawerForm = (props: Props) => {
           return stock;
         }
       );
-  
+
       setSelectedProductStocks((prevStocks) => ({
         ...prevStocks,
         [selectedproductid]: updatedStocks,
       }));
-  
+
       setTableData([...tableData, newRow]);
-  
+
       formProps.form.setFieldsValue({
         proname: "",
         unitsellingprice: "",
@@ -384,18 +384,18 @@ export const SaleDrawerForm = (props: Props) => {
             </Form.Item>
 
             <Form.Item
-  label={t("Grand Total")}
-  // name="totalPrice"
-  className={styles.formItem}
->
-  <InputNumber
-    style={{ width: "150px", color: "red" }}
-    disabled
-    value={totalPrice}
-    decimalSeparator="."
-    precision={2}
-  />
-</Form.Item>
+              label={t("Grand Total")}
+              // name="totalPrice"
+              className={styles.formItem}
+            >
+              <InputNumber
+                style={{ width: "150px", color: "red" }}
+                disabled
+                value={totalPrice}
+                decimalSeparator="."
+                precision={2}
+              />
+            </Form.Item>
             <Form.Item
               label={t("Payment")}
               name="payment"

@@ -128,10 +128,10 @@ export interface ISales {
 
   rowdata:RowDatasale[];
 }
-interface RowDatasale {
+export interface RowDatasale {
   name: string;
-  productID: string | number;
-  stockID: string | number; // Change the type to string | number
+  productID:  number;
+  stockID:  number; // Change the type to string | number
   quantity:  number;
   unitBuyPrice: string | number;
   unitSellPrice: number;
@@ -152,7 +152,7 @@ export interface ISalesShow {
 
   saleDetails:RowDatasaleshow[];
 }
-interface RowDatasaleshow {
+export interface RowDatasaleshow {
   name: string;
   productID: string | number;
   stockID: string | number; // Change the type to string | number

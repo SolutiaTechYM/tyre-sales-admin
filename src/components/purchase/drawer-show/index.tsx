@@ -23,7 +23,7 @@ import {
 } from "antd";
 import { useSearchParams } from "react-router-dom";
 import { Drawer } from "../../drawer";
-import { ICategory, IProduct, IPurchase, IPurchaseProductshow } from "../../../interfaces";
+import { ICategory, IProduct, IPurchase } from "../../../interfaces";
 import { DeleteButton, NumberField } from "@refinedev/antd";
 import { PurchaseStatus } from "../status";
 import { EditOutlined, FilePdfOutlined } from "@ant-design/icons";
