@@ -76,9 +76,10 @@ const App: React.FC = () => {
   const { loading } = useAutoLoginForDemo();
 
   // const API_URL = "https://api.finefoods.refine.dev";
-const API_URL = " https://tyre-sales-admin-backend.onrender.com";
+  // const API_URL = " https://tyre-sales-admin-backend.onrender.com";
+  const API_URL = "http://192.168.8.101:3000";
 
- 
+
   const dataProvider = jsonServerDataProvider(API_URL);
 
   const { t, i18n } = useTranslation();
@@ -151,7 +152,7 @@ const API_URL = " https://tyre-sales-admin-backend.onrender.com";
 
                 show: "/customers/:id",
                 meta: {
-                 
+
                   icon: <UserOutlined />,
                 },
               },
@@ -215,7 +216,7 @@ const API_URL = " https://tyre-sales-admin-backend.onrender.com";
               //     icon: <BikeWhiteIcon />,
               //   },
               // },
-               {
+              {
                 name: "transactions",
                 list: "/transactions",
                 create: "/transactions/new",
@@ -230,7 +231,7 @@ const API_URL = " https://tyre-sales-admin-backend.onrender.com";
               },
             ]}
           >
-           
+
             <Routes>
               <Route
                 element={
@@ -287,17 +288,17 @@ const API_URL = " https://tyre-sales-admin-backend.onrender.com";
                 </Route> */}
 
                 {/* xx */}
-                
-                <Route path="/suppliers" 
-                                  element={
-                                    <SupplierList>
-                                      <Outlet />
-                                    </SupplierList>
-                                  }>
-                  <Route path="new" element={<SupplierCreate/>} />
+
+                <Route path="/suppliers"
+                  element={
+                    <SupplierList>
+                      <Outlet />
+                    </SupplierList>
+                  }>
+                  <Route path="new" element={<SupplierCreate />} />
                   <Route path=":id" element={<SupplierShow />} />
 
-                  <Route path=":id/edit" element={<SupplierEdit/>} />
+                  <Route path=":id/edit" element={<SupplierEdit />} />
                 </Route>
 
 
@@ -312,7 +313,7 @@ const API_URL = " https://tyre-sales-admin-backend.onrender.com";
                   <Route path="new" element={<ProductCreate />} />
                   <Route path=":id" element={<ProductShow />} />
                   <Route path=":id/edit" element={<ProductEdit />} />
-                </Route> 
+                </Route>
 
                 <Route
                   path="/purchases"
@@ -327,14 +328,14 @@ const API_URL = " https://tyre-sales-admin-backend.onrender.com";
                   <Route path=":id/edit" element={<PurchaseEdit />} />
                 </Route>
 
-                
+
                 <Route
                   path="/sales"
                   element={
                     <SaleList>
                       <Outlet />
                     </SaleList>
-                    
+
                   }
                 >
                   <Route path="new" element={<SaleCreate />} />
@@ -359,7 +360,7 @@ const API_URL = " https://tyre-sales-admin-backend.onrender.com";
 
 
                 </Route>
-                
+
 
                 <Route path="/stores">
                   <Route index element={<StoreList />} />

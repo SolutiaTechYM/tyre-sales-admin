@@ -148,7 +148,7 @@ export const PurchaseDrawerShow = (props: Props) => {
                   purchase.due_amount < 0 ? (
                     <span
                       style={{
-                        color: "red",
+                        color: "lightgreen",
                         fontVariantNumeric: "tabular-nums",
                         whiteSpace: "nowrap",
                       }}
@@ -162,7 +162,7 @@ export const PurchaseDrawerShow = (props: Props) => {
                   ) : purchase.due_amount > 0 ? (
                     <span
                       style={{
-                        color: "lightgreen",
+                        color: "red",
                         fontVariantNumeric: "tabular-nums",
                         whiteSpace: "nowrap",
                       }}

@@ -94,15 +94,19 @@ export const SalesDrawerShow = (props: Props) => {
       title: 'Unit Buy Price',
       dataIndex: 'unitBuyPrice',
       key: 'unitBuyPrice',
-      render: (value: number) => <NumberField value={value} options={{                 minimumFractionDigits: 2,
-        maximumFractionDigits: 2, }} />,
+      render: (value: number) => <NumberField value={value} options={{
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }} />,
     },
     {
       title: 'Unit Sell Price',
       dataIndex: 'unitSellPrice',
       key: 'unitSellPrice',
-      render: (value: number) => <NumberField value={value} options={{                 minimumFractionDigits: 2,
-        maximumFractionDigits: 2, }} />,
+      render: (value: number) => <NumberField value={value} options={{
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }} />,
     },
     {
       title: 'Quantity',
@@ -113,122 +117,126 @@ export const SalesDrawerShow = (props: Props) => {
       title: 'Total',
       dataIndex: 'totalPrice',
       key: 'totalPrice',
-      render: (value: number) => <NumberField value={value} options={{                 minimumFractionDigits: 2,
-        maximumFractionDigits: 2, }} />,
+      render: (value: number) => <NumberField value={value} options={{
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }} />,
     },
   ];
 
   return (
     <>
-    <Drawer
-      open={true}
-      width={breakpoint.sm ? "1134px" : "100%"}
-      zIndex={1001}
-      onClose={handleDrawerClose}
-    >
-      <Flex
-        vertical
-        style={{
-          backgroundColor: token.colorBgContainer,
-        }}
+      <Drawer
+        open={true}
+        width={breakpoint.sm ? "1134px" : "100%"}
+        zIndex={1001}
+        onClose={handleDrawerClose}
       >
-<Flex style={{ padding: "16px", justifyContent: "space-between" }}>
-    <Flex vertical>
-        <Typography.Title level={5}>
-            Sale ID : {sales?.id}
-        </Typography.Title>
-        <Typography.Text type="secondary">
-            {sales?.description}
-        </Typography.Text>
-        <Typography.Text>
-  Due Amount:{" "}
-  {sales?.due_amount !== undefined ? (
-  sales.due_amount < 0 ? (
-    <span
-      style={{
-        color: "red",
-        fontVariantNumeric: "tabular-nums",
-        whiteSpace: "nowrap",
-      }}
-    >
-      C{" "}
-      {Math.abs(sales.due_amount).toLocaleString("en-US", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })}
-    </span>
-  ) : sales.due_amount > 0 ? (
-    <span
-      style={{
-        color: "lightgreen",
-        fontVariantNumeric: "tabular-nums",
-        whiteSpace: "nowrap",
-      }}
-    >
-      D{" "}
-      {sales.due_amount.toLocaleString("en-US", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })}
-    </span>
-  ) : (
-    "-"
-  )
-) : (
-  <NumberField value={0} options={{ style: "currency", currency: "USD" }} />
-)}
-</Typography.Text>
-        <Typography.Text>
-            Total Price:{" "}
-            <NumberField
-                value={sales?.price || 0}
-                options={{ minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,}}
-                style={{
-                fontWeight:"bold"
-
-                }}
-            />
-        </Typography.Text>
-    </Flex >
-    <Flex vertical>
-        <Typography.Title level={5} style={{color:"red"}}>
-            Print Invoice 
-        </Typography.Title>
-
-    <Button
-            style={{ alignSelf: "center",borderColor:"red" }}
-            size="large"
-            icon={<FilePdfOutlined style={{ color: "red"}} />}
-            onClick={() => {
-              setRecord(sales);
-              show();
-            }}
-          />
-          </Flex>
-</Flex>
-        <Divider
-          style={{
-            margin: 0,
-            padding: 0,
-          }}
-        />
         <Flex
           vertical
-          gap={32}
           style={{
-            padding: "32px",
+            backgroundColor: token.colorBgContainer,
           }}
         >
-          <Table dataSource={sales?.saleDetails} columns={columns} />
+          <Flex style={{ padding: "16px", justifyContent: "space-between" }}>
+            <Flex vertical>
+              <Typography.Title level={5}>
+                Sale ID : {sales?.id}
+              </Typography.Title>
+              <Typography.Text type="secondary">
+                {sales?.description}
+              </Typography.Text>
+              <Typography.Text>
+                Due Amount:{" "}
+                {sales?.due_amount !== undefined ? (
+                  sales.due_amount < 0 ? (
+                    <span
+                      style={{
+                        color: "red",
+                        fontVariantNumeric: "tabular-nums",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      D{" "}
+                      {Math.abs(sales.due_amount).toLocaleString("en-US", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </span>
+                  ) : sales.due_amount > 0 ? (
+                    <span
+                      style={{
+                        color: "lightgreen",
+                        fontVariantNumeric: "tabular-nums",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      C{" "}
+                      {sales.due_amount.toLocaleString("en-US", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </span>
+                  ) : (
+                    "-"
+                  )
+                ) : (
+                  <NumberField value={0} options={{ style: "currency", currency: "USD" }} />
+                )}
+              </Typography.Text>
+              <Typography.Text>
+                Total Price:{" "}
+                <NumberField
+                  value={sales?.price || 0}
+                  options={{
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }}
+                  style={{
+                    fontWeight: "bold"
+
+                  }}
+                />
+              </Typography.Text>
+            </Flex >
+            <Flex vertical>
+              <Typography.Title level={5} style={{ color: "red" }}>
+                Print Invoice
+              </Typography.Title>
+
+              <Button
+                style={{ alignSelf: "center", borderColor: "red" }}
+                size="large"
+                icon={<FilePdfOutlined style={{ color: "red" }} />}
+                onClick={() => {
+                  setRecord(sales);
+                  show();
+                }}
+              />
+            </Flex>
+          </Flex>
+          <Divider
+            style={{
+              margin: 0,
+              padding: 0,
+            }}
+          />
+          <Flex
+            vertical
+            gap={32}
+            style={{
+              padding: "32px",
+            }}
+          >
+            <Table dataSource={sales?.saleDetails} columns={columns} />
+          </Flex>
         </Flex>
-      </Flex>
 
 
-    </Drawer>
-    <Modal visible={visible} onCancel={close} width="80%" footer={null} zIndex={99999999}>
-          <PdfLayout  record={record}/>
-        </Modal>
+      </Drawer>
+      <Modal visible={visible} onCancel={close} width="80%" footer={null} zIndex={99999999}>
+        <PdfLayout record={record} />
+      </Modal>
     </>
   );
 };

@@ -53,18 +53,18 @@ export const PurchaseListTable = () => {
           operator: "in",
           value: [],
         },
-        
+
       ],
     },
   });
 
   console.log(tableProps);
-  
+
   return (
     <Table
       {...tableProps}
-     
-      
+
+
       rowKey="id"
       scroll={{ x: true }}
       pagination={{
@@ -81,7 +81,7 @@ export const PurchaseListTable = () => {
               whiteSpace: "nowrap",
             }}
           >
-            ID 
+            ID
           </Typography.Text>
         }
         dataIndex="id"
@@ -213,7 +213,7 @@ export const PurchaseListTable = () => {
                 width: "80px",
                 fontVariantNumeric: "tabular-nums",
                 whiteSpace: "nowrap",
-                fontWeight:"bold"
+                fontWeight: "bold"
               }}
               options={{
 
@@ -231,16 +231,16 @@ export const PurchaseListTable = () => {
         align="right"
         sorter
         //defaultSortOrder={getDefaultSortOrder("price", sorters)}
- 
+
         render={(credit: number) => {
           const formatOptions = {
 
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           };
-        
-          if (credit > 0) {
-            const formattedValue = `${credit.toLocaleString('en-LK', formatOptions)}`;
+
+          if (credit < 0) {
+            const formattedValue = `${Math.abs(credit).toLocaleString('en-LK', formatOptions)}`;
             return (
               <span
                 style={{
@@ -251,18 +251,18 @@ export const PurchaseListTable = () => {
                   fontWeight: "bold",
                 }}
               >
-                <div style={{display:"flex",justifyContent:"space-between"}}>
-                <div>C</div>
-                <div>
-                {formattedValue}
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                  <div>C</div>
+                  <div>
+                    {formattedValue}
 
-                </div>
+                  </div>
 
                 </div>
               </span>
             );
-          } else if(credit < 0) {
-            const formattedValue = `${Math.abs(credit).toLocaleString('en-LK', formatOptions)}`;
+          } else if (credit > 0) {
+            const formattedValue = `${credit.toLocaleString('en-LK', formatOptions)}`;
             return (
               <span
                 style={{
@@ -273,19 +273,19 @@ export const PurchaseListTable = () => {
                   fontWeight: "bold",
                 }}
               >
-                                <div style={{display:"flex",justifyContent:"space-between"}}>
-                <div>D</div>
-                <div>
-                {formattedValue}
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                  <div>D</div>
+                  <div>
+                    {formattedValue}
 
-                </div>
+                  </div>
 
                 </div>
 
 
               </span>
             );
-          }else{
+          } else {
             return (
               <span
                 style={{
@@ -295,7 +295,7 @@ export const PurchaseListTable = () => {
                   color: "white"
                 }}
               >
-              -
+                -
               </span>)
           }
         }}
