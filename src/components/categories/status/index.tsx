@@ -5,7 +5,7 @@ import { ICategory } from "../../../interfaces";
 import { useConfigProvider } from "../../../context";
 
 type Props = {
-  value: ICategory["isActive"];
+  value: ICategory;
 };
 
 export const CategoryStatus = ({ value }: Props) => {

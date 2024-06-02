@@ -33,7 +33,6 @@ import { DashboardPage } from "./pages/dashboard";
 import { OrderList, OrderShow } from "./pages/orders";
 import { AuthPage } from "./pages/auth";
 import { CustomerShow, CustomerList } from "./pages/customers";
-import { CourierList, CourierCreate, CourierEdit } from "./pages/couriers";
 import {
   ProductList,
   ProductCreate,
@@ -43,7 +42,6 @@ import {
 } from "./pages/products";
 
 // import { CustomerListss,CustomerShowss } from "./pages/customersss";
-import { StoreCreate, StoreEdit, StoreList } from "./pages/stores";
 import { CategoryCreate, CategoryEdit, CategoryList, CategoryShow } from "./pages/categories";
 import { useTranslation } from "react-i18next";
 import { Header, Title } from "./components";
@@ -362,13 +360,6 @@ const App: React.FC = () => {
                 </Route>
 
 
-                <Route path="/stores">
-                  <Route index element={<StoreList />} />
-                  <Route path="new" element={<StoreCreate />} />
-                  <Route path=":id/edit" element={<StoreEdit />} />
-                </Route>
-
-
 
                 {/* <Route path="/categories" element={<CategoryList />} /> */}
 
@@ -385,21 +376,6 @@ const App: React.FC = () => {
                   <Route path=":id/edit" element={<CategoryEdit />} />
                 </Route>
 
-
-                <Route path="/couriers">
-                  <Route
-                    path=""
-                    element={
-                      <CourierList>
-                        <Outlet />
-                      </CourierList>
-                    }
-                  >
-                    <Route path="new" element={<CourierCreate />} />
-                  </Route>
-
-                  <Route path=":id/edit" element={<CourierEdit />} />
-                </Route>
               </Route>
 
               <Route
