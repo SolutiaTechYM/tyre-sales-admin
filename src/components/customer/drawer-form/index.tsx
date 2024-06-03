@@ -120,11 +120,11 @@ export const CustomerDrawerForm = (props: Props) => {
             style={{
               margin: 0,
             }}
-            rules={[
-              {
-                required: true,
-              },
-            ]}
+            // rules={[
+            //   {
+            //     required: true,
+            //   },
+            // ]}
           >
             <Upload.Dragger
               name="file"

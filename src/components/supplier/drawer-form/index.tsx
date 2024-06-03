@@ -122,11 +122,11 @@ export const SupplierDrawerForm = (props: Props) => {
             style={{
               margin: 0,
             }}
-            rules={[
-              {
-                required: false,
-              },
-            ]}
+            // rules={[
+            //   {
+            //     required: false,
+            //   },
+            // ]}
           >
             <Upload.Dragger
               name="file"
