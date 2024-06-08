@@ -3,41 +3,37 @@ import { notification } from "antd";
 import bcrypt from "bcryptjs";
 import axios from "axios";
 import { enableAutoLogin } from "./hooks";
+import { customAxiosInstance } from "./utils/custom-axios";
+import { API_URL } from "./utils";
 
-export const TOKEN_KEY = "refine-auth";
+export const TOKEN_KEY = "token";
 
 export const authProvider: AuthProvider = {
   login: async ({ email, password }) => {
-    // try {
-    //   const response = await axios.post(`http://localhost:3000/api/login`, { email, password });
+    try {
+      const response = await customAxiosInstance.post(`${API_URL}/auth/login`, { email, password });
      
-    //   if (!response.data.token) {
-    //     throw new Error('Invalid email or password');
-    //   }
+      if (!response.headers.authorization) {
+        throw new Error('Invalid email or password');
+      }
 
-    //   localStorage.setItem(TOKEN_KEY, response.data.token);
+      localStorage.setItem(TOKEN_KEY, response.headers.authorization);
 
-    //   return {
-    //     success: true,
-    //     redirectTo: "/"
-    //   };
-    // } catch (error) {
-    //   console.log(error);
+      return {
+        success: true,
+        redirectTo: "/"
+      };
+    } catch (error) {
+      console.log(error);
       
-    //   return {
-    //     success: false,
-    //     error: {
-    //       message: "Login failed",
-    //       name: "Invalid email or password"
-    //     }
-    //   };
-    // }
-    enableAutoLogin();
-    localStorage.setItem(TOKEN_KEY, `${email}-${password}`);
-    return {
-      success: true,
-      redirectTo: "/",
-    };
+      return {
+        success: false,
+        error: {
+          message: "Login failed",
+          name: "Invalid email or password"
+        }
+      };
+    }
   },
   register: async ({ email, password }) => {
     try {
