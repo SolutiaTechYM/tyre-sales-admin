@@ -5,6 +5,7 @@ import {
   useExport,
   useGo,
   useNavigation,
+  useSelect,
 } from "@refinedev/core";
 import {
   List,
@@ -25,10 +26,11 @@ import {
   Input,
   Select,
   Button,
+  SelectProps,
 } from "antd";
 
-import { ITransactionlist, ICustomer } from "../../interfaces";
-import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
+import { ITransactionlist, ICustomer, TradeType } from "../../interfaces";
+import { EyeOutlined, FunnelPlotFilled, FunnelPlotOutlined, SearchOutlined } from "@ant-design/icons";
 import { PaginationTotal } from "../../components";
 import { PropsWithChildren } from "react";
 import { useLocation } from "react-router-dom";
@@ -80,6 +82,14 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
       };
     },
   });
+
+
+  const typeSelectProps:SelectProps = {
+    options: Object.values(TradeType).filter((type) => typeof type === "string").map((type) => ({
+      label: type,
+      value: type,
+    })),
+  };
 
   return (
     <List
@@ -169,8 +179,36 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
         <Table.Column
           key="type"
           dataIndex="type"
-          sorter
+          // sorter
+          defaultFilteredValue={getDefaultFilter("type", filters, "in")}
+        filterDropdown={(props) => {
+          return (
+            <FilterDropdown
+              {...props}
+              selectedKeys={props.selectedKeys.map((item) => Number(item))}
+            >
+              <Select
+                {...typeSelectProps}
+                style={{ width: "200px" }}
+                allowClear
+                mode="multiple"
+                placeholder={t("Select Type")}
+              />
+            </FilterDropdown>
+          );
+        }}
+        render={(_, record) => {
 
+          return (
+            <Typography.Text
+              style={{
+                whiteSpace: "nowrap",
+              }}
+            >
+              {record.type}
+            </Typography.Text>
+          );
+        }}
           title={t("Type")}
 
 
