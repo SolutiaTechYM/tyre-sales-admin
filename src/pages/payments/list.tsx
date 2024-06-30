@@ -56,7 +56,7 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
     console.log("filteredData:", filteredData);
     
 
-    let tableName;
+    let tableName: string;
     switch (type) {
       case 'PURCHASE':
         tableName = "Purchase Transactions";
