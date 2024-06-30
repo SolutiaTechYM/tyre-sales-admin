@@ -326,7 +326,7 @@ export interface ITransactionlist {
   id: number;
   date: string;
   value: number;
-  type: TradeType;
+  type: string;
   description?: string;
   connection: {
       id?: number,

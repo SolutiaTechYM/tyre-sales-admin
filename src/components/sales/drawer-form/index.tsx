@@ -63,6 +63,8 @@ export const SaleDrawerForm = (props: Props) => {
 
   const [selectedproductid, setselectedproductid] = useState<number | undefined>(undefined);
   const [fetchedProductIds, setFetchedProductIds] = useState<number[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+
 
   const { drawerProps, formProps, close, saveButtonProps, formLoading } =
     useDrawerForm<ISales>({
@@ -85,11 +87,35 @@ export const SaleDrawerForm = (props: Props) => {
     resource: "customers",
     optionLabel: "name", // Add this line
   });
-  const { selectProps: productSelectProps } = useSelect<IProduct>({
-    resource: "products",
-    optionLabel: "name", // Add this line
-    optionValue: "id", // Add this line
-  });
+  // const { selectProps: productSelectProps } = useSelect<IProduct>({
+  //   resource: "products",
+  //   optionLabel: "name", // Add this line
+  //   optionValue: "id", // Add this line
+  // });
+
+
+
+const { selectProps: categorySelectProps } = useSelect<ICategory>({
+  resource: "categories",
+  optionLabel: "title",
+  optionValue: "id",
+});
+
+const { selectProps: productSelectProps } = useSelect<IProduct>({
+  resource: "products",
+  optionLabel: "name",
+  optionValue: "id",
+  filters: [
+    {
+      field: "category.id",
+      operator: "eq",
+      value: selectedCategory,
+    },
+  ],
+  queryOptions: {
+    enabled: !!selectedCategory,
+  },
+});
 
   useEffect(() => {
     if (selectedproductid && !fetchedProductIds.includes(selectedproductid)) {
@@ -452,7 +478,7 @@ export const SaleDrawerForm = (props: Props) => {
 
               {showModal && (
                 <Flex gap={25} style={{ marginBottom: '15px', flexWrap: 'wrap' }} >
-                  <Form.Item
+                  {/* <Form.Item
                     label={t("purchases.fields.details.name")}
                     name="proname"
                     style={{ minWidth: '150px' }}
@@ -464,7 +490,37 @@ export const SaleDrawerForm = (props: Props) => {
                     ]}
                   >
                     <Select {...productSelectProps} onChange={(value) => setselectedproductid(value as unknown as number)} />
-                  </Form.Item>
+                  </Form.Item> */}
+
+<Form.Item
+      label={t("Category")}
+      name="category"
+      style={{ minWidth: '150px' }}
+      className={styles.subFormItem}
+      rules={[{ required: true }]}
+    >
+      <Select 
+        {...categorySelectProps} 
+        onChange={(value) => {
+          setSelectedCategory(value as unknown as number);
+          formProps.form.setFieldsValue({ proname: undefined });
+        }}
+      />
+    </Form.Item>
+    
+    <Form.Item
+      label={t("Product")}
+      name="proname"
+      style={{ minWidth: '150px' }}
+      className={styles.subFormItem}
+      rules={[{ required: true }]}
+    >
+      <Select 
+        {...productSelectProps} 
+        disabled={!selectedCategory}
+        onChange={(value) => setselectedproductid(value as unknown as number)}
+      />
+    </Form.Item>
                   <Form.Item
                     label={t("Stock")}
                     name="stockid"
