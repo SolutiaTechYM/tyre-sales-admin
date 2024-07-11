@@ -74,7 +74,7 @@ const App: React.FC = () => {
   const { loading } = useAutoLoginForDemo();
 
   // const API_URL = "https://api.finefoods.refine.dev";
-  const API_URL = "https://as-enterprice-api.azurewebsites.net";
+  const API_URL = "https://tyre-sales-admin-backend.onrender.com";
   // const API_URL = "http://192.168.8.101:3000";
 
 
