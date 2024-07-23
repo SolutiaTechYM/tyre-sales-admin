@@ -1,180 +1,200 @@
-import React from 'react';
-import { useTranslate, HttpError, getDefaultFilter, useExport, useGo, useNavigation } from "@refinedev/core";
-import { List, useTable, DateField, FilterDropdown, getDefaultSortOrder, ExportButton, CreateButton, NumberField } from "@refinedev/antd";
-import { Table, Typography, theme, InputNumber, Input, Select, Button } from "antd";
-import { ITransactionlist, ICustomer, TradeType } from "../../interfaces";
-import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
+import React, { useState, useEffect } from 'react';
+import { useTranslate, HttpError, useExport, useGo, useNavigation, useList, CrudFilters } from "@refinedev/core";
+import { List, FilterDropdown, ExportButton, CreateButton, NumberField } from "@refinedev/antd";
+import { Table, Typography, theme, InputNumber } from "antd";
+import { ITransactionlist } from "../../interfaces";
+import { SearchOutlined } from "@ant-design/icons";
 import { PaginationTotal } from "../../components";
 import { PropsWithChildren } from "react";
 import { useLocation } from "react-router-dom";
-import { log } from 'console';
 
 export const PaymentList = ({ children }: PropsWithChildren) => {
   const go = useGo();
   const { pathname } = useLocation();
-  const { showUrl } = useNavigation();
   const t = useTranslate();
   const { token } = theme.useToken();
   const { createUrl } = useNavigation();
 
-  const transactionTypes = ["capital", "purchase", "sell"];
+  const [purchasePagination, setPurchasePagination] = useState({ current: 1, pageSize: 10 });
+  const [salePagination, setSalePagination] = useState({ current: 1, pageSize: 10 });
+  const [capitalPagination, setCapitalPagination] = useState({ current: 1, pageSize: 10 });
 
-  const { tableProps, filters, sorters } = useTable<ITransactionlist, HttpError>({
-    filters: {
-      initial: [
-        {
-          field: "fullName",
-          operator: "contains",
-          value: "",
-        },
-      ],
-    },
-    sorters: {
-      initial: [
-        {
-          field: "id",
-          order: "desc",
-        },
-      ],
-    },
-    syncWithLocation: true,
+  const [purchaseSorter, setPurchaseSorter] = useState<{ field: string; order: 'asc' | 'desc' } | undefined>();
+  const [saleSorter, setSaleSorter] = useState<{ field: string; order: 'asc' | 'desc' } | undefined>();
+  const [capitalSorter, setCapitalSorter] = useState<{ field: string; order: 'asc' | 'desc' } | undefined>();
+
+  const [idFilter, setIdFilter] = useState<number | null>(null);
+
+  useEffect(() => {
+    setPurchasePagination({ current: 1, pageSize: 10 });
+    setSalePagination({ current: 1, pageSize: 10 });
+    setCapitalPagination({ current: 1, pageSize: 10 });
+  }, [idFilter]);
+
+  const getFilters = (type: string): CrudFilters => {
+    const filters: CrudFilters = [
+      { field: "trade.type", operator: "eq", value: type },
+    ];
+
+    if (idFilter !== null) {
+      filters.push({ field: "id", operator: "eq", value: idFilter });
+    }
+
+    return filters;
+  };
+
+  const { data: purchaseData, isLoading: isPurchaseLoading } = useList<ITransactionlist>({
+    resource: "transactions",
+    filters: getFilters("PURCHASE"),
+    pagination: purchasePagination,
+    sorters: purchaseSorter ? [purchaseSorter] : undefined,
   });
 
-  const { isLoading, triggerExport } = useExport<ITransactionlist>({
-    sorters,
-    filters,
+  const { data: saleData, isLoading: isSaleLoading } = useList<ITransactionlist>({
+    resource: "transactions",
+    filters: getFilters("SALE"),
+    pagination: salePagination,
+    sorters: saleSorter ? [saleSorter] : undefined,
+  });
+
+  const { data: capitalData, isLoading: isCapitalLoading } = useList<ITransactionlist>({
+    resource: "transactions",
+    filters: getFilters("CAPITAL"),
+    pagination: capitalPagination,
+    sorters: capitalSorter ? [capitalSorter] : undefined,
+  });
+
+  const { isLoading: exportLoading, triggerExport } = useExport<ITransactionlist>({
     mapData: (item) => {
       return {
         id: item.id,
+        connection: item.connection?.name,
+        type: item.type,
+        date: item.date,
+        value: item.value,
+        description: item.description,
       };
     },
   });
 
   const renderTable = (type: string) => {
-    console.log("tableProps.dataSource:", tableProps.dataSource);
-    const filteredData = tableProps.dataSource?.filter((item) => item.type === type);
-    console.log("filteredData:", filteredData);
-    
+    let data, isLoading, pagination, setPagination, sorter, setSorter, tableName;
 
-    let tableName: string;
     switch (type) {
       case 'PURCHASE':
+        data = purchaseData;
+        isLoading = isPurchaseLoading;
+        pagination = purchasePagination;
+        setPagination = setPurchasePagination;
+        sorter = purchaseSorter;
+        setSorter = setPurchaseSorter;
         tableName = "Purchase Transactions";
-        console.log("tableName:", tableName);
-
         break;
       case 'SALE':
+        data = saleData;
+        isLoading = isSaleLoading;
+        pagination = salePagination;
+        setPagination = setSalePagination;
+        sorter = saleSorter;
+        setSorter = setSaleSorter;
         tableName = "Sale Transactions";
-        console.log("tableName:", tableName);
-
         break;
       case 'CAPITAL':
+        data = capitalData;
+        isLoading = isCapitalLoading;
+        pagination = capitalPagination;
+        setPagination = setCapitalPagination;
+        sorter = capitalSorter;
+        setSorter = setCapitalSorter;
         tableName = "Capital Transactions";
-        console.log("tableName:", tableName);
-
         break;
       default:
-        tableName = "Transactions";
-        console.log("all data");
-
+        return null;
     }
 
+    const handleTableChange = (pagination: any, filters: any, sorter: any) => {
+      setPagination(pagination);
+      if (sorter.field && sorter.order) {
+        setSorter({ field: sorter.field, order: sorter.order === 'ascend' ? 'asc' : 'desc' });
+      } else {
+        setSorter(undefined);
+      }
+    };
+
     return (
-      <List title={type}>
       <Table
-        {...tableProps}
-        dataSource={filteredData}
-        rowKey="id"
-        scroll={{ x: true }}
-        style={{ marginBottom: 24 }}
-        pagination={{
-          ...tableProps.pagination,
-          showTotal: (total) => (
-            <PaginationTotal
-              total={total}
-              entityName="transactions"
-              customText={tableName}
-            />
-          ),
-        }}
-      >
+      title={() => <Typography.Title level={5}>{tableName}</Typography.Title>}
+      dataSource={data?.data}
+      loading={isLoading}
+      pagination={{
+        ...pagination,
+        total: data?.total,
+        showTotal: (total) => (
+          <PaginationTotal
+            total={total}
+            entityName="transactions"
+            customText={tableName}
+          />
+        ),
+      }}
+      onChange={handleTableChange}
+      rowKey="id"
+      scroll={{ x: true }}
+      style={{ marginBottom: 24 }}
+    >
+          <Table.Column
+            key="id"
+            dataIndex="id"
+            title="ID"
+            sorter={true}
+            render={(value) => (
+              <Typography.Text style={{ whiteSpace: "nowrap" }}>{value}</Typography.Text>
+            )}
+            // filterIcon={(filtered) => (
+            //   <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
+            // )}
+            // filterDropdown={(props) => (
+            //   <FilterDropdown {...props}>
+            //     <InputNumber
+            //       style={{ width: "100%" }}
+            //       placeholder={t("orders.filter.id.placeholder")}
+            //       onChange={(value) => {
+            //         setIdFilter(value as number | null);
+            //         props.confirm();
+            //       }}
+            //     />
+            //   </FilterDropdown>
+            // )}
+          />
 
-        <Table.Column
-          key="id"
-          dataIndex="id"
-          sorter
+          <Table.Column
+            key="connection"
+            dataIndex={["connection", "name"]}
+            title={t("Connection")}
+            sorter={true}
+          />
 
-          title="ID"
-          render={(value) => (
-            <Typography.Text
-              style={{
-                whiteSpace: "nowrap",
-              }}
-            >
-              {value}
-            </Typography.Text>
-          )}
-          filterIcon={(filtered) => (
-            <SearchOutlined
-              style={{
-                color: filtered ? token.colorPrimary : undefined,
-              }}
-            />
-          )}
-          defaultFilteredValue={getDefaultFilter("orderNumber", filters, "eq")}
-          filterDropdown={(props) => (
-            <FilterDropdown {...props}>
-              <InputNumber
-                addonBefore="#"
-                style={{ width: "100%" }}
-                placeholder={t("orders.filter.id.placeholder")}
-              />
-            </FilterDropdown>
-          )}
-        />
+          <Table.Column
+            key="type"
+            dataIndex="type"
+            title={t("Type")}
+            sorter={true}
+          />
 
-        <Table.Column
-          key="connection"
-          dataIndex="connection"
-          sorter
-          title={t("Connection")}
-          render={(connection) => connection?.name}
-        />
+          <Table.Column
+            key="date"
+            dataIndex="date"
+            title={t("Date")}
+            sorter={true}
+          />
 
-        <Table.Column
-          key="type"
-          dataIndex="type"
-          sorter
-
-          title={t("Type")}
-
-
-        />
-        <Table.Column
-          key="date"
-          dataIndex="date"
-          sorter
-
-          title={t("Date")}
-
-
-        />
-
-
-
-
-
-
-
-        <Table.Column
-          key="value"
-          dataIndex="value"
-          title="Value"
-          align="right"
-
-
-          render={(value: number) => {
-            return (
+          <Table.Column
+            key="value"
+            dataIndex="value"
+            title="Value"
+            align="right"
+            sorter={true}
+            render={(value: number) => (
               <NumberField
                 value={value}
                 style={{
@@ -188,21 +208,17 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
                   maximumFractionDigits: 2,
                 }}
               />
-            );
-          }}
+            )}
+          />
 
-          sorter
-        />
-        <Table.Column
-          key="description"
-          dataIndex="description"
-          title="Description"
-
-          sorter
-        />
-
-      </Table>
-      </List>
+          <Table.Column
+            key="description"
+            dataIndex="description"
+            title="Description"
+            sorter={true}
+          />
+        </Table>
+      // </List>
     );
   };
 
@@ -210,7 +226,7 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
     <List
       breadcrumb={false}
       headerButtons={(props) => [
-        <ExportButton onClick={triggerExport} loading={isLoading} />,
+        <ExportButton onClick={triggerExport} loading={exportLoading} />,
         <CreateButton
           {...props.createButtonProps}
           key="create"

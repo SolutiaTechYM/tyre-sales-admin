@@ -1,6 +1,7 @@
 import {
   BaseKey,
   HttpError,
+  useDelete,
   useGetToPath,
   useGo,
   useModal,
@@ -19,6 +20,7 @@ import {
   Modal,
   Table,
   Typography,
+  message,
   theme,
 } from "antd";
 import { useSearchParams } from "react-router-dom";
@@ -26,7 +28,7 @@ import { Drawer } from "../../drawer";
 import { ICategory, IProduct, IPurchase, ISalesShow } from "../../../interfaces";
 import { DeleteButton, NumberField } from "@refinedev/antd";
 import { PurchaseStatus } from "../status";
-import { EditOutlined, FilePdfOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, FilePdfOutlined } from "@ant-design/icons";
 import { PurchaseDetailsTable } from "../details-table";
 import { PdfLayout } from "../../../pages/sales/PdfLayout";
 import { useState } from "react";
@@ -48,6 +50,9 @@ export const SalesDrawerShow = (props: Props) => {
   const [record, setRecord] = useState<ISalesShow>();
 
   const { show, visible, close } = useModal();
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+
+  const { mutate: deletesales } = useDelete();
 
   const { queryResult } = useShow<ISalesShow, HttpError>({
     resource: "sales",
@@ -77,6 +82,32 @@ export const SalesDrawerShow = (props: Props) => {
       type: "replace",
     });
   };
+
+  const handleDeleteConfirm = () => {
+    if (sales?.id) {
+      deletesales(
+        {
+          resource: "sales",
+          id: sales.id,
+        },
+        {
+          onSuccess: () => {
+            setDeleteModalVisible(false);
+            handleDrawerClose();
+            message.success("sales deleted successfully");
+          },
+          onError: (error: { message: string; }) => {
+            setDeleteModalVisible(false);
+            message.error("Error deleting sales: " + error.message);
+          },
+        }
+      );
+    } else {
+      message.error("Cannot delete sales: Invalid ID");
+      setDeleteModalVisible(false);
+    }
+  };
+
 
   const columns = [
 
@@ -200,14 +231,14 @@ export const SalesDrawerShow = (props: Props) => {
               </Typography.Text>
             </Flex >
             <Flex vertical>
-              <Typography.Title level={5} style={{ color: "red" }}>
+              <Typography.Title level={5} style={{ color: "green" }}>
                 Print Invoice
               </Typography.Title>
 
               <Button
-                style={{ alignSelf: "center", borderColor: "red" }}
+                style={{ alignSelf: "center", borderColor: "green" }}
                 size="large"
-                icon={<FilePdfOutlined style={{ color: "red" }} />}
+                icon={<FilePdfOutlined style={{ color: "green" }} />}
                 onClick={() => {
                   setRecord(sales);
                   show();
@@ -229,6 +260,18 @@ export const SalesDrawerShow = (props: Props) => {
             }}
           >
             <Table dataSource={sales?.saleDetails} columns={columns} />
+
+
+            <Flex style={{ justifyContent: "flex-end" }}>
+              <Button
+                style={{ alignSelf: "center", borderColor: "red" }}
+                size="large"
+                icon={<DeleteOutlined style={{ color: "red" }} />}
+                onClick={() => setDeleteModalVisible(true)}
+              >
+                Delete Sale
+              </Button>
+            </Flex>
           </Flex>
         </Flex>
 
@@ -236,6 +279,16 @@ export const SalesDrawerShow = (props: Props) => {
       </Drawer>
       <Modal visible={visible} onCancel={close} width="80%" footer={null} zIndex={99999999}>
         <PdfLayout record={record} />
+      </Modal>
+
+      <Modal
+        title="Confirm Delete"
+        visible={deleteModalVisible}
+        onOk={handleDeleteConfirm}
+        onCancel={() => setDeleteModalVisible(false)}
+        zIndex={2147483647} 
+      >
+        <p>Are you sure you want to delete this sale?</p>
       </Modal>
     </>
   );

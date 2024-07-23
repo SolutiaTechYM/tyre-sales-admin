@@ -8,6 +8,7 @@ import {
   useOne,
   useShow,
   useTranslate,
+  useDelete,
 } from "@refinedev/core";
 import {
   Avatar,
@@ -20,13 +21,14 @@ import {
   Table,
   Typography,
   theme,
+  message,
 } from "antd";
 import { useSearchParams } from "react-router-dom";
 import { Drawer } from "../../drawer";
 import { ICategory, IProduct, IPurchase } from "../../../interfaces";
 import { DeleteButton, NumberField } from "@refinedev/antd";
 import { PurchaseStatus } from "../status";
-import { EditOutlined, FilePdfOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, FilePdfOutlined } from "@ant-design/icons";
 import { PurchaseDetailsTable } from "../details-table";
 import { PdfLayout } from "../../../pages/purchases/PdfLayout";
 import { useState } from "react";
@@ -48,11 +50,13 @@ export const PurchaseDrawerShow = (props: Props) => {
   const [record, setRecord] = useState<IPurchase>();
 
   const { show, visible, close } = useModal();
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
+  const { mutate: deletePurchase } = useDelete();
 
   const { queryResult } = useShow<IPurchase, HttpError>({
     resource: "purchases",
-    id: props?.id, // when undefined, id will be read from the URL.
+    id: props?.id,
   });
   const purchase = queryResult.data?.data;
 
@@ -77,6 +81,31 @@ export const PurchaseDrawerShow = (props: Props) => {
       },
       type: "replace",
     });
+  };
+
+  const handleDeleteConfirm = () => {
+    if (purchase?.id) {
+      deletePurchase(
+        {
+          resource: "purchases",
+          id: purchase.id,
+        },
+        {
+          onSuccess: () => {
+            setDeleteModalVisible(false);
+            handleDrawerClose();
+            message.success("Purchase deleted successfully");
+          },
+          onError: (error) => {
+            setDeleteModalVisible(false);
+            message.error("Error deleting purchase: " + error.message);
+          },
+        }
+      );
+    } else {
+      message.error("Cannot delete purchase: Invalid ID");
+      setDeleteModalVisible(false);
+    }
   };
 
   const columns = [
@@ -127,6 +156,7 @@ export const PurchaseDrawerShow = (props: Props) => {
         width={breakpoint.sm ? "1134px" : "100%"}
         zIndex={1001}
         onClose={handleDrawerClose}
+        
       >
         <Flex
           vertical
@@ -190,20 +220,19 @@ export const PurchaseDrawerShow = (props: Props) => {
                   }}
                   style={{
                     fontWeight: "bold"
-
                   }}
                 />
               </Typography.Text>
             </Flex >
             <Flex vertical>
-              <Typography.Title level={5} style={{ color: "red" }}>
+              <Typography.Title level={5} style={{ color: "green" }}>
                 Print Invoice
               </Typography.Title>
 
               <Button
-                style={{ alignSelf: "center", borderColor: "red" }}
+                style={{ alignSelf: "center", borderColor: "green" }}
                 size="large"
-                icon={<FilePdfOutlined style={{ color: "red" }} />}
+                icon={<FilePdfOutlined style={{ color: "green" }} />}
                 onClick={() => {
                   setRecord(purchase);
                   show();
@@ -225,13 +254,32 @@ export const PurchaseDrawerShow = (props: Props) => {
             }}
           >
             <Table dataSource={purchase?.purchaseDetails} columns={columns} />
+            <Flex style={{ justifyContent: "flex-end" }}>
+              <Button
+                style={{ alignSelf: "center", borderColor: "red" }}
+                size="large"
+                icon={<DeleteOutlined style={{ color: "red" }} />}
+                onClick={() => setDeleteModalVisible(true)}
+              >
+                Delete Purchase
+              </Button>
+            </Flex>
           </Flex>
         </Flex>
-
-
       </Drawer>
+
       <Modal visible={visible} onCancel={close} width="80%" footer={null} zIndex={99999999}>
         <PdfLayout record={record} />
+      </Modal>
+
+      <Modal
+        title="Confirm Delete"
+        visible={deleteModalVisible}
+        onOk={handleDeleteConfirm}
+        onCancel={() => setDeleteModalVisible(false)}
+        zIndex={2147483647} 
+      >
+        <p>Are you sure you want to delete this purchase?</p>
       </Modal>
     </>
   );
