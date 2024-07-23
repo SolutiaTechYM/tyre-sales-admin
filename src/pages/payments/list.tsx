@@ -77,7 +77,7 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
     },
   });
 
-  const renderTable = (type: string) => {
+  const renderTable = (type: 'PURCHASE' | 'SALE' | 'CAPITAL') => {
     let data, isLoading, pagination, setPagination, sorter, setSorter, tableName;
 
     switch (type) {
@@ -123,102 +123,86 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
 
     return (
       <Table
-      title={() => <Typography.Title level={5}>{tableName}</Typography.Title>}
-      dataSource={data?.data}
-      loading={isLoading}
-      pagination={{
-        ...pagination,
-        total: data?.total,
-        showTotal: (total) => (
-          <PaginationTotal
-            total={total}
-            entityName="transactions"
-            customText={tableName}
-          />
-        ),
-      }}
-      onChange={handleTableChange}
-      rowKey="id"
-      scroll={{ x: true }}
-      style={{ marginBottom: 24 }}
-    >
-          <Table.Column
-            key="id"
-            dataIndex="id"
-            title="ID"
-            sorter={true}
-            render={(value) => (
-              <Typography.Text style={{ whiteSpace: "nowrap" }}>{value}</Typography.Text>
-            )}
-            // filterIcon={(filtered) => (
-            //   <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
-            // )}
-            // filterDropdown={(props) => (
-            //   <FilterDropdown {...props}>
-            //     <InputNumber
-            //       style={{ width: "100%" }}
-            //       placeholder={t("orders.filter.id.placeholder")}
-            //       onChange={(value) => {
-            //         setIdFilter(value as number | null);
-            //         props.confirm();
-            //       }}
-            //     />
-            //   </FilterDropdown>
-            // )}
-          />
+        title={() => <Typography.Title level={5}>{tableName}</Typography.Title>}
+        dataSource={data?.data}
+        loading={isLoading}
+        pagination={{
+          ...pagination,
+          total: data?.total,
+          showTotal: (total) => (
+            <PaginationTotal
+              total={total}
+              entityName="transactions"
+              customText={tableName}
+            />
+          ),
+        }}
+        onChange={handleTableChange}
+        rowKey="id"
+        scroll={{ x: true }}
+        style={{ marginBottom: 24 }}
+      >
+        <Table.Column
+          key="id"
+          dataIndex="id"
+          title="ID"
+          sorter={true}
+          render={(value) => (
+            <Typography.Text style={{ whiteSpace: "nowrap" }}>{value}</Typography.Text>
+          )}
+        />
 
-          <Table.Column
-            key="connection"
-            dataIndex={["connection", "name"]}
-            title={t("Connection")}
-            sorter={true}
-          />
+        <Table.Column
+          key="connection"
+          dataIndex={["connection", "name"]}
+          title={t("Connection")}
+          sorter={true}
+        />
 
-          <Table.Column
-            key="type"
-            dataIndex="type"
-            title={t("Type")}
-            sorter={true}
-          />
+        <Table.Column
+          key="type"
+          dataIndex="type"
+          title={t("Type")}
+          sorter={true}
+        />
 
-          <Table.Column
-            key="date"
-            dataIndex="date"
-            title={t("Date")}
-            sorter={true}
-          />
+        <Table.Column
+          key="date"
+          dataIndex="date"
+          title={t("Date")}
+          sorter={true}
+        />
 
-          <Table.Column
-            key="value"
-            dataIndex="value"
-            title="Value"
-            align="right"
-            sorter={true}
-            render={(value: number) => (
-              <NumberField
-                value={value}
-                style={{
-                  width: "80px",
-                  fontVariantNumeric: "tabular-nums",
-                  whiteSpace: "nowrap",
-                  fontWeight: "bold",
-                }}
-                options={{
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                }}
-              />
-            )}
-          />
+        <Table.Column
+          key="value"
+          dataIndex="value"
+          title="Value"
+          align="right"
+          sorter={true}
+          render={(value: number) => (
+            <NumberField
+              value={value}
+              style={{
+                width: "80px",
+                fontVariantNumeric: "tabular-nums",
+                whiteSpace: "nowrap",
+                fontWeight: "bold",
+              }}
+              options={{
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              }}
+            />
+          )}
+        />
 
-          <Table.Column
-            key="description"
-            dataIndex="description"
-            title="Description"
-            sorter={true}
-          />
-        </Table>
-      // </List>
+        <Table.Column
+          key="description"
+          dataIndex="description"
+          title="Description"
+          sorter={true}
+        />
+      </Table>
     );
   };
 
