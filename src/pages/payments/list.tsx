@@ -78,7 +78,7 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
   });
 
   const renderTable = (type: 'PURCHASE' | 'SALE' | 'CAPITAL') => {
-    let data, isLoading, pagination, setPagination, sorter, setSorter, tableName;
+    let data: any, isLoading: boolean, pagination: any, setPagination: React.Dispatch<React.SetStateAction<any>>, sorter: any, setSorter: React.Dispatch<React.SetStateAction<any>>, tableName: string;
 
     switch (type) {
       case 'PURCHASE':
