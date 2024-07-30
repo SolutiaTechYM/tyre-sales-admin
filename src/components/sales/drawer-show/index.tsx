@@ -259,7 +259,80 @@ export const SalesDrawerShow = (props: Props) => {
               padding: "32px",
             }}
           >
-            <Table dataSource={sales?.saleDetails} columns={columns} />
+            <Table 
+  dataSource={sales?.saleDetails} 
+  columns={[
+    ...columns,
+    {
+      title: t("Profit"),
+      dataIndex: "totalPrice",
+      key: "totalPrice",
+      align: "right",
+      sorter: true,
+      render: (credit: number) => {
+        const formatOptions = {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        };
+      
+        if (credit > 0) {
+          const formattedValue = `${credit.toLocaleString('en-LK', formatOptions)}`;
+          return (
+            <span
+              style={{
+                width: "80px",
+                fontVariantNumeric: "tabular-nums",
+                whiteSpace: "nowrap",
+                color: "cyan",
+                fontWeight: "bold",
+              }}
+            >
+              <div style={{display:"flex",justifyContent:"space-between"}}>
+                <div>P</div>
+                <div>
+                  {formattedValue}
+                </div>
+              </div>
+            </span>
+          );
+        } else if(credit < 0) {
+          const formattedValue = `${Math.abs(credit).toLocaleString('en-LK', formatOptions)}`;
+          return (
+            <span
+              style={{
+                width: "80px",
+                fontVariantNumeric: "tabular-nums",
+                whiteSpace: "nowrap",
+                color: "orange",
+                fontWeight: "bold",
+              }}
+            >
+              <div style={{display:"flex",justifyContent:"space-between"}}>
+                <div>N</div>
+                <div>
+                  {formattedValue}
+                </div>
+              </div>
+            </span>
+          );
+        } else {
+          return (
+            <span
+              style={{
+                width: "80px",
+                fontVariantNumeric: "tabular-nums",
+                whiteSpace: "nowrap",
+                color: "white"
+              }}
+            >
+              -
+            </span>
+          );
+        }
+      }
+    }
+  ]} 
+/>
 
 
             <Flex style={{ justifyContent: "flex-end" }}>

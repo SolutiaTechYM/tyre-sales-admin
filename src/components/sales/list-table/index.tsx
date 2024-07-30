@@ -162,11 +162,89 @@ export const SaleListTable = () => {
           );
         }}
       />
+
+
+<Table.Column
+        title={t("Total Profit")}
+        dataIndex="due_amount"
+        key="due_amount"
+        align="right"
+        sorter
+        //defaultSortOrder={getDefaultSortOrder("price", sorters)}
+ 
+        render={(credit: number) => {
+          const formatOptions = {
+
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          };
+        
+          if (credit > 0) {
+            const formattedValue = `${credit.toLocaleString('en-LK', formatOptions)}`;
+            return (
+              <span
+                style={{
+                  width: "80px",
+                  fontVariantNumeric: "tabular-nums",
+                  whiteSpace: "nowrap",
+                  color: "cyan"
+                  ,fontWeight: "bold",
+                }}
+              >
+                <div style={{display:"flex",justifyContent:"space-between"}}>
+                <div>P</div>
+                <div>
+                {formattedValue}
+
+                </div>
+
+                </div>
+              </span>
+            );
+          } else if(credit < 0) {
+            const formattedValue = `${Math.abs(credit).toLocaleString('en-LK', formatOptions)}`;
+            return (
+              <span
+                style={{
+                  width: "80px",
+                  fontVariantNumeric: "tabular-nums",
+                  whiteSpace: "nowrap",
+                  color: "orange",
+                  fontWeight: "bold",
+                }}
+              >
+                                <div style={{display:"flex",justifyContent:"space-between"}}>
+                <div>N</div>
+                <div>
+                {formattedValue}
+
+                </div>
+
+                </div>
+
+
+              </span>
+            );
+          }else{
+            return (
+              <span
+                style={{
+                  width: "80px",
+                  fontVariantNumeric: "tabular-nums",
+                  whiteSpace: "nowrap",
+                  color: "white"
+                }}
+              >
+              -
+              </span>)
+          }
+        }}
+      />
       <Table.Column
         title={t("purchases.fields.note")}
         dataIndex="description"
         key="description"
-        width={380}
+        width={200}
         filterIcon={(filtered) => (
           <SearchOutlined
             style={{
