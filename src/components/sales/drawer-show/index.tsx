@@ -265,8 +265,8 @@ export const SalesDrawerShow = (props: Props) => {
     ...columns,
     {
       title: t("Profit"),
-      dataIndex: "totalPrice",
-      key: "totalPrice",
+      dataIndex: "profit",
+      key: "profit",
       align: "right",
       sorter: true,
       render: (credit: number) => {
