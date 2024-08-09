@@ -84,7 +84,7 @@ export const SalesDrawerShow = (props: Props) => {
   };
 
   const handleDeleteConfirm = () => {
-    if (sales?.id) {
+    if (sales?.id) {    
       deletesales(
         {
           resource: "sales",

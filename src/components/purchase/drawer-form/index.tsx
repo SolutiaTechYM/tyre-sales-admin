@@ -1,7 +1,8 @@
-import { SaveButton, useDrawerForm } from "@refinedev/antd";
+import { SaveButton, useDrawerForm, useTable } from "@refinedev/antd";
 import { Alert } from "antd";
 import {
   BaseKey,
+  HttpError,
   useApiUrl,
   useGetToPath,
   useGo,
@@ -30,6 +31,7 @@ import { Drawer } from "../../drawer";
 import { UploadOutlined } from "@ant-design/icons";
 import { useStyles } from "./styled";
 import { PurchaseDetailsEditableTable } from "../details-table copy";
+import { log } from "console";
 
 type Props = {
   id?: BaseKey;
@@ -50,6 +52,7 @@ export const PurchaseDrawerForm = (props: Props) => {
   const [showModal, setShowModal] = useState(false);
   const [totalPrice, settotalPrice] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  
 
 
   const { drawerProps, formProps, close, saveButtonProps, formLoading } =
@@ -65,6 +68,45 @@ export const PurchaseDrawerForm = (props: Props) => {
   const quantity = Form.useWatch("quantity", formProps.form);
   const unitPrice = Form.useWatch("unitprice", formProps.form);
 
+
+
+  const { tableProps, sorters, filters } = useTable<IPurchase, HttpError>({
+    filters: {
+      initial: [
+        {
+          field: "description",
+          operator: "contains",
+          value: "",
+        },
+        {
+          field: "date",
+          operator: "contains",
+          value: "",
+        },
+        {
+          field: "id",
+          operator: "in",
+          value: [],
+        },
+
+      ],
+    },
+  });
+
+
+  let total: number | undefined;
+
+  if (tableProps.pagination && typeof tableProps.pagination === 'object') {
+    total = tableProps.pagination.total;
+  }
+  
+  console.log("Total number of purchases:", total);
+  const [nextId, setNextId] = useState(`PUR${total ? total + 1 : 0}`);
+  
+
+  useEffect(() => {
+    setNextId(`PUR${total ? total + 1 : 0}`);
+  }, [total]);
   // useEffect(() => {
   //   const totalPrice = quantity * unitPrice || 0;
   //   formProps.form.setFieldsValue({ totalprice: totalPrice });
@@ -222,6 +264,25 @@ const { selectProps: productSelectProps } = useSelect<IProduct>({
             >
               <Select {...supplierSelectProps} />
             </Form.Item>
+
+            <Form.Item
+  label={t("ID")}
+  name="id"
+  className={styles.formItem}
+  rules={[
+    {
+      required: true,
+    },
+  ]}
+  initialValue={nextId}
+>
+  <Input
+    style={{ width: "150px" }}
+    onChange={(e) => {
+      formProps.form.setFieldsValue({ id: e.target.value });
+    }}
+  />
+</Form.Item>
 
             <Form.Item
                     label={t("purchases.fields.note")}
@@ -477,9 +538,14 @@ const { selectProps: productSelectProps } = useSelect<IProduct>({
                   if (tableData.length !== 0) {
                     try {
                       const payment = formProps.form.getFieldValue("payment");
+                      const purchaseid = formProps.form.getFieldValue("id");
                       const supplier = formProps.form.getFieldValue("suppliername");
                       const description = formProps.form.getFieldValue("description");
 
+                      console.log(description);
+                      console.log(purchaseid);
+                      
+                      
                       if(!supplier) {
                         chooseasupplier();
                         return;
@@ -497,7 +563,8 @@ const { selectProps: productSelectProps } = useSelect<IProduct>({
                             supplierId,
                             payment,
                             totalPrice,
-                            description
+                            description,
+                            purchaseid
                           }),
                         });
 
@@ -522,6 +589,16 @@ const { selectProps: productSelectProps } = useSelect<IProduct>({
               type: "replace",
             });
 
+
+            const currentIdNumber = parseInt(purchaseid.replace('PUR', ''), 10);
+            setNextId(`PUR${currentIdNumber + 1}`);
+            
+            // Reset the form
+            formProps.form.resetFields();
+            formProps.form.setFieldsValue({ id:"" });
+
+
+            
                         } else {
                           // Handle error response
                           console.error("Failed to save purchase details");
