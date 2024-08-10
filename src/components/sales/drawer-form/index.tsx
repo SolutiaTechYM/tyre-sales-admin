@@ -389,6 +389,18 @@ const { selectProps: productSelectProps } = useSelect<IProduct>({
         <Form {...formProps} layout="vertical">
           <Flex vertical>
             <Form.Item
+                label={"Code"}
+                name="code"
+                className={styles.formItem}
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
               label={t("Customer")}
               name="customername"
               className={styles.formItem}
