@@ -96,13 +96,12 @@ export const PurchaseDrawerForm = (props: Props) => {
 
     useEffect(() => {
         let total: number = 10001;
+        const count = parseInt(sessionStorage.getItem("purchase-list-count") || "0", 10);
 
-        if (tableProps.pagination && typeof tableProps.pagination === 'object') {
-            total += tableProps.pagination.total || 1;
-        }
+        total += count;
 
         setNextId(`PCH${total.toString().substring(1)}`);
-    }, [tableProps.pagination]);
+    }, [drawerProps]);
     // useEffect(() => {
     //   const totalPrice = quantity * unitPrice || 0;
     //   formProps.form.setFieldsValue({ totalprice: totalPrice });

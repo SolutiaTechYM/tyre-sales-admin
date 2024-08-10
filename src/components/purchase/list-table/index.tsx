@@ -58,7 +58,6 @@ export const PurchaseListTable = () => {
     },
   });
 
-  console.log(tableProps);
 
   return (
     <Table
@@ -69,9 +68,10 @@ export const PurchaseListTable = () => {
       scroll={{ x: true }}
       pagination={{
         ...tableProps.pagination,
-        showTotal: (total) => (
-          <PaginationTotal total={total} entityName="purchases" />
-        ),
+        showTotal: (total) => {
+            sessionStorage.setItem("purchase-list-count", total.toString());
+            return <PaginationTotal total={total} entityName="purchases"/>
+        },
       }}
     >
       {/*<Table.Column*/}
@@ -145,7 +145,7 @@ export const PurchaseListTable = () => {
             defaultFilteredValue={getDefaultFilter("code", filters, "contains")}
             filterDropdown={(props) => (
                 <FilterDropdown {...props}>
-                    <InputNumber
+                    <Input
                         // addonBefore="#"
                         style={{ width: "100%" }}
                         placeholder="Enter Purchase Code"
