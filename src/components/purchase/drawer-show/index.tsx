@@ -167,7 +167,7 @@ export const PurchaseDrawerShow = (props: Props) => {
           <Flex style={{ padding: "16px", justifyContent: "space-between" }}>
             <Flex vertical>
               <Typography.Title level={5}>
-                Purchase ID : {purchase?.id}
+                Purchase Code : {purchase?.code}
               </Typography.Title>
               <Typography.Text type="secondary">
                 {purchase?.description}

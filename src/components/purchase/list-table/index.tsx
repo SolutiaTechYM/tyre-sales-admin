@@ -74,46 +74,85 @@ export const PurchaseListTable = () => {
         ),
       }}
     >
-      <Table.Column
-        title={
-          <Typography.Text
-            style={{
-              whiteSpace: "nowrap",
-            }}
-          >
-            ID
-          </Typography.Text>
-        }
-        dataIndex="id"
-        key="id"
-        width={80}
-        render={(value) => (
-          <Typography.Text
-            style={{
-              whiteSpace: "nowrap",
-            }}
-          >
-            {value}
-          </Typography.Text>
-        )}
-        filterIcon={(filtered) => (
-          <SearchOutlined
-            style={{
-              color: filtered ? token.colorPrimary : undefined,
-            }}
-          />
-        )}
-        defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
-        filterDropdown={(props) => (
-          <FilterDropdown {...props}>
-            <InputNumber
-              // addonBefore="#"
-              style={{ width: "100%" }}
-              placeholder={t("products.filter.id.placeholder")}
-            />
-          </FilterDropdown>
-        )}
-      />
+      {/*<Table.Column*/}
+      {/*  title={*/}
+      {/*    <Typography.Text*/}
+      {/*      style={{*/}
+      {/*        whiteSpace: "nowrap",*/}
+      {/*      }}*/}
+      {/*    >*/}
+      {/*      ID*/}
+      {/*    </Typography.Text>*/}
+      {/*  }*/}
+      {/*  dataIndex="id"*/}
+      {/*  key="id"*/}
+      {/*  width={80}*/}
+      {/*  render={(value) => (*/}
+      {/*    <Typography.Text*/}
+      {/*      style={{*/}
+      {/*        whiteSpace: "nowrap",*/}
+      {/*      }}*/}
+      {/*    >*/}
+      {/*      {value}*/}
+      {/*    </Typography.Text>*/}
+      {/*  )}*/}
+      {/*  filterIcon={(filtered) => (*/}
+      {/*    <SearchOutlined*/}
+      {/*      style={{*/}
+      {/*        color: filtered ? token.colorPrimary : undefined,*/}
+      {/*      }}*/}
+      {/*    />*/}
+      {/*  )}*/}
+      {/*  defaultFilteredValue={getDefaultFilter("id", filters, "eq")}*/}
+      {/*  filterDropdown={(props) => (*/}
+      {/*    <FilterDropdown {...props}>*/}
+      {/*      <InputNumber*/}
+      {/*        // addonBefore="#"*/}
+      {/*        style={{ width: "100%" }}*/}
+      {/*        placeholder={t("products.filter.id.placeholder")}*/}
+      {/*      />*/}
+      {/*    </FilterDropdown>*/}
+      {/*  )}*/}
+      {/*/>*/}
+        <Table.Column
+            title={
+                <Typography.Text
+                    style={{
+                        whiteSpace: "nowrap",
+                    }}
+                >
+                    Code
+                </Typography.Text>
+            }
+            dataIndex="code"
+            key="code"
+            render={(value) => (
+                <Typography.Text
+                    style={{
+                        whiteSpace: "nowrap",
+                    }}
+                >
+                    {value}
+                </Typography.Text>
+            )}
+            filterIcon={(filtered) => (
+                <SearchOutlined
+                    style={{
+                        color: filtered ? token.colorPrimary : undefined,
+                    }}
+                />
+            )}
+            defaultFilteredValue={getDefaultFilter("code", filters, "contains")}
+            filterDropdown={(props) => (
+                <FilterDropdown {...props}>
+                    <InputNumber
+                        // addonBefore="#"
+                        style={{ width: "100%" }}
+                        placeholder="Enter Purchase Code"
+                    />
+                </FilterDropdown>
+            )}
+        />
       <Table.Column
         title={t("purchases.fields.createdAt")}
         dataIndex="date"
