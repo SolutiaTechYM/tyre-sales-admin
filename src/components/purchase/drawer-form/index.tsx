@@ -101,7 +101,7 @@ export const PurchaseDrawerForm = (props: Props) => {
         total += count;
 
         setNextId(`PCH${total.toString().substring(1)}`);
-    }, [drawerProps]);
+    }, []);
     // useEffect(() => {
     //   const totalPrice = quantity * unitPrice || 0;
     //   formProps.form.setFieldsValue({ totalprice: totalPrice });
