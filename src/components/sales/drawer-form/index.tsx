@@ -518,7 +518,7 @@ export const SaleDrawerForm = (props: Props) => {
                                     <Form.Item
                                         label={t("Product")}
                                         name="proname"
-                                        style={{minWidth: '150px'}}
+                                        style={{minWidth: '250px'}}
                                         className={styles.subFormItem}
                                         rules={[{required: true}]}
                                     >
@@ -531,7 +531,7 @@ export const SaleDrawerForm = (props: Props) => {
                                     <Form.Item
                                         label={t("Stock")}
                                         name="stockid"
-                                        style={{minWidth: '250px'}}
+                                        style={{minWidth: '150px'}}
                                         className={styles.subFormItem}
                                         rules={[
                                             {
