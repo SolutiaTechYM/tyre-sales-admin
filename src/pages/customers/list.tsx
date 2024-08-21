@@ -118,7 +118,7 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
           ),
         }}
       >
-        <Table.Column
+        {/* <Table.Column
           key="id"
           dataIndex="id"
           sorter
@@ -150,7 +150,7 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
               />
             </FilterDropdown>
           )}
-        />
+        /> */}
         <Table.Column
           align="center"
           key="avatar"

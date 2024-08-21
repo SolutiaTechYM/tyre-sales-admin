@@ -285,17 +285,17 @@ export const SaleDrawerForm = (props: Props) => {
             }
 
             // Check if entered unit selling price is greater than the unit buying price
-            if (enteredUnitSellPrice <= (selectedStock?.unitBuyPrice ?? 0)) {
-                notification.error({
-                    message: "Error",
-                    description: "Unit selling price must be greater than the unit buying price.",
-                    duration: 3,
-                    style: {
-                        zIndex: 1000,
-                    },
-                });
-                return;
-            }
+            // if (enteredUnitSellPrice <= (selectedStock?.unitBuyPrice ?? 0)) {
+            //     notification.error({
+            //         message: "Error",
+            //         description: "Unit selling price must be greater than the unit buying price.",
+            //         duration: 3,
+            //         style: {
+            //             zIndex: 1000,
+            //         },
+            //     });
+            //     return;
+            // }
 
             const newRow = {
                 name: selectedProduct?.label?.toString() || "",

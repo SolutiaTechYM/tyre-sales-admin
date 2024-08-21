@@ -142,7 +142,7 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
         scroll={{ x: true }}
         style={{ marginBottom: 24 }}
       >
-        <Table.Column
+        {/* <Table.Column
           key="id"
           dataIndex="id"
           title="ID"
@@ -150,7 +150,7 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
           render={(value) => (
             <Typography.Text style={{ whiteSpace: "nowrap" }}>{value}</Typography.Text>
           )}
-        />
+        /> */}
 
         <Table.Column
           key="connection"

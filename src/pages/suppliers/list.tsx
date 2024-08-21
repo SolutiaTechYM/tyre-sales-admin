@@ -105,7 +105,7 @@ export const SupplierList = ({ children }: PropsWithChildren) => {
           ),
         }}
       >
-        <Table.Column
+        {/* <Table.Column
           title={
             <Typography.Text
               style={{
@@ -144,7 +144,7 @@ export const SupplierList = ({ children }: PropsWithChildren) => {
               />
             </FilterDropdown>
           )}
-        />
+        /> */}
         <Table.Column
           title={t("suppliers.fields.avatar")}
           dataIndex="avatar"
