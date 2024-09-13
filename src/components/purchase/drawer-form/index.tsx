@@ -91,17 +91,13 @@ export const PurchaseDrawerForm = (props: Props) => {
         },
     });
 
-
-    const [nextId, setNextId] = useState(`PCH00001`);
-
-    useEffect(() => {
+    const getNextId = () => {
         let total: number = 10001;
         const count = parseInt(sessionStorage.getItem("purchase-list-count") || "0", 10);
-
         total += count;
+        return `PCH${total}`;
+    }
 
-        setNextId(`PCH${total.toString().substring(1)}`);
-    }, []);
     // useEffect(() => {
     //   const totalPrice = quantity * unitPrice || 0;
     //   formProps.form.setFieldsValue({ totalprice: totalPrice });
@@ -151,7 +147,6 @@ export const PurchaseDrawerForm = (props: Props) => {
     };
 
     useEffect(() => {
-        console.log(tableData.length);
         if (tableData.length === 0) {
             settotalPrice(0);
         } else {
@@ -162,6 +157,7 @@ export const PurchaseDrawerForm = (props: Props) => {
             settotalPrice(temp);
         }
     }, [tableData]);
+
     const onDrawerCLose = () => {
         close();
 
@@ -261,20 +257,17 @@ export const PurchaseDrawerForm = (props: Props) => {
 
                         <Form.Item
                             label={t("Code")}
-                            name="code"
+                            name="id"
                             className={styles.formItem}
                             rules={[
                                 {
                                     required: true,
                                 },
                             ]}
-                            initialValue={nextId}
+                            initialValue={getNextId()}
                         >
                             <Input
                                 style={{width: "150px"}}
-                                onChange={(e) => {
-                                    formProps.form.setFieldsValue({id: e.target.value});
-                                }}
                             />
                         </Form.Item>
 
