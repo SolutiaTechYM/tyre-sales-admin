@@ -58,12 +58,24 @@ export const PaymentDrawerForm = (props: Props) => {
     resource: "suppliers",
     optionValue: "id",
     optionLabel: "name",
+    queryOptions: {
+      select: (data) => ({
+        data: data.data.sort((a, b) => a.name.localeCompare(b.name)),
+        total: data.total,
+      }),
+    },
   });
 
   const { selectProps: customerSelectProps } = useSelect<ICustomer>({
     resource: "customers",
     optionValue: "id",
     optionLabel: "name",
+    queryOptions: {
+      select: (data) => ({
+        data: data.data.sort((a, b) => a.name.localeCompare(b.name)),
+        total: data.total,
+      }),
+    },
   });
 
   const [filteredSellData, setFilteredSellData] = useState<IPaymentTable[]>([]);
@@ -168,7 +180,9 @@ export const PaymentDrawerForm = (props: Props) => {
             <Form.Item>
               {filteredSellData.length > 0 ? (
                 <Table
-                  dataSource={filteredSellData.map(item => ({
+                dataSource={filteredSellData
+                  .filter(item => item.dueAmount > 0)  // Add this line
+                  .map(item => ({
                     id: item.id,
                     dueAmount: item.dueAmount,
                     value: item.value,
@@ -231,13 +245,15 @@ export const PaymentDrawerForm = (props: Props) => {
             <Form.Item>
               {filteredPurchaseData.length > 0 ? (
                 <Table
-                  dataSource={filteredPurchaseData.map(item => ({
+                dataSource={filteredPurchaseData
+                  .filter(item => item.dueAmount > 0)  // Add this line
+                  .map(item => ({
                     id: item.id,
                     dueAmount: item.dueAmount,
                     value: item.value,
                     date: item.date,
                     description: item.description,
-                    code  : item.code,
+                    code: item.code,
                     payment: purchasePayments[item.id] || 0,
                   }))}
                   rowKey="id"
