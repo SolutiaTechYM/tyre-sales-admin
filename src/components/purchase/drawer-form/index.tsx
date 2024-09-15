@@ -106,6 +106,12 @@ export const PurchaseDrawerForm = (props: Props) => {
     const {selectProps: supplierSelectProps} = useSelect<ISupplier>({
         resource: "suppliers",
         optionLabel: "name", // Add this line
+        queryOptions: {
+            select: (data) => ({
+              data: data.data.sort((a, b) => a.name.localeCompare(b.name)),
+              total: data.total,
+            }),
+          },
     });
     // const { selectProps: productSelectProps } = useSelect<IProduct>({
     //   resource: "products",

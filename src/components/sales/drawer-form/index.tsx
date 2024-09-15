@@ -83,10 +83,16 @@ export const SaleDrawerForm = (props: Props) => {
     //   formProps.form.setFieldsValue({ totalprice: totalPrice });
     // }, [quantity, unitPrice, formProps.form]);
 
-    const {selectProps: supplierSelectProps} = useSelect<ICustomer>({
+    const { selectProps: supplierSelectProps } = useSelect<ICustomer>({
         resource: "customers",
-        optionLabel: "name", // Add this line
-    });
+        optionLabel: "name",
+        queryOptions: {
+          select: (data) => ({
+            data: data.data.sort((a, b) => a.name.localeCompare(b.name)),
+            total: data.total,
+          }),
+        },
+      });
     // const { selectProps: productSelectProps } = useSelect<IProduct>({
     //   resource: "products",
     //   optionLabel: "name", // Add this line

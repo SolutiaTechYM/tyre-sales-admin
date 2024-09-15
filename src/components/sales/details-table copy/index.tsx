@@ -80,7 +80,7 @@ export const SaleDetailsEditableTable = ({
           )}
         /> */}
 
-      <Table.Column
+      {/* <Table.Column
         title={t("ID")}
         dataIndex="productID"
         key="productID"
@@ -91,7 +91,7 @@ export const SaleDetailsEditableTable = ({
             {value}
           </Typography.Text>
         )}
-      />
+      /> */}
 
       <Table.Column
         title={t("Product Name")}

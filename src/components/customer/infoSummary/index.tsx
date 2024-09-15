@@ -10,7 +10,7 @@ export const CustomerInfoSummary = ({ customer }: Props) => {
     <Flex align="center" gap={32}>
       <Avatar size={96} src={customer?.avatar[0]?.thumbnailUrl} />
       <Flex vertical>
-        <Typography.Text type="secondary">{customer?.id}</Typography.Text>
+        {/* <Typography.Text type="secondary">{customer?.id}</Typography.Text> */}
         <Typography.Title
           level={3}
           style={{

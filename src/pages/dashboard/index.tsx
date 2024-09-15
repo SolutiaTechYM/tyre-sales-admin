@@ -411,7 +411,7 @@ export const DashboardPage: React.FC = () => {
                 }}
               />
             }
-            title={t("dashboard.recentOrders.title")}
+            title={t("Recent Sales")}
           >
             <RecentOrders />
           </CardWithContent>

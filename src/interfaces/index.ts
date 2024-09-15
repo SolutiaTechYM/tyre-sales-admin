@@ -177,6 +177,7 @@ export interface IPaymentTable {
     description: string;
     dueAmount: number;
     value: number;
+    code: string;
 
 
 }
@@ -334,7 +335,8 @@ export interface ITransactionlist {
         id?: number,
         name: string
     };
-    tradeID: number
+    tradeID: number,
+    code: string;
 }
 
 export interface ITransactionCreate {
@@ -343,7 +345,7 @@ export interface ITransactionCreate {
 }
 
 export interface ITransactionCreateDetail {
-    tradeID?: number;
+    tradeID?: string;
     amount: number;
 }
 

@@ -13,8 +13,8 @@ export const CustomerOrderHistory = ({ customer }: Props) => {
   const columns = [
     {
       title: "Purcase ID",
-      dataIndex: "id",
-      key: "id",
+      dataIndex: "code",
+      key: "code",
       render: (value: any) => (
         <Typography.Text style={{ whiteSpace: "nowrap" }}>{value}</Typography.Text>
       ),

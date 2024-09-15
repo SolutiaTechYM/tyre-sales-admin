@@ -8,6 +8,7 @@ import { useSearchParams } from "react-router-dom";
 import { Drawer } from "../../drawer";
 import { useState, useEffect } from "react";
 import { Empty } from 'antd';
+import { code } from "@uiw/react-md-editor";
 
 type Props = {
   id?: BaseKey;
@@ -173,17 +174,28 @@ export const PaymentDrawerForm = (props: Props) => {
                     value: item.value,
                     date: item.date,
                     description: item.description,
+                    code: item.code,
                     payment: sellPayments[item.id] || 0,
                   }))}
                   rowKey="id"
                   bordered
                   pagination={false}
                 >
-                  <Table.Column title="ID" dataIndex="id" key="id" />
+                  <Table.Column title="Code" dataIndex="code" key="code" />
                   <Table.Column title="Description" dataIndex="description" key="description" />
                   <Table.Column title="Date" dataIndex="date" key="date" />
-                  <Table.Column title="Total Price" dataIndex="value" key="value" />
-                  <Table.Column title="Due Amount" dataIndex="dueAmount" key="dueAmount" />
+                  <Table.Column 
+    title="Total Price" 
+    dataIndex="value" 
+    key="value"  
+    render={(text) => <span style={{ color: 'blue',fontWeight:'bold' }}>{text}</span>}
+  />
+  <Table.Column 
+    title="Due Amount" 
+    dataIndex="dueAmount" 
+    key="dueAmount" 
+    render={(text) => <span style={{ color: 'orange',fontWeight:'bold' }}>{text}</span>}
+  />
                   <Table.Column
                     title="Payment"
                     dataIndex="payment"
@@ -225,17 +237,28 @@ export const PaymentDrawerForm = (props: Props) => {
                     value: item.value,
                     date: item.date,
                     description: item.description,
+                    code  : item.code,
                     payment: purchasePayments[item.id] || 0,
                   }))}
                   rowKey="id"
                   bordered
                   pagination={false}
                 >
-                  <Table.Column title="ID" dataIndex="id" key="id" />
+                  <Table.Column title="Code" dataIndex="code" key="code" />
                   <Table.Column title="Description" dataIndex="description" key="description" />
                   <Table.Column title="Date" dataIndex="date" key="date" />
-                  <Table.Column title="Total Price" dataIndex="value" key="value" />
-                  <Table.Column title="Due Amount" dataIndex="dueAmount" key="dueAmount" />
+                  <Table.Column 
+    title="Total Price" 
+    dataIndex="value" 
+    key="value"  
+    render={(text) => <span style={{ color: 'blue',fontWeight:'bold' }}>{text}</span>}
+  />
+  <Table.Column 
+    title="Due Amount" 
+    dataIndex="dueAmount" 
+    key="dueAmount" 
+    render={(text) => <span style={{ color: 'orange',fontWeight:'bold' }}>{text}</span>}
+  />
                   <Table.Column
                     title="Payment"
                     dataIndex="payment"
@@ -340,7 +363,7 @@ export const PaymentDrawerForm = (props: Props) => {
           // Make a POST request to save the sell transaction
           const saleBody:ITransactionCreate = {
             type: TradeType.SALE,
-            transactions: Object.entries(sellPayments).map(([id, payment]) => ({tradeID:parseInt(id), amount:payment}))
+            transactions: Object.entries(sellPayments).map(([id, payment]) => ({tradeID:id, amount:payment}))
           }
           const sellResponse = await fetch(`${apiUrl}/transactions`, {
             method: "POST",
@@ -393,7 +416,7 @@ export const PaymentDrawerForm = (props: Props) => {
           // Make a POST request to save the purchase transaction
           const purchaseBody:ITransactionCreate = {
             type: TradeType.PURCHASE,
-            transactions: Object.entries(purchasePayments).map(([id, payment]) => ({tradeID:parseInt(id), amount:payment}))
+            transactions: Object.entries(purchasePayments).map(([id, payment]) => ({tradeID:id, amount:payment}))
           }
           const purchaseResponse = await fetch(`${apiUrl}/transactions`, {
             method: "POST",

@@ -11,14 +11,14 @@ export const ProductStock = ({ product }: Props) => {
   // const { stocks } = product;
 
   const columns = [
-    {
-      title: "Stock ID",
-      dataIndex: "id",
-      key: "id",
-      render: (value: any) => (
-        <Typography.Text style={{ whiteSpace: "nowrap" }}>{value}</Typography.Text>
-      ),
-    },
+    // {
+    //   title: "Stock ID",
+    //   dataIndex: "id",
+    //   key: "id",
+    //   render: (value: any) => (
+    //     <Typography.Text style={{ whiteSpace: "nowrap" }}>{value}</Typography.Text>
+    //   ),
+    // },
     {
       title: "Date",
       dataIndex: "date",

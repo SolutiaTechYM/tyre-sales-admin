@@ -205,7 +205,7 @@ export const PurchaseListTable = () => {
         title={t("purchases.fields.note")}
         dataIndex="description"
         key="description"
-        width={380}
+        width={200}
         filterIcon={(filtered) => (
           <SearchOutlined
             style={{

@@ -73,6 +73,7 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
         date: item.date,
         value: item.value,
         description: item.description,
+        code: item.code,
       };
     },
   });
@@ -142,15 +143,15 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
         scroll={{ x: true }}
         style={{ marginBottom: 24 }}
       >
-        {/* <Table.Column
-          key="id"
-          dataIndex="id"
-          title="ID"
+        <Table.Column
+          key="code"
+          dataIndex="code"
+          title="Code"
           sorter={true}
           render={(value) => (
             <Typography.Text style={{ whiteSpace: "nowrap" }}>{value}</Typography.Text>
           )}
-        /> */}
+        />
 
         <Table.Column
           key="connection"
@@ -158,13 +159,13 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
           title={t("Connection")}
           sorter={true}
         />
-
+{/* 
         <Table.Column
           key="type"
           dataIndex="type"
           title={t("Type")}
           sorter={true}
-        />
+        /> */}
 
         <Table.Column
           key="date"
