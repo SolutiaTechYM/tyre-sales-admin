@@ -1,136 +1,75 @@
 import { AuthProvider } from "@refinedev/core";
-import { notification } from "antd";
-import bcrypt from "bcryptjs";
 import axios from "axios";
-import { enableAutoLogin } from "./hooks";
-
-export const TOKEN_KEY = "refine-auth";
+import { encode } from "base-64";
 
 export const authProvider: AuthProvider = {
   login: async ({ email, password }) => {
-    // try {
-    //   const response = await axios.post(`http://localhost:3000/api/login`, { email, password });
-     
-    //   if (!response.data.token) {
-    //     throw new Error('Invalid email or password');
-    //   }
-
-    //   localStorage.setItem(TOKEN_KEY, response.data.token);
-
-    //   return {
-    //     success: true,
-    //     redirectTo: "/"
-    //   };
-    // } catch (error) {
-    //   console.log(error);
-      
-    //   return {
-    //     success: false,
-    //     error: {
-    //       message: "Login failed",
-    //       name: "Invalid email or password"
-    //     }
-    //   };
-    // }
-    enableAutoLogin();
-    localStorage.setItem(TOKEN_KEY, `${email}-${password}`);
-    return {
-      success: true,
-      redirectTo: "/",
-    };
-  },
-  register: async ({ email, password }) => {
     try {
-      const hashedPassword = await bcrypt.hash(password, 10);
-      await axios.post(`http://localhost:3000/api/register`, { email, password: hashedPassword });
+      const encodedCredentials = encode(`${email}:${password}`);
+      const response = await axios.post(`http://localhost:3000/auth/login`, {cred:encodedCredentials});
 
-      return {
-        success: true
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: {
-          message: "Register failed",
-          name: "Register failed"
-        }
-      };
-    }
-  },
-  updatePassword: async () => {
-    try {
-      await axios.post(`http://localhost:3000/api/updatePassword`, null, {
-        headers: {
-          'Authorization': `${localStorage.getItem(TOKEN_KEY)}`
-        }
-      });
+      if (!response.data.success) {
+        throw new Error('Invalid email or password');
+      }
 
-      notification.success({
-        message: "Updated Password",
-        description: "Password updated successfully"
-      });
-
-      return {
-        success: true
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: {
-          message: "Update password failed",
-          name: "Update password failed"
-        }
-      };
-    }
-  },
-  forgotPassword: async ({ email }) => {
-    try {
-      await axios.post(`http://localhost:3000/api/forgotPassword`, { email });
-
-      notification.success({
-        message: "Reset Password",
-        description: `Reset password link sent to "${email}"`
-      });
-
-      return {
-        success: true
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: {
-          message: "Reset password failed",
-          name: "Reset password failed"
-        }
-      };
-    }
-  },
-  logout: async () => {
-    try {
-      await axios.post(`http://localhost:3000/api/logout`, null, {
-        headers: {
-          'Authorization': `${localStorage.getItem(TOKEN_KEY)}`
-        }
-      });
-
-      localStorage.removeItem(TOKEN_KEY);
+      const token = response.headers.authorization;
+      localStorage.setItem('token', token);
 
       return {
         success: true,
-        redirectTo: "/login"
+        redirectTo: "/"
       };
-    } catch (error) {
+    }
+    catch (error) {
+      console.log(error);
+
       return {
         success: false,
         error: {
-          message: "Logout failed",
-          name: "Logout failed"
+          message: "Login failed",
+          name: "Invalid email or password"
         }
       };
     }
   },
+  // register: async ({ email, password }) => {
+  //   return {
+  //     success: false,
+  //     error: {
+  //       message: "Register failed",
+  //       name: "Register failed"
+  //     }
+  //   };
+  // },
+  // updatePassword: async () => {
+  //   return {
+  //     success: false,
+  //     error: {
+  //       message: "Update password failed",
+  //       name: "Update password failed"
+  //     }
+  //   };
+  // },
+  // forgotPassword: async ({ email }) => {
+  //   return {
+  //     success: false,
+  //     error: {
+  //       message: "Reset password failed",
+  //       name: "Reset password failed"
+  //     }
+  //   };
+  // },
+  logout: async () => {
+    localStorage.removeItem('token');
+    return {
+      success: true,
+      redirectTo: "/login"
+    };
+  },
   onError: async (error) => {
+    console.log('error')
     if (error.response?.status === 401) {
+      localStorage.removeItem('token');
       return {
         logout: true
       };
@@ -139,75 +78,31 @@ export const authProvider: AuthProvider = {
     return { error };
   },
   check: async () => {
-    // try {
-    //   console.log("yyyyyyyyyyyyyyyyy");
-      
-    //   const response = await axios.post(`http://localhost:3000/api/check`, null, {
-    //     headers: {
-    //       'Authorization': `${localStorage.getItem(TOKEN_KEY)}`
-    //     }
-    //   });
-
-    //   console.log("xxxxxxxxxxxxxxx");
-      
-    //   console.log(response);
-      
-    //   if (!response.data.authenticated) {
-    //     throw new Error('Check failed');
-    //   }
-
-    //   return {
-    //     authenticated: true
-    //   };
-    // } catch (error) {
-    //   localStorage.removeItem(TOKEN_KEY);
-
-    //   return {
-    //     authenticated: false,
-    //     error: {
-    //       message: "Check failed",
-    //       name: "Check failed"
-    //     },
-    //     redirectTo: "/login"
-    //   };
-    // }
-    const token = localStorage.getItem(TOKEN_KEY);
-    if (token) {
-      return {
-        authenticated: true,
-      };
-    }
-
-    return {
-      authenticated: false,
-      error: {
-        message: "Check failed",
-        name: "Token not found",
-      },
-      logout: true,
-      redirectTo: "/login",
-    };
-  },
-  getPermissions: async () => null,
-  getIdentity: async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/api/identity`, {
+      const response = await axios.post(`http://localhost:3000/auth/check`, null, {
         headers: {
-          'Authorization': `${localStorage.getItem(TOKEN_KEY)}`
+          Authorization: localStorage.getItem('token') || ''
         }
       });
+      console.log(response.data);
 
-      if (!response.data) {
-        throw new Error('Failed to fetch identity');
+      if (!response.data.success) {
+        throw new Error('Check failed');
       }
 
       return {
-        id: response.data.id,
-        name: response.data.name,
-        avatar: response.data.avatar
+        authenticated: true
       };
-    } catch (error) {
-      return null;
     }
-  }
+    catch (error) {
+      return {
+        authenticated: false,
+        error: {
+          message: "Check failed",
+          name: "Check failed"
+        },
+        redirectTo: "/login"
+      };
+    }
+  },
 };
