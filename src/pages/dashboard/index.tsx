@@ -416,7 +416,7 @@ export const DashboardPage: React.FC = () => {
             }
             title={t("dashboard.trendingProducts.title")}
           >
-            <TrendingMenu />
+         <TrendingMenu dateFilter={selectedDateFilter} />
           </CardWithContent>
         </Col>
       </Row>

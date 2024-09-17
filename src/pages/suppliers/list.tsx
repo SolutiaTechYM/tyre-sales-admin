@@ -282,6 +282,8 @@ export const SupplierList = ({ children }: PropsWithChildren) => {
                   fontVariantNumeric: "tabular-nums",
                   whiteSpace: "nowrap",
                   textAlign: "right",
+                  fontWeight:"bold",
+                  color:"red"
                 }}
                 options={{
                   minimumFractionDigits: 2,

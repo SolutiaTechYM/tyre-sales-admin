@@ -13,7 +13,8 @@ import {
   FilterDropdown,
   getDefaultSortOrder,
   ExportButton,
-  CreateButton
+  CreateButton,
+  NumberField
 } from "@refinedev/antd";
 import {
   Table,
@@ -237,6 +238,25 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
           key="due_amount"
           dataIndex="dueAmount"
           title="Due Amount"
+          render={(dueAmount: number) => {
+            return (
+              <NumberField
+                value={dueAmount}
+                style={{
+                  width: "80px",
+                  fontVariantNumeric: "tabular-nums",
+                  whiteSpace: "nowrap",
+                  textAlign: "right",
+                  fontWeight:"bold",
+                  color:"green"
+                }}
+                options={{
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }}
+              />
+            );
+          }}
         />
         {/* <Table.Column
           key="isActive"
