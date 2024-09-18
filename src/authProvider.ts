@@ -2,11 +2,13 @@ import { AuthProvider } from "@refinedev/core";
 import axios from "axios";
 import { encode } from "base-64";
 
+const API_URL=import.meta.env.VITE_APP_API_URL
+
 export const authProvider: AuthProvider = {
   login: async ({ email, password }) => {
     try {
       const encodedCredentials = encode(`${email}:${password}`);
-      const response = await axios.post(`http://localhost:3000/auth/login`, {cred:encodedCredentials});
+      const response = await axios.post(`${API_URL}/auth/login`, {cred:encodedCredentials});
 
       if (!response.data.success) {
         throw new Error('Invalid email or password');
@@ -79,7 +81,7 @@ export const authProvider: AuthProvider = {
   },
   check: async () => {
     try {
-      const response = await axios.post(`http://localhost:3000/auth/check`, null, {
+      const response = await axios.post(`${API_URL}/auth/check`, null, {
         headers: {
           Authorization: localStorage.getItem('token') || ''
         }
