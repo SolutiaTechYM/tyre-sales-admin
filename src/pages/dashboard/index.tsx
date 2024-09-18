@@ -1,20 +1,13 @@
+import React, { useMemo, useState } from 'react';
 import {
-  Row, Col, theme, Dropdown, MenuProps, Button, Flex, Table, Space,
-  Grid,
-  Card,
-  Typography,
+  Row, Col, theme, Dropdown, MenuProps, Button, Flex, Typography, Grid, Card, Divider
 } from "antd";
-
-import { Divider } from "antd";
-
 import { useTranslation } from "react-i18next";
-
 import {
   CardWithPlot,
   DailyRevenue,
   DailyOrders,
   NewCustomers,
-  // OrderTimeline,
   RecentOrders,
   TrendingMenu,
   CardWithContent,
@@ -29,7 +22,6 @@ import {
   ShoppingOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { useMemo, useState } from "react";
 import { List, NumberField } from "@refinedev/antd";
 import { useApiUrl, useCustom } from "@refinedev/core";
 import dayjs from "dayjs";
@@ -38,9 +30,7 @@ import { ISalesChart, ISummary } from "../../interfaces";
 type DateFilter = "lastWeek" | "lastMonth";
 
 const { Text } = Typography;
-
 const { useBreakpoint } = Grid;
-
 
 const DATE_FILTERS: Record<
   DateFilter,
@@ -65,28 +55,25 @@ export const DashboardPage: React.FC = () => {
   const API_URL = useApiUrl();
   const screens = useBreakpoint();
 
-
-  const [selecetedDateFilter, setSelectedDateFilter] = useState<DateFilter>(
+  const [selectedDateFilter, setSelectedDateFilter] = useState<DateFilter>(
     DATE_FILTERS.lastWeek.value,
   );
 
   const dateFilters: MenuProps["items"] = useMemo(() => {
     const filters = Object.keys(DATE_FILTERS) as DateFilter[];
 
-    return filters.map((filter) => {
-      return {
-        key: DATE_FILTERS[filter].value,
-        label: t(`dashboard.filter.date.${DATE_FILTERS[filter].text}`),
-        onClick: () => {
-          setSelectedDateFilter(DATE_FILTERS[filter].value);
-        },
-      };
-    });
-  }, []);
+    return filters.map((filter) => ({
+      key: DATE_FILTERS[filter].value,
+      label: t(`dashboard.filter.date.${DATE_FILTERS[filter].text}`),
+      onClick: () => {
+        setSelectedDateFilter(DATE_FILTERS[filter].value);
+      },
+    }));
+  }, [t]);
 
   const dateFilterQuery = useMemo(() => {
     const now = dayjs();
-    switch (selecetedDateFilter) {
+    switch (selectedDateFilter) {
       case "lastWeek":
         return {
           start: now.subtract(6, "days").startOf("day").format(),
@@ -103,7 +90,7 @@ export const DashboardPage: React.FC = () => {
           end: now.endOf("day").format(),
         };
     }
-  }, [selecetedDateFilter]);
+  }, [selectedDateFilter]);
 
   const { data: dailyRevenueData } = useCustom<{
     data: ISalesChart[];
@@ -140,6 +127,29 @@ export const DashboardPage: React.FC = () => {
       query: dateFilterQuery,
     },
   });
+
+  const { data: summaryData } = useCustom<{
+    today: {
+      income: number;
+      expense: number;
+      dueamountPurchase: number;
+      dueamountSale: number;
+      profit: number;
+    };
+    thisMonth: {
+      income: number;
+      expense: number;
+      dueamountPurchase: number;
+      dueamountSale: number;
+      profit: number;
+    };
+  }>({
+    url: `${API_URL}/misc/summary`,
+    method: "get",
+  });
+
+  const todayData = summaryData?.data?.today;
+  const thisMonthData = summaryData?.data?.thisMonth;
 
   const revenue = useMemo(() => {
     const data = dailyRevenueData?.data?.data;
@@ -205,14 +215,23 @@ export const DashboardPage: React.FC = () => {
     };
   }, [newCustomersData]);
 
-
-  const { data: iepdData } = useCustom<ISummary>({
-    url: `${API_URL}/misc/headerdata`,
-    method: "get",
-    
-  });
-
-  const headerdata=iepdData?.data;
+  const renderCard = (title: string, value: number, type: "success" | "danger" | "warning" | "") => (
+    <Col xs={24} sm={12} md={6} style={{ margin: 10 }}>
+      <Card hoverable>
+        <Row align="middle">
+          <div>
+            <Text>{title}</Text>
+            <Divider type="vertical" />
+          </div>
+          <NumberField
+            value={value}
+            options={{ style: "currency", currency: "USD" }}
+            style={{ fontSize: screens.sm ? "14px" : "12px", color: type === "success" ? "#52c41a" : type === "danger" ? "#f5222d" : type === "warning" ? "#faad14" : "#1890ff" }}
+          />
+        </Row>
+      </Card>
+    </Col>
+  );
 
   return (
     <List
@@ -221,7 +240,7 @@ export const DashboardPage: React.FC = () => {
         <Dropdown menu={{ items: dateFilters }}>
           <Button>
             {t(
-              `dashboard.filter.date.${DATE_FILTERS[selecetedDateFilter].text}`,
+              `dashboard.filter.date.${DATE_FILTERS[selectedDateFilter].text}`,
             )}
             <DownOutlined />
           </Button>
@@ -314,8 +333,6 @@ export const DashboardPage: React.FC = () => {
           </Row>
         </Col>
 
-
-
         <Col xl={24} lg={24} md={24} sm={24} xs={24}>
           <CardWithContent
             bodyStyles={{
@@ -331,72 +348,40 @@ export const DashboardPage: React.FC = () => {
             }
             title={t("Today Overview")}
           >
-            {/* <RecentOrders /> */}
-
-            <Row justify={screens.md ? "space-between" : "center"} >
-              <Col xs={24} sm={8} md={5} style={{ margin: 10 }}>
-                <Card hoverable>
-                  <Row align="middle">
-                    <div>
-                      <Text>Income</Text>
-                      <Divider type="vertical" />
-                    </div>
-                    <Text type="success" style={{ fontSize: screens.sm ? "14px" : "14px" }}>
-                      {headerdata?.income}
-                    </Text>
-                  </Row>
-                </Card>
-              </Col>
-
-              <Col xs={24} sm={8} md={5} style={{ margin: 10 }}>
-                <Card hoverable>
-                  <Row align="middle">
-                    <div>
-                      <Text >Expense</Text>
-                      <Divider type="vertical" />
-                    </div>
-                    <Text type="danger" style={{ fontSize: screens.sm ? "14px" : "14px" }}>
-                      {headerdata?.expense}
-                    </Text>
-                  </Row>
-                </Card>
-              </Col>
-
-              <Col xs={24} sm={8} md={5} style={{ margin: 10 }}>
-                <Card hoverable>
-                  <Row align="middle">
-                    <div>
-                      <Text >Profit</Text>
-                      <Divider type="vertical" />
-                    </div>
-                    <Text style={{ fontSize: screens.sm ? "14px" : "14px", color: "#3c89e8" }}>
-                      {headerdata?.profit}
-                    </Text>
-                  </Row>
-                </Card>
-              </Col>
-
-              <Col xs={24} sm={8} md={5} style={{ margin: 10 }}>
-                <Card hoverable>
-                  <Row align="middle">
-                    <div>
-                      <Text >Due Amount</Text>
-                      <Divider type="vertical" />
-                    </div>
-                    <Text type="warning" style={{ fontSize: screens.sm ? "14px" : "14px" }}>
-                      {headerdata?.dueamount}
-                    </Text>
-                  </Row>
-                </Card>
-              </Col>
+            <Row justify={screens.md ? "space-between" : "center"}>
+              {renderCard("Income", todayData?.income || 0, "success")}
+              {renderCard("Expense", todayData?.expense || 0, "danger")}
+              {renderCard("Profit", todayData?.profit || 0, "")}
+              {renderCard("Due Amount (Purchase)", todayData?.dueamountPurchase || 0, "warning")}
+              {renderCard("Due Amount (Sale)", todayData?.dueamountSale || 0, "warning")}
             </Row>
-
-
-
           </CardWithContent>
         </Col>
 
-
+        <Col xl={24} lg={24} md={24} sm={24} xs={24}>
+          <CardWithContent
+            bodyStyles={{
+              padding: "1px 0px 0px 0px",
+            }}
+            icon={
+              <DollarCircleOutlined
+                style={{
+                  fontSize: 14,
+                  color: token.colorPrimary,
+                }}
+              />
+            }
+            title={t("This Month Overview")}
+          >
+            <Row justify={screens.md ? "space-between" : "center"}>
+              {renderCard("Income", thisMonthData?.income || 0, "success")}
+              {renderCard("Expense", thisMonthData?.expense || 0, "danger")}
+              {renderCard("Profit", thisMonthData?.profit || 0, "")}
+              {renderCard("Due Amount (Purchase)", thisMonthData?.dueamountPurchase || 0, "warning")}
+              {renderCard("Due Amount (Sale)", thisMonthData?.dueamountSale || 0, "warning")}
+            </Row>
+          </CardWithContent>
+        </Col>
 
         <Col xl={15} lg={15} md={24} sm={24} xs={24}>
           <CardWithContent
@@ -431,7 +416,7 @@ export const DashboardPage: React.FC = () => {
             }
             title={t("dashboard.trendingProducts.title")}
           >
-            <TrendingMenu />
+         <TrendingMenu dateFilter={selectedDateFilter} />
           </CardWithContent>
         </Col>
       </Row>

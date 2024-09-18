@@ -153,12 +153,14 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
           )}
         />
 
-        <Table.Column
-          key="connection"
-          dataIndex={["connection", "name"]}
-          title={t("Connection")}
-          sorter={true}
-        />
+{type !== 'CAPITAL' && (
+          <Table.Column
+            key="connection"
+            dataIndex={["connection", "name"]}
+            title={type === 'PURCHASE' ? t("Supplier") : t("Customer")}
+            sorter={true}
+          />
+        )}
 {/* 
         <Table.Column
           key="type"

@@ -9,17 +9,32 @@ import {
   Rank5Icon,
 } from "../../icons";
 import { ReactNode } from "react";
+import { useList } from "@refinedev/core";
 
-export const TrendingMenu: React.FC = () => {
-  const { listProps } = useSimpleList<ITrendingProducts>({
+
+type DateFilter = "lastWeek" | "lastMonth";
+export const TrendingMenu: React.FC<{ dateFilter: DateFilter }> = ({ dateFilter }) => {
+  const pageSize = dateFilter === "lastWeek" ? 7 : 30;
+
+  const { data, isLoading } = useList<ITrendingProducts>({
     resource: "misc/trendingProducts",
-    pagination: { pageSize: 5, current: 1 },
-    syncWithLocation: false,
+    pagination: { pageSize, current: 1 },
+    filters: [
+      {
+        field: "dateFilter",
+        operator: "eq",
+        value: dateFilter,
+      },
+    ],
   });
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <AntdList
-      {...listProps}
+      dataSource={data?.data}
       pagination={false}
       size="large"
       bordered={false}
@@ -131,4 +146,6 @@ const RankIcons: Record<number, ReactNode> = {
   3: <Rank3Icon />,
   4: <Rank4Icon />,
   5: <Rank5Icon />,
+  // For ranks 6-30, we'll use the same icon as rank 5
+  ...Object.fromEntries(Array.from({ length: 25 }, (_, i) => [i + 6, <Rank5Icon />])),
 };
