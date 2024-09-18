@@ -348,7 +348,7 @@ export const DashboardPage: React.FC = () => {
             }
             title={t("Today Overview")}
           >
-            <Row justify={screens.md ? "space-between" : "center"}>
+            <Row justify={screens.md ? "center" : "center"}>
               {renderCard("Income", todayData?.income || 0, "success")}
               {renderCard("Expense", todayData?.expense || 0, "danger")}
               {renderCard("Profit", todayData?.profit || 0, "")}
@@ -373,7 +373,7 @@ export const DashboardPage: React.FC = () => {
             }
             title={t("This Month Overview")}
           >
-            <Row justify={screens.md ? "space-between" : "center"}>
+            <Row justify={screens.md ? "center" : "center"}>
               {renderCard("Income", thisMonthData?.income || 0, "success")}
               {renderCard("Expense", thisMonthData?.expense || 0, "danger")}
               {renderCard("Profit", thisMonthData?.profit || 0, "")}

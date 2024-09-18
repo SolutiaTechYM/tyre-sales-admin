@@ -1,4 +1,4 @@
-import { NumberField, useSimpleList } from "@refinedev/antd";
+import { NumberField, TextField, useSimpleList } from "@refinedev/antd";
 import { Typography, Avatar, List as AntdList, Flex } from "antd";
 import { ITrendingProducts } from "../../../interfaces";
 import {
@@ -19,13 +19,7 @@ export const TrendingMenu: React.FC<{ dateFilter: DateFilter }> = ({ dateFilter 
   const { data, isLoading } = useList<ITrendingProducts>({
     resource: "misc/trendingProducts",
     pagination: { pageSize, current: 1 },
-    filters: [
-      {
-        field: "dateFilter",
-        operator: "eq",
-        value: dateFilter,
-      },
-    ],
+    
   });
 
   if (isLoading) {
@@ -111,14 +105,14 @@ export const TrendingMenu: React.FC<{ dateFilter: DateFilter }> = ({ dateFilter 
                       {item.product?.name}
                     </Typography.Paragraph>
                   </div>
-                  <NumberField
+                  <TextField
                     type="secondary"
                     options={{
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
                       notation: "standard",
                     }}
-                    value={item.orderCount * item.product.current_price}
+                    value={item.product.code}
                   />
                 </Flex>
                 <Typography.Text
