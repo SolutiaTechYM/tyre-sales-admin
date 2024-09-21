@@ -58,7 +58,7 @@ export const PdfLayout: React.FC<PdfProps> = ({ record }) =>  {
           <View style={styles.infoContainer}>
             <View style={styles.infoRow}>
               <Text style={styles.infoLabel}>Purchase ID:</Text>
-              <Text style={styles.infoValue}>{record?.id}</Text>
+              <Text style={styles.infoValue}>{record?.code}</Text>
             </View>
             <View style={styles.infoRow}>
               <Text style={styles.infoLabel}>Supplier Name:</Text>
@@ -66,11 +66,11 @@ export const PdfLayout: React.FC<PdfProps> = ({ record }) =>  {
             </View>
             <View style={styles.infoRow}>
               <Text style={styles.infoLabel}>Created Date:</Text>
-              <Text style={styles.infoValue}>{record?.date}</Text>
+              <Text style={styles.infoValue}>{record?.createdAt}</Text>
             </View>
             <View style={styles.infoRow}>
               <Text style={styles.infoLabel}>Note:</Text>
-              <Text style={styles.infoValue}>{record?.description}</Text>
+              <Text style={styles.infoValue}>{record?.note}</Text>
             </View>
 
           </View>
@@ -131,7 +131,7 @@ export const PdfLayout: React.FC<PdfProps> = ({ record }) =>  {
           <View style={[styles.totadue]}>
   <View style={styles.infoRowtotadue}>
     <Text style={styles.infoLabeltotadue}>Total Price:</Text>
-    <Text style={styles.infoValuetotadue}>LKR {record?.price}</Text>
+    <Text style={styles.infoValuetotadue}>LKR {record?.totalAmount}</Text>
   </View>
   <View style={styles.infoRowtotadue}>
     <Text style={styles.infoLabeltotadue}>Due Balance:</Text>

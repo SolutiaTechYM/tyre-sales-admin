@@ -42,7 +42,7 @@ export const CustomerInfoList = ({ customer }: Props) => {
           {
             title: t("Contact"),
             icon: <PhoneOutlined />,
-            value: <Typography.Text>{customer?.contact}</Typography.Text>,
+            value: <Typography.Text>{customer?.contact_person}</Typography.Text>,
           },
           {
             title: t("Address"),
@@ -60,7 +60,7 @@ export const CustomerInfoList = ({ customer }: Props) => {
 
             value: (
               <Typography.Text>
-               {customer?.contact}
+               {customer?.contact_person}
               </Typography.Text>
             ),
           },

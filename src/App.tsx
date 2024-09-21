@@ -68,13 +68,14 @@ import {PaymentList} from "./pages/payments";
 import {PaymentCreate} from "./pages/payments/create";
 import axiosInstance from "./utils/axios-instance";
 
+const API_URL=import.meta.env.VITE_APP_API_URL
 
 const App: React.FC = () => {
     // This hook is used to automatically login the user.
     // We use this hook to skip the login page and demonstrate the application more quickly
 
     // const API_URL = "https://api.finefoods.refine.dev";
-    const API_URL = "https://tyre-sales-admin-backend.onrender.com";
+    // const API_URL = VITE_APP_API_URL;
     // const API_URL = "http://localhost:3000";
 
 

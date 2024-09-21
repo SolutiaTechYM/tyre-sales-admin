@@ -175,7 +175,7 @@ export const SalesDrawerShow = (props: Props) => {
                 Sale Code : {sales?.code}
               </Typography.Title>
               <Typography.Text type="secondary">
-                {sales?.description}
+                {sales?.note}
               </Typography.Text>
               <Typography.Text>
                 Due Amount:{" "}
@@ -218,7 +218,7 @@ export const SalesDrawerShow = (props: Props) => {
               <Typography.Text>
                 Total Price:{" "}
                 <NumberField
-                  value={sales?.price || 0}
+                  value={sales?.totalAmount || 0}
                   options={{
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,

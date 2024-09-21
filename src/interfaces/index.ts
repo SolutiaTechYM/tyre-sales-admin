@@ -47,8 +47,8 @@ export interface ISalesChart {
 export interface ICustomer {
     id: number;
     name: string;
-    company: string;
-    contact: string;
+    contact_person: string;
+    phone: string;
     address: string;
     dueAmount: number;
     lastOrderDate: string;
@@ -114,11 +114,12 @@ export interface IPurchaseCreate {
 }
 
 export interface IPurchaseProduct {
+    totalPrice: number;
     productID: string | number;
     categoryID?: number;
     quantity: number;
     unitPrice: number;
-    totalPrice: number;
+    // totalAmount: number;
 }
 
 export interface ISales {
@@ -146,10 +147,10 @@ export interface ISalesShow {
     // id: number;
     // createdAt: string;
     id: number;
-    date: string;
-    description: string;
+    createdAt: string;
+    note: string;
     due_amount: number;
-    price: number;
+    totalAmount: number;
     customer: string;
     code?: string;
     profit: number;
@@ -173,8 +174,8 @@ export interface IPaymentTable {
     // id: number;
     // createdAt: string;
     id: number;
-    date: string;
-    description: string;
+    createdAt: string;
+    note: string;
     dueAmount: number;
     value: number;
     code: string;
@@ -330,7 +331,7 @@ export interface ITransactionlist {
     date: string;
     value: number;
     type: string;
-    description?: string;
+    note?: string;
     connection: {
         id?: number,
         name: string
@@ -430,10 +431,10 @@ export interface ISupplier {
 
 export interface IPurchase {
     id: number;
-    date: string;
+    createdAt: string;
     supplier: string;
-    description: string;
-    price: number;
+    note: string;
+    totalAmount: number;
     due_amount: number;
     code?: string;
     // createdAt: string;

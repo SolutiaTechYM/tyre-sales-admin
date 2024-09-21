@@ -109,11 +109,11 @@ export const PurchaseDrawerShow = (props: Props) => {
   };
 
   const columns = [
-    {
-      title: '',
-      dataIndex: 'productID',
-      key: 'productID',
-    },
+    // {
+    //   title: '',
+    //   dataIndex: 'productID',
+    //   key: 'productID',
+    // },
     {
       title: 'Product Code',
       dataIndex: 'productCode',
@@ -170,7 +170,7 @@ export const PurchaseDrawerShow = (props: Props) => {
                 Purchase Code : {purchase?.code}
               </Typography.Title>
               <Typography.Text type="secondary">
-                {purchase?.description}
+                {purchase?.note}
               </Typography.Text>
               <Typography.Text>
                 Due Amount:{" "}
@@ -213,7 +213,7 @@ export const PurchaseDrawerShow = (props: Props) => {
               <Typography.Text>
                 Total Price:{" "}
                 <NumberField
-                  value={purchase?.price || 0}
+                  value={purchase?.totalAmount || 0}
                   options={{
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,

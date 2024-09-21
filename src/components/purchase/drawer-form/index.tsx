@@ -531,7 +531,7 @@ export const PurchaseDrawerForm = (props: Props) => {
                                     if (tableData.length !== 0) {
                                         try {
                                             const payment = formProps.form.getFieldValue("payment");
-                                            const code = formProps.form.getFieldValue("code");
+                                            const code = formProps.form.getFieldValue("id");
                                             const supplier = formProps.form.getFieldValue("suppliername");
                                             const description = formProps.form.getFieldValue("description");
 

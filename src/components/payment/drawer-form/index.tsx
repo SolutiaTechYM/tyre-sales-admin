@@ -186,8 +186,8 @@ export const PaymentDrawerForm = (props: Props) => {
                     id: item.id,
                     dueAmount: item.dueAmount,
                     value: item.value,
-                    date: item.date,
-                    description: item.description,
+                    createdAt: item.createdAt,
+                    note: item.note,
                     code: item.code,
                     payment: sellPayments[item.id] || 0,
                   }))}
@@ -196,8 +196,8 @@ export const PaymentDrawerForm = (props: Props) => {
                   pagination={false}
                 >
                   <Table.Column title="Code" dataIndex="code" key="code" />
-                  <Table.Column title="Description" dataIndex="description" key="description" />
-                  <Table.Column title="Date" dataIndex="date" key="date" />
+                  <Table.Column title="Description" dataIndex="note" key="note" />
+                  <Table.Column title="Date" dataIndex="createdAt" key="createdAt" />
                   <Table.Column 
     title="Total Price" 
     dataIndex="value" 
@@ -251,8 +251,8 @@ export const PaymentDrawerForm = (props: Props) => {
                     id: item.id,
                     dueAmount: item.dueAmount,
                     value: item.value,
-                    date: item.date,
-                    description: item.description,
+                    createdAt: item.createdAt,
+                    note: item.note,
                     code: item.code,
                     payment: purchasePayments[item.id] || 0,
                   }))}
@@ -261,8 +261,8 @@ export const PaymentDrawerForm = (props: Props) => {
                   pagination={false}
                 >
                   <Table.Column title="Code" dataIndex="code" key="code" />
-                  <Table.Column title="Description" dataIndex="description" key="description" />
-                  <Table.Column title="Date" dataIndex="date" key="date" />
+                  <Table.Column title="Description" dataIndex="note" key="note" />
+                  <Table.Column title="Date" dataIndex="createdAt" key="createdAt" />
                   <Table.Column 
     title="Total Price" 
     dataIndex="value" 

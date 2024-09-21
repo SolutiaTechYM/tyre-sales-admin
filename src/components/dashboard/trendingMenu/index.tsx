@@ -107,11 +107,11 @@ export const TrendingMenu: React.FC<{ dateFilter: DateFilter }> = ({ dateFilter 
                   </div>
                   <TextField
                     type="secondary"
-                    options={{
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                      notation: "standard",
-                    }}
+                    // options={{
+                    //   minimumFractionDigits: 2,
+                    //   maximumFractionDigits: 2,
+                    //   notation: "standard",
+                    // }}
                     value={item.product.code}
                   />
                 </Flex>

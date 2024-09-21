@@ -3,26 +3,48 @@ import {
   IResourceComponentsProps,
   HttpError,
   useGo,
-  useNavigation
+  useNavigation,
+  getDefaultFilter,
+
 } from "@refinedev/core";
-import { List, useTable } from "@refinedev/antd";
-import { Button, Table, theme } from "antd";
+
+
+import { FilterDropdown, List, useTable } from "@refinedev/antd";
+import { Button, Input, Table, theme, Typography } from "antd";
 // import { ICategory } from "../../interfaces";
 
 import { ICategory } from "../../../interfaces";
 import { PaginationTotal } from "../../paginationTotal";
 import { CategoryStatus } from "../status";
 import { TableCategoryProductColumn } from "../tableColumnProducts";
-import { EyeOutlined } from "@ant-design/icons";
+import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
 
 export const CategoryTable: React.FC<IResourceComponentsProps> = () => {
-  const { tableProps } = useTable<ICategory, HttpError>();
   const go = useGo();
   const { pathname } = useLocation();
   const { showUrl } = useNavigation();
   const t = useTranslate();
   const { token } = theme.useToken();
+
+  const {tableProps, sorters, filters} = useTable<ICategory, HttpError>({
+    filters: {
+        initial: [
+            {
+                field: "title",
+                operator: "contains",
+                value: "",
+            },
+            
+            {
+                field: "quantity",
+                operator: "in",
+                value: [],
+            },
+
+        ],
+    },
+});
 
 
   return (
@@ -45,7 +67,39 @@ export const CategoryTable: React.FC<IResourceComponentsProps> = () => {
           key="title"
           dataIndex="title"
           width={224}
+          sorter
+
           title={t("categories.fields.title")}
+          filterIcon={(filtered) => (
+            <SearchOutlined
+                style={{
+                    color: filtered ? token.colorPrimary : undefined,
+                }}
+            />
+        )}
+        defaultFilteredValue={getDefaultFilter(
+            "title",
+            filters,
+            "contains"
+        )}
+        filterDropdown={(props) => (
+            <FilterDropdown {...props}>
+                <Input placeholder={t("purchases.filter.note.placeholder")}/>
+            </FilterDropdown>
+        )}
+        render={(description: string) => {
+            return (
+                <Typography.Paragraph
+                    ellipsis={{rows: 1, tooltip: true}}
+                    style={{
+                        maxWidth: "380px",
+                        marginBottom: 0,
+                    }}
+                >
+                    {description}
+                </Typography.Paragraph>
+            );
+        }}
         />
         <Table.Column<ICategory>
           key="id"
@@ -62,6 +116,37 @@ export const CategoryTable: React.FC<IResourceComponentsProps> = () => {
           key="quantity"
           dataIndex="quantity"
           title={t("Quantity")}
+          sorter
+          filterIcon={(filtered) => (
+            <SearchOutlined
+                style={{
+                    color: filtered ? token.colorPrimary : undefined,
+                }}
+            />
+        )}
+        defaultFilteredValue={getDefaultFilter(
+            "quantity",
+            filters,
+            "contains"
+        )}
+        filterDropdown={(props) => (
+            <FilterDropdown {...props}>
+                <Input placeholder={t("purchases.filter.note.placeholder")}/>
+            </FilterDropdown>
+        )}
+        render={(description: string) => {
+            return (
+                <Typography.Paragraph
+                    ellipsis={{rows: 1, tooltip: true}}
+                    style={{
+                        maxWidth: "380px",
+                        marginBottom: 0,
+                    }}
+                >
+                    {description}
+                </Typography.Paragraph>
+            );
+        }}
           
         />
           <Table.Column<ICategory>

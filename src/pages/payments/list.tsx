@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslate, HttpError, useExport, useGo, useNavigation, useList, CrudFilters } from "@refinedev/core";
 import { List, FilterDropdown, ExportButton, CreateButton, NumberField } from "@refinedev/antd";
-import { Table, Typography, theme, InputNumber } from "antd";
+import { Table, Typography, theme, InputNumber, Input } from "antd";
 import { ITransactionlist } from "../../interfaces";
 import { SearchOutlined } from "@ant-design/icons";
 import { PaginationTotal } from "../../components";
@@ -24,12 +24,15 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
   const [capitalSorter, setCapitalSorter] = useState<{ field: string; order: 'asc' | 'desc' } | undefined>();
 
   const [idFilter, setIdFilter] = useState<number | null>(null);
+  const [codeFilter, setCodeFilter] = useState<string>('');
+  const [supplierFilter, setSupplierFilter] = useState<string>('');
+  const [descriptionFilter, setDescriptionFilter] = useState<string>('');
 
   useEffect(() => {
     setPurchasePagination({ current: 1, pageSize: 10 });
     setSalePagination({ current: 1, pageSize: 10 });
     setCapitalPagination({ current: 1, pageSize: 10 });
-  }, [idFilter]);
+  }, [idFilter, codeFilter, supplierFilter, descriptionFilter]);
 
   const getFilters = (type: string): CrudFilters => {
     const filters: CrudFilters = [
@@ -38,6 +41,15 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
 
     if (idFilter !== null) {
       filters.push({ field: "id", operator: "eq", value: idFilter });
+    }
+    if (codeFilter) {
+      filters.push({ field: "code", operator: "contains", value: codeFilter });
+    }
+    if (supplierFilter) {
+      filters.push({ field: "connection.name", operator: "contains", value: supplierFilter });
+    }
+    if (descriptionFilter) {
+      filters.push({ field: "description", operator: "contains", value: descriptionFilter });
     }
 
     return filters;
@@ -72,7 +84,7 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
         type: item.type,
         date: item.date,
         value: item.value,
-        description: item.description,
+        description: item.note,
         code: item.code,
       };
     },
@@ -148,26 +160,37 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
           dataIndex="code"
           title="Code"
           sorter={true}
+          filterDropdown={() => (
+            <Input
+              placeholder="Search code"
+              value={codeFilter}
+              onChange={(e) => setCodeFilter(e.target.value)}
+              style={{ width: 200, marginBottom: 8, display: 'block' }}
+            />
+          )}
+          filterIcon={() => <SearchOutlined style={{ color: codeFilter ? '#1890ff' : undefined }} />}
           render={(value) => (
             <Typography.Text style={{ whiteSpace: "nowrap" }}>{value}</Typography.Text>
           )}
         />
 
-{type !== 'CAPITAL' && (
+        {type !== 'CAPITAL' && (
           <Table.Column
             key="connection"
             dataIndex={["connection", "name"]}
             title={type === 'PURCHASE' ? t("Supplier") : t("Customer")}
             sorter={true}
+            filterDropdown={() => (
+              <Input
+                placeholder="Search supplier"
+                value={supplierFilter}
+                onChange={(e) => setSupplierFilter(e.target.value)}
+                style={{ width: 200, marginBottom: 8, display: 'block' }}
+              />
+            )}
+            filterIcon={() => <SearchOutlined style={{ color: supplierFilter ? '#1890ff' : undefined }} />}
           />
         )}
-{/* 
-        <Table.Column
-          key="type"
-          dataIndex="type"
-          title={t("Type")}
-          sorter={true}
-        /> */}
 
         <Table.Column
           key="date"
@@ -200,10 +223,19 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
         />
 
         <Table.Column
-          key="description"
-          dataIndex="description"
-          title="Description"
-          sorter={true}
+          key="note"
+          dataIndex="note"
+          title="note"
+          // sorter={true}
+          filterDropdown={() => (
+            <Input
+              placeholder="Search description"
+              value={descriptionFilter}
+              onChange={(e) => setDescriptionFilter(e.target.value)}
+              style={{ width: 200, marginBottom: 8, display: 'block' }}
+            />
+          )}
+          filterIcon={() => <SearchOutlined style={{ color: descriptionFilter ? '#1890ff' : undefined }} />}
         />
       </Table>
     );

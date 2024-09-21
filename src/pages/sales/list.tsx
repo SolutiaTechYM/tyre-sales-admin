@@ -22,10 +22,10 @@ export const SaleList = ({ children }: PropsWithChildren) => {
     mapData: (item) => {
       return {
         id: item.id,
-        date:item.date,
+        date:item.createdAt,
         // createdAt: item.createdAt,
-        description: item.description,
-        price: item.price,
+        description: item.note,
+        totalAmount: item.totalAmount,
         customer:item.customer
       };
     },

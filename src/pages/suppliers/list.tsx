@@ -55,6 +55,12 @@ export const SupplierList = ({ children }: PropsWithChildren) => {
           value: "",
         },
         {
+          field: "contact_person",
+          operator: "contains",
+          value: "",
+        },
+
+        {
           field: "address",
           operator: "contains",
           value: "",
@@ -163,6 +169,8 @@ export const SupplierList = ({ children }: PropsWithChildren) => {
           title={t("suppliers.fields.name")}
           dataIndex="name"
           key="name"
+          sorter
+
           filterIcon={(filtered) => (
             <SearchOutlined
               style={{
@@ -262,7 +270,31 @@ export const SupplierList = ({ children }: PropsWithChildren) => {
           title="Contact Person"
           width={200}
 
-
+          filterIcon={(filtered) => (
+            <SearchOutlined
+              style={{
+                color: filtered ? token.colorPrimary : undefined,
+              }}
+            />
+          )}
+          defaultFilteredValue={getDefaultFilter("contact_person", filters, "contains")}
+          filterDropdown={(props) => (
+            <FilterDropdown {...props}>
+              <Input placeholder={t("contact person")} />
+            </FilterDropdown>
+          )}
+          // width={180}
+          render={(value: string) => {
+            return (
+              <Typography.Text
+                style={{
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {value}
+              </Typography.Text>
+            );
+          }}
         // sorter
         />
 
@@ -270,7 +302,7 @@ export const SupplierList = ({ children }: PropsWithChildren) => {
           title={t("suppliers.fields.dueAmount")}
           dataIndex="dueAmount"
           key="dueAmount"
-          sorter
+          // sorter
           width={150}
           defaultSortOrder={getDefaultSortOrder("price", sorters)}
           render={(dueAmount: number) => {
@@ -297,7 +329,7 @@ export const SupplierList = ({ children }: PropsWithChildren) => {
           title={t("Last Order Date")}
           dataIndex="lastOrderDate"
           key="lastOrderDate"
-          sorter
+          // sorter
           width={150}
           defaultSortOrder={getDefaultSortOrder("lastOrderDate", sorters)}
           render={(lastOrderDate) => {

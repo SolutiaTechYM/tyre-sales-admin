@@ -54,6 +54,22 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
           operator: "contains",
           value: "",
         },
+        {
+          field: "address", //fullname
+          operator: "contains",
+          value: "",
+        },
+        {
+          field: "phone", //fullname
+          operator: "contains",
+          value: "",
+        },
+        {
+          field: "contact_person", //fullname
+          operator: "contains",
+          value: "",
+        },
+        
       ],
     },
     sorters: {
@@ -196,40 +212,106 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
         />
 
         <Table.Column
-          key="Contact"
-          dataIndex="contact"
+          key="phone"
+          dataIndex="phone"
           title={t("Contact")}
-          defaultFilteredValue={getDefaultFilter("Contact", filters, "eq")}
+          defaultFilteredValue={getDefaultFilter("phone", filters, "eq")}
+          filterIcon={(filtered) => (
+            <SearchOutlined
+              style={{
+                color: filtered ? token.colorPrimary : undefined,
+              }}
+            />
+          )}
+          
           filterDropdown={(props) => (
             <FilterDropdown {...props}>
-              <Input
-                style={{ width: "100%" }}
-                placeholder="search contact"
-              />
+              <Input style={{ width: "100%" }}
+                placeholder={t("users.filter.name.placeholder")} />
             </FilterDropdown>
           )}
+          render={(value: string) => {
+            return (
+              <Typography.Text
+                style={{
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {value}
+              </Typography.Text>
+            );
+          }}
         />
         <Table.Column
           key="address"
           dataIndex="address"
           title="Address"
+          defaultFilteredValue={getDefaultFilter("address", filters, "contains")}
+          filterIcon={(filtered) => (
+            <SearchOutlined
+              style={{
+                color: filtered ? token.colorPrimary : undefined,
+              }}
+            />
+          )}
+          
+          filterDropdown={(props) => (
+            <FilterDropdown {...props}>
+              <Input style={{ width: "100%" }}
+                placeholder={t("users.filter.name.placeholder")} />
+            </FilterDropdown>
+          )}
+          render={(value: string) => {
+            return (
+              <Typography.Text
+                style={{
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {value}
+              </Typography.Text>
+            );
+          }}
 
-          sorter
         />
         <Table.Column
           key="lastOrderDate"
           dataIndex="lastOrderDate"
           title="Last Order Date"
 
-          sorter
+          // sorter
         />
 
         <Table.Column
-          key="company"
-          dataIndex="company"
+          key="contact_person"
+          dataIndex="contact_person"
           title="Company"
-
-        // sorter
+          defaultFilteredValue={getDefaultFilter("contact_person", filters, "contains")}
+          filterIcon={(filtered) => (
+            <SearchOutlined
+              style={{
+                color: filtered ? token.colorPrimary : undefined,
+              }}
+            />
+          )}
+          
+          filterDropdown={(props) => (
+            <FilterDropdown {...props}>
+              <Input style={{ width: "100%" }}
+                placeholder={t("users.filter.name.placeholder")} />
+            </FilterDropdown>
+          )}
+          render={(value: string) => {
+            return (
+              <Typography.Text
+                style={{
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {value}
+              </Typography.Text>
+            );
+          }}
         />
 
 
@@ -238,6 +320,8 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
           key="due_amount"
           dataIndex="dueAmount"
           title="Due Amount"
+        // sorter
+
           render={(dueAmount: number) => {
             return (
               <NumberField

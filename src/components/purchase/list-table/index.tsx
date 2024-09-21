@@ -44,10 +44,12 @@ export const PurchaseListTable = () => {
           value: "",
         },
         {
-          field: "date",
+          field: "note",
           operator: "contains",
           value: "",
         },
+       
+        
         {
           field: "id",
           operator: "in",
@@ -126,6 +128,8 @@ export const PurchaseListTable = () => {
             }
             dataIndex="code"
             key="code"
+        sorter
+
             render={(value) => (
                 <Typography.Text
                     style={{
@@ -155,11 +159,11 @@ export const PurchaseListTable = () => {
         />
       <Table.Column
         title={t("purchases.fields.createdAt")}
-        dataIndex="date"
-        key="date"
+        dataIndex="createdAt"
+        key="createdAt"
         align="right"
         sorter
-        // defaultSortOrder={getDefaultSortOrder("price", sorters)}
+        defaultSortOrder={getDefaultSortOrder("createdAt", sorters)}
         render={(value: string) => {
           return (
             <Typography.Text
@@ -175,7 +179,9 @@ export const PurchaseListTable = () => {
       <Table.Column
         title={t("purchases.fields.supplier")}
         dataIndex="supplier"
-        key="supplier"
+        key="connection.name$is$contains"
+        // sorter
+
         filterIcon={(filtered) => (
           <SearchOutlined
             style={{
@@ -183,7 +189,7 @@ export const PurchaseListTable = () => {
             }}
           />
         )}
-        defaultFilteredValue={getDefaultFilter("name", filters, "contains")}
+        defaultFilteredValue={getDefaultFilter("connection.name$is$contains", filters, "contains")}
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
             <Input placeholder={t("purchases.filter.supplier.placeholder")} />
@@ -203,8 +209,8 @@ export const PurchaseListTable = () => {
       />
       <Table.Column
         title={t("purchases.fields.note")}
-        dataIndex="description"
-        key="description"
+        dataIndex="note"
+        key="note"
         width={200}
         filterIcon={(filtered) => (
           <SearchOutlined
@@ -214,7 +220,7 @@ export const PurchaseListTable = () => {
           />
         )}
         defaultFilteredValue={getDefaultFilter(
-          "description",
+          "note",
           filters,
           "contains"
         )}
@@ -239,11 +245,11 @@ export const PurchaseListTable = () => {
       />
       <Table.Column
         title={t("products.fields.price")}
-        dataIndex="price"
-        key="price"
+        dataIndex="totalAmount"
+        key="totalAmount"
         align="right"
         sorter
-        defaultSortOrder={getDefaultSortOrder("price", sorters)}
+        defaultSortOrder={getDefaultSortOrder("totalAmount", sorters)}
         render={(price: number) => {
           return (
             <NumberField

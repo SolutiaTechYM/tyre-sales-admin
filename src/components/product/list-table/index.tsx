@@ -165,6 +165,7 @@ export const ProductListTable = () => {
         title={t("products.fields.name")}
         dataIndex="name"
         key="name"
+        sorter
         filterIcon={(filtered) => (
           <SearchOutlined
             style={{
@@ -255,13 +256,13 @@ export const ProductListTable = () => {
           return (
             <FilterDropdown
               {...props}
-              selectedKeys={props.selectedKeys.map((item) => Number(item))}
+         
             >
               <Select
                 {...categorySelectProps}
                 style={{ width: "200px" }}
                 allowClear
-                mode="multiple"
+            
                 placeholder={t("products.filter.category.placeholder")}
               />
             </FilterDropdown>

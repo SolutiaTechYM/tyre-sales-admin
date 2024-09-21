@@ -416,7 +416,7 @@ export const SaleDrawerForm = (props: Props) => {
 
                         <Form.Item
                             label={t("purchases.fields.note")}
-                            name="description"
+                            name="note"
                             className={styles.formItem}
                         >
                             <Input.TextArea rows={2}/>
@@ -686,7 +686,7 @@ export const SaleDrawerForm = (props: Props) => {
                                         try {
                                             const payment = formProps.form.getFieldValue("payment");
                                             const customer = formProps.form.getFieldValue("customername");
-                                            const description = formProps.form.getFieldValue("description");
+                                            const note = formProps.form.getFieldValue("note");
                                             const code = formProps.form.getFieldValue("code");
 
                                             if (!code) {
@@ -712,7 +712,7 @@ export const SaleDrawerForm = (props: Props) => {
                                                         customerId,
                                                         payment,
                                                         totalPrice,
-                                                        description,
+                                                        note,
                                                         code
                                                     }),
                                                 });
