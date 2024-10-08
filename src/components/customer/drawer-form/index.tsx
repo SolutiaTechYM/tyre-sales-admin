@@ -56,7 +56,23 @@ export const CustomerDrawerForm = (props: Props) => {
       onMutationSuccess: () => {
         console.log("Form data:", form.getFieldsValue());
         props.onMutationSuccess?.();
-        onDrawerCLose();
+        // onDrawerCLose();
+
+        go({
+          to:
+            searchParams.get("to") ??
+            getToPath({
+              action: "list",
+            }) ??
+            "",
+          query: {
+            to: undefined,
+          },
+          options: {
+            keepQuery: true,
+          },
+          type: "replace",
+        });
 
       },
       // form,
@@ -189,7 +205,7 @@ export const CustomerDrawerForm = (props: Props) => {
 
             <Form.Item
   label={t("Contact")}
-  name="contact"
+  name="phone"
   className={styles.formItem}
   rules={[
     {

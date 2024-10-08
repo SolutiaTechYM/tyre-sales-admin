@@ -349,7 +349,7 @@ export const SaleListTable = () => {
                 dataIndex="profit"
                 key="profit"
                 align="right"
-                sorter
+                // sorter
                 //defaultSortOrder={getDefaultSortOrder("price", sorters)}
 
                 render={(credit: number) => {
