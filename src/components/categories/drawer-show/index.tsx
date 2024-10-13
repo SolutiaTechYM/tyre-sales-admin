@@ -104,7 +104,7 @@ export const CategoryDrawerShow = (props: Props) => {
             padding: "16px",
           }}
         >
-          <Typography.Title level={5}>{category?.title}</Typography.Title>
+          <Typography.Title level={5}>{category?.name}</Typography.Title>
           <Typography.Text type="secondary">
             {/* {category?.description} */}
           </Typography.Text>

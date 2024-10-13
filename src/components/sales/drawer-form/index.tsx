@@ -102,7 +102,7 @@ export const SaleDrawerForm = (props: Props) => {
 
     const {selectProps: categorySelectProps} = useSelect<ICategory>({
         resource: "categories",
-        optionLabel: "title",
+        optionLabel: "name",
         optionValue: "id",
     });
 

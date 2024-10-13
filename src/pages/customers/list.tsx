@@ -177,8 +177,8 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
         />
 
         <Table.Column
-          key="name"
-          dataIndex="name"
+          key="contact_person"
+          dataIndex="contact_person"
           sorter
 
           title={t("users.fields.name")}
@@ -189,7 +189,7 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
               }}
             />
           )}
-          defaultFilteredValue={getDefaultFilter("name",
+          defaultFilteredValue={getDefaultFilter("contact_person",
             filters,
             "contains",)}
           filterDropdown={(props) => (
@@ -283,10 +283,10 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
         />
 
         <Table.Column
-          key="contact_person"
-          dataIndex="contact_person"
+          key="name"
+          dataIndex="name"
           title="Company"
-          defaultFilteredValue={getDefaultFilter("contact_person", filters, "contains")}
+          defaultFilteredValue={getDefaultFilter("name", filters, "contains")}
           filterIcon={(filtered) => (
             <SearchOutlined
               style={{

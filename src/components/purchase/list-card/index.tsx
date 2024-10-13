@@ -144,7 +144,7 @@ export const PurchaseListCard = () => {
                 handleOnTagClick(category.id);
               }}
             >
-              {category.title}
+              {category.name}
             </Tag>
           ))}
 
@@ -238,7 +238,7 @@ export const PurchaseListCard = () => {
                     {
                       categories.find(
                         (category) => category.id === item.category.id
-                      )?.title
+                      )?.name
                     }
                   </Typography.Text>
                   {/* <PurchaseStatus key="status" value={item.isActive} /> */}

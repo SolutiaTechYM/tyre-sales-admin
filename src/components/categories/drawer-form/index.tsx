@@ -108,7 +108,7 @@ export const CategoryDrawerForm = (props: Props) => {
           <Flex vertical>
             <Form.Item
               label={t("Title")}
-              name="title"
+              name="name"
               className={styles.formItem}
               rules={[
                 {

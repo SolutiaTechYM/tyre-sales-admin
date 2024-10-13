@@ -64,7 +64,7 @@ export const PurchaseDetailsTable = () => {
   const { selectProps: categorySelectProps, queryResult } =
     useSelect<ICategory>({
       resource: "categories",
-      optionLabel: "title",
+      optionLabel: "name",
       optionValue: "id",
       defaultValue: getDefaultFilter("category.id", filters, "in"),
     });
@@ -252,7 +252,7 @@ export const PurchaseDetailsTable = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              {category?.title || "-"}
+              {category?.name || "-"}
             </Typography.Text>
           );
         }}

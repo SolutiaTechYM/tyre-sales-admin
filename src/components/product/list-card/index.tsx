@@ -144,7 +144,7 @@ export const ProductListCard = () => {
                 handleOnTagClick(category.id);
               }}
             >
-              {category.title}
+              {category.name}
             </Tag>
           ))}
 
@@ -238,7 +238,7 @@ export const ProductListCard = () => {
                     {
                       categories.find(
                         (category) => category.id === item.category.id,
-                      )?.title
+                      )?.name
                     }
                   </Typography.Text>
                   {/* <ProductStatus key="status" value={item.isActive} /> */}

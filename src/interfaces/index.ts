@@ -466,7 +466,7 @@ interface IPurchaseProductshow {
 
 export interface ICategory {
     id: number;
-    title: string;
+    name: string;
     products?: {
         id: number;
         name: string;
