@@ -443,14 +443,15 @@ export interface IPurchase {
 }
 
 
-interface IPurchaseProductshow {
+export interface IPurchaseProductshow {
     productID: string | number;
     productCode: string;
-    productName: string;
+    categoryName: string;
     categoryID?: number;
     quantity: number;
     unitPrice: number;
     totalPrice: number;
+    productName:string;
 }
 
 

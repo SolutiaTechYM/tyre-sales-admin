@@ -25,7 +25,7 @@ import {
 } from "antd";
 import { useSearchParams } from "react-router-dom";
 import { Drawer } from "../../drawer";
-import { ICategory, IProduct, IPurchase } from "../../../interfaces";
+import { ICategory, IProduct, IPurchase,IPurchaseProductshow } from "../../../interfaces";
 import { DeleteButton, NumberField } from "@refinedev/antd";
 import { PurchaseStatus } from "../status";
 import { DeleteOutlined, EditOutlined, FilePdfOutlined } from "@ant-design/icons";
@@ -120,9 +120,12 @@ export const PurchaseDrawerShow = (props: Props) => {
       key: 'productCode',
     },
     {
-      title: 'Product Name',
-      dataIndex: 'productName',
-      key: 'productName',
+      title: 'Category / Product Name',
+      dataIndex: 'categoryName', 
+      key: 'categoryName',
+      render: (categoryName: string, record: IPurchaseProductshow) => (
+        `${categoryName} - ${record.productName}`
+      ),
     },
     {
       title: 'Unit Price',

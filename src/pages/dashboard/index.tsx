@@ -225,7 +225,7 @@ export const DashboardPage: React.FC = () => {
           </div>
           <NumberField
             value={value}
-            options={{ style: "currency", currency: "USD" }}
+      
             style={{ fontSize: screens.sm ? "14px" : "12px", color: type === "success" ? "#52c41a" : type === "danger" ? "#f5222d" : type === "warning" ? "#faad14" : "#1890ff" }}
           />
         </Row>
