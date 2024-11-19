@@ -85,13 +85,20 @@ export const SaleDrawerForm = (props: Props) => {
 
     const { selectProps: supplierSelectProps } = useSelect<ICustomer>({
         resource: "customers",
-        optionLabel: "name",
-        queryOptions: {
-          select: (data) => ({
-            data: data.data.sort((a, b) => a.name.localeCompare(b.name)),
-            total: data.total,
-          }),
-        },
+        optionLabel: "contact_person",
+        optionValue: "id",
+        sorters: [
+            {
+                field: "contact_person",
+                order: "asc",
+            },
+        ],
+        // queryOptions: {
+        //   select: (data) => ({
+        //     data: data.data.sort((a, b) => a.name.localeCompare(b.name)),
+        //     total: data.total,
+        //   }),
+        // },
       });
     // const { selectProps: productSelectProps } = useSelect<IProduct>({
     //   resource: "products",
@@ -155,7 +162,7 @@ export const SaleDrawerForm = (props: Props) => {
         const stocksForProduct = selectedProductStocks[productId] || [];
         const filteredStocks = stocksForProduct.filter(stock => stock.quantity > 0);
         return filteredStocks.map((stock: IStock) => ({
-            label: `${stock.quantity} units - ${stock.unitBuyPrice}`,
+            label: `${stock.quantity} units - ${stock.unitBuyPrice}/=`,
             value: stock.id,
             unitPrice: stock.unitBuyPrice,
         }));
