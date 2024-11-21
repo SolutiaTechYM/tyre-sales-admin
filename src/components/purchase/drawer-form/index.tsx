@@ -152,15 +152,25 @@ export const PurchaseDrawerForm = (props: Props) => {
         });
     };
 
+    // useEffect(() => {
+    //     if (tableData.length === 0) {
+    //         settotalPrice(0);
+    //     } else {
+    //         let temp = 0;
+    //         tableData.forEach((product) => {
+    //             temp += product.totalPrice;
+    //         });
+    //         settotalPrice(temp);
+    //     }
+    // }, [tableData]);
+
+
     useEffect(() => {
         if (tableData.length === 0) {
             settotalPrice(0);
         } else {
-            let temp = 0;
-            tableData.forEach((product) => {
-                temp += product.totalPrice;
-            });
-            settotalPrice(temp);
+            let temp = tableData.reduce((sum, product) => sum + Number(product.totalPrice.toFixed(2)), 0);
+            settotalPrice(Number(temp.toFixed(2)));
         }
     }, [tableData]);
 
@@ -470,16 +480,26 @@ export const PurchaseDrawerForm = (props: Props) => {
                                                         formProps.form.getFieldValue("proname")
                                                 );
 
+                                                // const newRow = {
+                                                //     // suppliername: selectedCategory?.label?.toString() || "",
+                                                //     name: selectedProduct?.label?.toString() || "",
+                                                //     productID: selectedProduct?.value || "",
+                                                //     quantity: formProps.form.getFieldValue("quantity"),
+                                                //     unitPrice:
+                                                //         formProps.form.getFieldValue("unitprice"),
+                                                //     totalPrice: formProps.form.getFieldValue("unitprice") * formProps.form.getFieldValue("quantity"),
+                                                //     // payment: formProps.form.getFieldValue("payment"),
+                                                // };
+
+
                                                 const newRow = {
-                                                    // suppliername: selectedCategory?.label?.toString() || "",
                                                     name: selectedProduct?.label?.toString() || "",
                                                     productID: selectedProduct?.value || "",
                                                     quantity: formProps.form.getFieldValue("quantity"),
-                                                    unitPrice:
-                                                        formProps.form.getFieldValue("unitprice"),
-                                                    totalPrice: formProps.form.getFieldValue("unitprice") * formProps.form.getFieldValue("quantity"),
-                                                    // payment: formProps.form.getFieldValue("payment"),
+                                                    unitPrice: formProps.form.getFieldValue("unitprice"),
+                                                    totalPrice: Number((formProps.form.getFieldValue("unitprice") * formProps.form.getFieldValue("quantity")).toFixed(2)),
                                                 };
+
                                                 setTableData([...tableData, newRow]);
                                                 formProps.form.setFieldsValue({
                                                     proname: "",
