@@ -72,12 +72,18 @@ export const PaymentDrawerForm = (props: Props) => {
     optionLabel: "name",
     queryOptions: {
       select: (data) => ({
-        data: data.data.sort((a, b) => a.name.localeCompare(b.name)),
+        data: data.data
+          .filter((customer) => customer?.name != null) // Filter out null names
+          .sort((a, b) => {
+            // Safe comparison with null checks
+            const nameA = a?.name || '';
+            const nameB = b?.name || '';
+            return nameA.localeCompare(nameB);
+          }),
         total: data.total,
       }),
     },
   });
-
   const [filteredSellData, setFilteredSellData] = useState<IPaymentTable[]>([]);
   const [filteredPurchaseData, setFilteredPurchaseData] = useState<IPaymentTable[]>([]);
 

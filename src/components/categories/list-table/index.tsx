@@ -64,8 +64,8 @@ export const CategoryTable: React.FC<IResourceComponentsProps> = () => {
         }}
       >
         <Table.Column
-          key="title"
-          dataIndex="title"
+          key="name"
+          dataIndex="name"
           width={224}
           sorter
 
@@ -78,7 +78,7 @@ export const CategoryTable: React.FC<IResourceComponentsProps> = () => {
             />
         )}
         defaultFilteredValue={getDefaultFilter(
-            "title",
+            "name",
             filters,
             "contains"
         )}

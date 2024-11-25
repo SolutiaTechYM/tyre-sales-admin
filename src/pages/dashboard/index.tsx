@@ -1,6 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import {
-  Row, Col, theme, Dropdown, MenuProps, Button, Flex, Typography, Grid, Card, Divider
+  Row, Col, theme, Dropdown, MenuProps, Button, Flex, Typography, Grid, Card, Divider,
+  DatePicker,
+  Space
 } from "antd";
 import { useTranslation } from "react-i18next";
 import {
@@ -128,28 +130,70 @@ export const DashboardPage: React.FC = () => {
     },
   });
 
-  const { data: summaryData } = useCustom<{
-    today: {
-      income: number;
-      expense: number;
-      dueamountPurchase: number;
-      dueamountSale: number;
-      profit: number;
-    };
-    thisMonth: {
-      income: number;
-      expense: number;
-      dueamountPurchase: number;
-      dueamountSale: number;
-      profit: number;
-    };
+  // const { data: summaryData } = useCustom<{
+  //   today: {
+  //     income: number;
+  //     expense: number;
+  //     dueamountPurchase: number;
+  //     dueamountSale: number;
+  //     profit: number;
+  //     billPorfit:number;
+  //   };
+  //   thisMonth: {
+  //     income: number;
+  //     expense: number;
+  //     dueamountPurchase: number;
+  //     dueamountSale: number;
+  //     profit: number;
+  //     billPorfit:number;
+  //   };
+  // }>({
+  //   url: `${API_URL}/misc/summary`,
+  //   method: "get",
+  // });
+
+
+  interface IDailySummary {
+    income: number;
+    expense: number;
+    dueamountPurchase: number;
+    dueamountSale: number;
+    profit: number;
+    billPorfit: number;
+  }
+
+  
+  const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs>(dayjs());
+
+  // Separate API call for today's data
+  const { data: todayOverviewData } = useCustom<{
+    data: IDailySummary;
   }>({
-    url: `${API_URL}/misc/summary`,
+    url: `${API_URL}/misc/daily-summary`,
     method: "get",
+    config: {
+      query: {
+        date: selectedDate.format('YYYY-MM-DD')
+      },
+    },
   });
 
-  const todayData = summaryData?.data?.today;
-  const thisMonthData = summaryData?.data?.thisMonth;
+
+    // Separate API call for monthly data
+    const { data: monthOverviewData } = useCustom<{
+      data: IDailySummary;
+    }>({
+      url: `${API_URL}/misc/monthly-summary`,
+      method: "get",
+      // config: {
+      //   query: {
+      //     month: dayjs().format('YYYY-MM')
+      //   },
+      // },
+    });
+
+  const todayData = todayOverviewData?.data;
+  const thisMonthData = monthOverviewData?.data;
 
   const revenue = useMemo(() => {
     const data = dailyRevenueData?.data?.data;
@@ -174,6 +218,26 @@ export const DashboardPage: React.FC = () => {
       trend: dailyRevenueData?.data?.trend || 0,
     };
   }, [dailyRevenueData]);
+
+
+    // Custom header component for Today Overview
+    const TodayOverviewHeader: React.FC = () => (
+      <Space size="middle">
+        <DollarCircleOutlined
+          style={{
+            fontSize: 14,
+            color: token.colorPrimary,
+          }}
+        />
+        <span>{t("Today Overview")}</span>
+        <DatePicker
+          value={selectedDate}
+          onChange={(date) => date && setSelectedDate(date)}
+          allowClear={false}
+          style={{ marginLeft: 'auto' }}
+        />
+      </Space>
+    );
 
   const orders = useMemo(() => {
     const data = dailyOrdersData?.data?.data;
@@ -334,28 +398,19 @@ export const DashboardPage: React.FC = () => {
         </Col>
 
         <Col xl={24} lg={24} md={24} sm={24} xs={24}>
-          <CardWithContent
-            bodyStyles={{
-              padding: "1px 0px 0px 0px",
-            }}
-            icon={
-              <DollarCircleOutlined
-                style={{
-                  fontSize: 14,
-                  color: token.colorPrimary,
-                }}
-              />
-            }
-            title={t("Today Overview")}
+        <Card
+            title={<TodayOverviewHeader />}
+            bodyStyle={{ padding: "1px 0px 0px 0px" }}
           >
             <Row justify={screens.md ? "center" : "center"}>
-              {renderCard("Income", todayData?.income || 0, "success")}
-              {renderCard("Expense", todayData?.expense || 0, "danger")}
-              {renderCard("Profit", todayData?.profit || 0, "")}
-              {renderCard("Due Amount (Purchase)", todayData?.dueamountPurchase || 0, "warning")}
-              {renderCard("Due Amount (Sale)", todayData?.dueamountSale || 0, "warning")}
+              {renderCard("Income", todayData?.data.expense || 0, "success")}
+              {renderCard("Expense", todayData?.data.expense || 0, "danger")}
+              {renderCard("Profit", todayData?.data.profit || 0, "")}
+              {renderCard("Due Amount (Purchase)", todayData?.data.dueamountPurchase || 0, "warning")}
+              {renderCard("Due Amount (Sale)", todayData?.data.dueamountSale || 0, "warning")}
+              {renderCard("Bill Profit", todayData?.data.billPorfit || 0, "warning")}
             </Row>
-          </CardWithContent>
+          </Card>
         </Col>
 
         <Col xl={24} lg={24} md={24} sm={24} xs={24}>
@@ -374,11 +429,12 @@ export const DashboardPage: React.FC = () => {
             title={t("This Month Overview")}
           >
             <Row justify={screens.md ? "center" : "center"}>
-              {renderCard("Income", thisMonthData?.income || 0, "success")}
-              {renderCard("Expense", thisMonthData?.expense || 0, "danger")}
-              {renderCard("Profit", thisMonthData?.profit || 0, "")}
-              {renderCard("Due Amount (Purchase)", thisMonthData?.dueamountPurchase || 0, "warning")}
-              {renderCard("Due Amount (Sale)", thisMonthData?.dueamountSale || 0, "warning")}
+              {renderCard("Income", thisMonthData?.data.income || 0, "success")}
+              {renderCard("Expense", thisMonthData?.data.expense || 0, "danger")}
+              {renderCard("Profit", thisMonthData?.data.profit || 0, "")}
+              {renderCard("Due Amount (Purchase)", thisMonthData?.data.dueamountPurchase || 0, "warning")}
+              {renderCard("Due Amount (Sale)", thisMonthData?.data.dueamountSale || 0, "warning")}
+              {renderCard("Bill Profit", thisMonthData?.data.billPorfit || 0, "warning")}
             </Row>
           </CardWithContent>
         </Col>
