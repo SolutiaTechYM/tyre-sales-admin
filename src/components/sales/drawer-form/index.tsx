@@ -31,6 +31,8 @@ import {UploadOutlined} from "@ant-design/icons";
 import {useStyles} from "./styled";
 import {SaleDetailsEditableTable} from "../details-table copy";
 import {ProductStock} from "../../product/stock";
+import { DatePicker } from "antd/lib";
+import dayjs from "dayjs";
 
 type Props = {
     id?: BaseKey;
@@ -53,6 +55,7 @@ export const SaleDrawerForm = (props: Props) => {
     const [stockunitprice, setstockunitprice] = useState(12345);
     // const [selectedproductid, setselectedproductid] = useState<number | undefined>();
     const [selectedstockid, setselectedstockid] = useState<number | undefined>();
+  const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs>(dayjs());
 
 
     const [stockdata, setstockdata] = useState<IStock[]>([]);
@@ -64,6 +67,7 @@ export const SaleDrawerForm = (props: Props) => {
     const [selectedproductid, setselectedproductid] = useState<number | undefined>(undefined);
     const [fetchedProductIds, setFetchedProductIds] = useState<number[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+
 
 
     const {drawerProps, formProps, close, saveButtonProps, formLoading} =
@@ -318,6 +322,7 @@ export const SaleDrawerForm = (props: Props) => {
                 quantity: enteredQuantity,
                 unitSellPrice: enteredUnitSellPrice,
                 totalPrice: enteredUnitSellPrice * enteredQuantity,
+                stockLabel: `${selectedStock?.quantity} units - ${selectedStock?.unitBuyPrice}/=`, 
             };
 
             // Update the selected stock quantity
@@ -341,13 +346,25 @@ export const SaleDrawerForm = (props: Props) => {
             setTableData([...tableData, newRow]);
 
             formProps.form.setFieldsValue({
-                proname: "",
-                unitsellingprice: "",
-                stockid: "",
-                unitprice: "",
-                quantity: "",
+                proname: undefined,
+                unitsellingprice: undefined,
+                stockid: undefined,
+                category: undefined,
+                unitprice: undefined,
+                quantity: undefined,
             });
+            setselectedproductid(undefined);
+            setSelectedCategory(null);
             setselectedstockid(undefined);
+            
+            // Force the Select components to reset their internal states
+            if (categorySelectProps.onChange) {
+                categorySelectProps.onChange(undefined as any, null as any);
+            }
+            if (productSelectProps.onChange) {
+                productSelectProps.onChange(undefined as any, null as any);
+            }
+            
         } else {
             showErrorNotification();
         }
@@ -419,6 +436,26 @@ export const SaleDrawerForm = (props: Props) => {
                             ]}
                         >
                             <Select {...supplierSelectProps} />
+                        </Form.Item>
+
+
+                        <Form.Item
+                            label={t("Date")}
+                            name="createdDate"
+                            className={styles.formItem}
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                              <DatePicker
+      disabledDate={(current) => current && current > dayjs().endOf('day')}
+      value={selectedDate}
+      onChange={(date) => date && setSelectedDate(date)}
+      allowClear={false}
+      
+    />
                         </Form.Item>
 
                         <Form.Item
@@ -542,21 +579,27 @@ export const SaleDrawerForm = (props: Props) => {
                                         />
                                     </Form.Item>
                                     <Form.Item
-                                        label={t("Stock")}
-                                        name="stockid"
-                                        style={{minWidth: '150px'}}
-                                        className={styles.subFormItem}
-                                        rules={[
-                                            {
-                                                required: true,
-                                            },
-                                        ]}
-                                    >
-                                        <Select
-                                            options={selectedproductid ? getStockOptionsForProduct(selectedproductid) : []}
-                                            onChange={(value) => setselectedstockid(value as unknown as number)}
-                                        />
-                                    </Form.Item>
+    label={t("Stock")}
+    name="stockid"
+    style={{minWidth: '150px'}}
+    className={styles.subFormItem}
+    rules={[
+        {
+            required: true,
+        },
+    ]}
+>
+    <Select
+        options={selectedproductid ? getStockOptionsForProduct(selectedproductid) : []}
+        onChange={(value) => setselectedstockid(value as unknown as number)}
+        onDropdownVisibleChange={(open) => {
+            if (open && selectedproductid) {
+                // Refresh the stock data when the dropdown opens
+                fetchStockData(selectedproductid);
+            }
+        }}
+    />
+</Form.Item>
                                     <Form.Item
                                         label={t("purchases.fields.details.qty")}
                                         name="quantity"
@@ -695,6 +738,7 @@ export const SaleDrawerForm = (props: Props) => {
                                             const customer = formProps.form.getFieldValue("customername");
                                             const note = formProps.form.getFieldValue("note");
                                             const code = formProps.form.getFieldValue("code");
+                                            const createdDate = formProps.form.getFieldValue("createdDate");
 
                                             if (!code) {
                                                 showError("Please Enter Code");
@@ -720,6 +764,7 @@ export const SaleDrawerForm = (props: Props) => {
                                                         payment,
                                                         totalPrice,
                                                         note,
+                                                        createdAt:createdDate.format('YYYY-MM-DD'),
                                                         code
                                                     }),
                                                 });

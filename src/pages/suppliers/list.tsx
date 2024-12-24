@@ -75,10 +75,31 @@ export const SupplierList = ({ children }: PropsWithChildren) => {
   });
 
 
+    const { isLoading, triggerExport } = useExport<ISupplier>({
+      // sorters,
+      // filters,
+      // pageSize: 50,
+      // maxItemCount: 50,
+      mapData: (item) => {
+        return {
+          id: item.name,
+          date:item.createdAt,
+          // createdAt: item.createdAt,
+          Contact_Person: item.contact_person,
+          Due_Amount: item.dueAmount,
+          Last_Order_Date:item.lastOrderDate,
+          Phone:item.phone
+        };
+      },
+    });
+
+
   return (
     <List
       breadcrumb={false}
       headerButtons={(props) => [
+        <ExportButton onClick={triggerExport} loading={isLoading} />,
+
         <CreateButton
           {...props.createButtonProps}
           key="create"
@@ -298,33 +319,81 @@ export const SupplierList = ({ children }: PropsWithChildren) => {
         // sorter
         />
 
-        <Table.Column
-          title={t("suppliers.fields.dueAmount")}
-          dataIndex="dueAmount"
-          key="dueAmount"
-          // sorter
-          width={150}
-          defaultSortOrder={getDefaultSortOrder("price", sorters)}
-          render={(dueAmount: number) => {
-            return (
-              <NumberField
-                value={dueAmount}
-                style={{
-                  width: "80px",
-                  fontVariantNumeric: "tabular-nums",
-                  whiteSpace: "nowrap",
-                  textAlign: "right",
-                  fontWeight:"bold",
-                  color:"red"
-                }}
-                options={{
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                }}
-              />
-            );
+<Table.Column
+  title={t("suppliers.fields.dueAmount")}
+  dataIndex="dueAmount"
+  key="dueAmount"
+  width={150}
+  defaultSortOrder={getDefaultSortOrder("dueAmount", sorters)}
+  render={(credit: number) => {
+    const formatOptions = {
+
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    };
+
+    if (credit < 0) {
+      const formattedValue = `${Math.abs(credit).toLocaleString('en-LK', formatOptions)}`;
+      return (
+        <span
+          style={{
+            width: "80px",
+            fontVariantNumeric: "tabular-nums",
+            whiteSpace: "nowrap",
+            color: "lightgreen",
+            fontWeight: "bold",
           }}
-        />
+        >
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div>C</div>
+            <div>
+              {formattedValue}
+
+            </div>
+
+          </div>
+        </span>
+      );
+    } else if (credit > 0) {
+      const formattedValue = `${credit.toLocaleString('en-LK', formatOptions)}`;
+      return (
+        <span
+          style={{
+            width: "80px",
+            fontVariantNumeric: "tabular-nums",
+            whiteSpace: "nowrap",
+            color: "red",
+            fontWeight: "bold",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div>D</div>
+            <div>
+              {formattedValue}
+
+            </div>
+
+          </div>
+
+
+        </span>
+      );
+    } else {
+      return (
+        <span
+          style={{
+            width: "80px",
+            fontVariantNumeric: "tabular-nums",
+            whiteSpace: "nowrap",
+            color: "white"
+          }}
+        >
+          -
+        </span>)
+    }
+  }}
+/>
+
         <Table.Column
           title={t("Last Order Date")}
           dataIndex="lastOrderDate"

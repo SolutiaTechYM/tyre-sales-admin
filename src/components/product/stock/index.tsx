@@ -21,8 +21,8 @@ export const ProductStock = ({ product }: Props) => {
     // },
     {
       title: "Date",
-      dataIndex: "date",
-      key: "date",
+      dataIndex: "createdAt",
+      key: "createdAt",
       render: (value: any) => (
         <Typography.Text style={{ whiteSpace: "nowrap" }}>{value}</Typography.Text>
       ),

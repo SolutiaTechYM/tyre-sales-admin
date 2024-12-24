@@ -12,7 +12,7 @@ export const SupplierInfoSummary = ({ supplier }: Props) => {
     <Flex align="center" gap={32}>
       <Avatar size={96} src={supplier?.avatar[0]?.thumbnailUrl} />
       <Flex vertical>
-        <Typography.Text type="secondary">{supplier?.id}</Typography.Text>
+        {/* <Typography.Text type="secondary">{supplier?.id}</Typography.Text> */}
         <Typography.Title
           level={3}
           style={{

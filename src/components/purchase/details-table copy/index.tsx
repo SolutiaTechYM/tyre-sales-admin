@@ -105,12 +105,12 @@ export const PurchaseDetailsEditableTable = ({
           key="category"
           // align="center"
 
-          // sorter
-          render={(value) => (
-            <Typography.Text style={{ whiteSpace: "nowrap" }}>
-              {value}
-            </Typography.Text>
-          )}
+          // // sorter
+          // render={(value) => (
+          //   <Typography.Text style={{ whiteSpace: "nowrap" }}>
+          //     {value}
+          //   </Typography.Text>
+          // )}
         />
         <Table.Column
           title={t("purchases.fields.details.qty")}

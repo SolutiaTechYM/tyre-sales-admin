@@ -73,7 +73,7 @@ export const DashboardPage: React.FC = () => {
     }));
   }, [t]);
 
-  const dateFilterQuery = useMemo(() => {
+  const dateFilterQuery = useMemo(() => { 
     const now = dayjs();
     switch (selectedDateFilter) {
       case "lastWeek":
@@ -166,34 +166,63 @@ export const DashboardPage: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs>(dayjs());
 
   // Separate API call for today's data
-  const { data: todayOverviewData } = useCustom<{
-    data: IDailySummary;
-  }>({
-    url: `${API_URL}/misc/daily-summary`,
-    method: "get",
-    config: {
-      query: {
-        date: selectedDate.format('YYYY-MM-DD')
-      },
-    },
-  });
+  // const { data: todayOverviewData } = useCustom<{
+  //   data: IDailySummary;
+  // }>({
+  //   url: `${API_URL}/misc/daily-summary`,
+  //   method: "get",
+  //   config: {
+  //     query: {
+  //       date: selectedDate.format('YYYY-MM-DD')
+  //     },
+  //   },
+  // });
 
 
-    // Separate API call for monthly data
-    const { data: monthOverviewData } = useCustom<{
-      data: IDailySummary;
+  //   // Separate API call for monthly data
+  //   const { data: monthOverviewData } = useCustom<{
+  //     data: IDailySummary;
+  //   }>({
+  //     url: `${API_URL}/misc/monthly-summary`,
+  //     method: "get",
+  //     // config: {
+  //     //   query: {
+  //     //     month: dayjs().format('YYYY-MM')
+  //     //   },
+  //     // },
+  //   });
+
+
+
+    const { data: todayOverviewData } = useCustom<{
+      today: {
+        income: number;
+        expense: number;
+        dueamountPurchase: number;
+        dueamountSale: number;
+        profit: number;
+        billProfit: number;
+      };
+      thisMonth: {
+        income: number;
+        expense: number;
+        dueamountPurchase: number;
+        dueamountSale: number;
+        profit: number;
+        billProfit: number;
+      };
     }>({
-      url: `${API_URL}/misc/monthly-summary`,
+      url: `${API_URL}/misc/summary`,
       method: "get",
-      // config: {
-      //   query: {
-      //     month: dayjs().format('YYYY-MM')
-      //   },
-      // },
+      config: {
+        query: {
+          date: selectedDate.format('YYYY-MM-DD')
+        },
+      },
     });
 
-  const todayData = todayOverviewData?.data;
-  const thisMonthData = monthOverviewData?.data;
+    const todayData = todayOverviewData?.data?.today;
+    const thisMonthData = todayOverviewData?.data?.thisMonth;
 
   const revenue = useMemo(() => {
     const data = dailyRevenueData?.data?.data;
@@ -220,24 +249,19 @@ export const DashboardPage: React.FC = () => {
   }, [dailyRevenueData]);
 
 
-    // Custom header component for Today Overview
-    const TodayOverviewHeader: React.FC = () => (
-      <Space size="middle">
-        <DollarCircleOutlined
-          style={{
-            fontSize: 14,
-            color: token.colorPrimary,
-          }}
-        />
-        <span>{t("Today Overview")}</span>
-        <DatePicker
-          value={selectedDate}
-          onChange={(date) => date && setSelectedDate(date)}
-          allowClear={false}
-          style={{ marginLeft: 'auto' }}
-        />
-      </Space>
-    );
+    // // Custom header component for Today Overview
+    // const TodayOverviewHeader: React.FC = () => (
+    //   <Space size="middle">
+    //     <DollarCircleOutlined
+    //       style={{
+    //         fontSize: 14,
+    //         color: token.colorPrimary,
+    //       }}
+    //     />
+    //     {t("Today Overview")}
+        
+    //   </Space>
+    // );
 
   const orders = useMemo(() => {
     const data = dailyOrdersData?.data?.data;
@@ -279,6 +303,11 @@ export const DashboardPage: React.FC = () => {
     };
   }, [newCustomersData]);
 
+  const formatValue = (value: number): number => {
+    return parseFloat((value || 0).toFixed(2));
+  };
+
+
   const renderCard = (title: string, value: number, type: "success" | "danger" | "warning" | "") => (
     <Col xs={24} sm={12} md={6} style={{ margin: 10 }}>
       <Card hoverable>
@@ -288,8 +317,12 @@ export const DashboardPage: React.FC = () => {
             <Divider type="vertical" />
           </div>
           <NumberField
-            value={value}
-      
+            // value={value}
+       value={formatValue(value)}
+            options={{
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }}
             style={{ fontSize: screens.sm ? "14px" : "12px", color: type === "success" ? "#52c41a" : type === "danger" ? "#f5222d" : type === "warning" ? "#faad14" : "#1890ff" }}
           />
         </Row>
@@ -396,21 +429,49 @@ export const DashboardPage: React.FC = () => {
             </Col>
           </Row>
         </Col>
-
+        <Col style={{width:"100%"}}>
+  <Row justify="space-between" align="middle" style={{width:"100%"}}>
+    <Text style={{ 
+      fontSize: 22,
+      fontWeight: 500,
+   
+    }}>
+      Summary
+    </Text>
+    <DatePicker
+      disabledDate={(current) => current && current > dayjs().endOf('day')}
+      value={selectedDate}
+      onChange={(date) => date && setSelectedDate(date)}
+      allowClear={false}
+    />
+  </Row>
+</Col>
+      
         <Col xl={24} lg={24} md={24} sm={24} xs={24}>
-        <Card
-            title={<TodayOverviewHeader />}
-            bodyStyle={{ padding: "1px 0px 0px 0px" }}
+        <CardWithContent
+            bodyStyles={{
+              padding: "1px 0px 0px 0px",
+            }}
+            icon={
+              <DollarCircleOutlined
+                style={{
+                  fontSize: 14,
+                  color: token.colorPrimary,
+                }}
+              />
+            }
+            title={t("Day Overview")}
           >
+       
             <Row justify={screens.md ? "center" : "center"}>
-              {renderCard("Income", todayData?.data.expense || 0, "success")}
-              {renderCard("Expense", todayData?.data.expense || 0, "danger")}
-              {renderCard("Profit", todayData?.data.profit || 0, "")}
-              {renderCard("Due Amount (Purchase)", todayData?.data.dueamountPurchase || 0, "warning")}
-              {renderCard("Due Amount (Sale)", todayData?.data.dueamountSale || 0, "warning")}
-              {renderCard("Bill Profit", todayData?.data.billPorfit || 0, "warning")}
+              {renderCard("Income", todayData?.income || 0.00, "success")}
+              {renderCard("Expense", todayData?.expense || 0.00, "danger")}
+              {renderCard("Profit", todayData?.profit || 0.00, "")}
+              {renderCard("Due Amount (Purchase)", todayData?.dueamountPurchase || 0.00, "warning")}
+              {renderCard("Due Amount (Sale)", todayData?.dueamountSale || 0.00, "warning")}
+              {renderCard("Bill Profit", todayData?.billProfit || 0.00, "warning")}
             </Row>
-          </Card>
+          </CardWithContent>
         </Col>
 
         <Col xl={24} lg={24} md={24} sm={24} xs={24}>
@@ -426,15 +487,15 @@ export const DashboardPage: React.FC = () => {
                 }}
               />
             }
-            title={t("This Month Overview")}
+            title={t("Month Overview")}
           >
-            <Row justify={screens.md ? "center" : "center"}>
-              {renderCard("Income", thisMonthData?.data.income || 0, "success")}
-              {renderCard("Expense", thisMonthData?.data.expense || 0, "danger")}
-              {renderCard("Profit", thisMonthData?.data.profit || 0, "")}
-              {renderCard("Due Amount (Purchase)", thisMonthData?.data.dueamountPurchase || 0, "warning")}
-              {renderCard("Due Amount (Sale)", thisMonthData?.data.dueamountSale || 0, "warning")}
-              {renderCard("Bill Profit", thisMonthData?.data.billPorfit || 0, "warning")}
+             <Row justify={screens.md ? "center" : "center"}>
+              {renderCard("Income", thisMonthData?.income || 0.00, "success")}
+              {renderCard("Expense", thisMonthData?.expense || 0.00, "danger")}
+              {renderCard("Profit", thisMonthData?.profit || 0.00, "")}
+              {renderCard("Due Amount (Purchase)", thisMonthData?.dueamountPurchase || 0.00, "warning")}
+              {renderCard("Due Amount (Sale)", thisMonthData?.dueamountSale || 0.00, "warning")}
+              {renderCard("Bill Profit", thisMonthData?.billProfit || 0.00, "warning")}
             </Row>
           </CardWithContent>
         </Col>

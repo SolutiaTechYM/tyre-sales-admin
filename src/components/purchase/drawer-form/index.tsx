@@ -32,6 +32,8 @@ import {UploadOutlined} from "@ant-design/icons";
 import {useStyles} from "./styled";
 import {PurchaseDetailsEditableTable} from "../details-table copy";
 import {log} from "console";
+import { DatePicker } from "antd/lib";
+import dayjs from "dayjs";
 
 type Props = {
     id?: BaseKey;
@@ -52,6 +54,8 @@ export const PurchaseDrawerForm = (props: Props) => {
     const [showModal, setShowModal] = useState(false);
     const [totalPrice, settotalPrice] = useState(0);
     const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+    const [selectedCategoryLabel, setSelectedCategoryLabel] = useState<string>("");
+  const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs>(dayjs());
 
 
     const {drawerProps, formProps, close, saveButtonProps, formLoading} =
@@ -288,12 +292,32 @@ export const PurchaseDrawerForm = (props: Props) => {
                         </Form.Item>
 
                         <Form.Item
+                            label={t("Date")}
+                            name="createdDate"
+                            className={styles.formItem}
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                              <DatePicker
+      disabledDate={(current) => current && current > dayjs().endOf('day')}
+      value={selectedDate}
+      onChange={(date) => date && setSelectedDate(date)}
+      allowClear={false}
+      
+    />
+                        </Form.Item>
+
+                        <Form.Item
                             label={t("purchases.fields.note")}
                             name="description"
                             className={styles.formItem}
                         >
                             <Input.TextArea rows={2}/>
                         </Form.Item>
+
 
                         <Form.Item
                             label={t("Grand Total")}
@@ -381,21 +405,23 @@ export const PurchaseDrawerForm = (props: Props) => {
                   </Form.Item> */}
 
 
-                                <Form.Item
-                                    label={t("purchases.fields.category")}
-                                    name="category"
-                                    style={{minWidth: '300px'}}
-                                    className={styles.subFormItem}
-                                    rules={[{required: true}]}
-                                >
-                                    <Select
-                                        {...categorySelectProps}
-                                        onChange={(value) => {
-                                            setSelectedCategory(value as unknown as number);
-                                            formProps.form.setFieldsValue({proname: undefined});
-                                        }}
-                                    />
-                                </Form.Item>
+<Form.Item
+        label={t("purchases.fields.category")}
+        name="category"
+        style={{minWidth: '300px'}}
+        className={styles.subFormItem}
+        rules={[{required: true}]}
+    >
+        <Select
+            {...categorySelectProps}
+            onChange={(value, option) => {
+                setSelectedCategory(value as unknown as number);
+                // Store the category label when selected
+                setSelectedCategoryLabel(Array.isArray(option) ? option[0]?.label?.toString() || "" : option?.label?.toString() || "");
+                formProps.form.setFieldsValue({proname: undefined});
+            }}
+        />
+    </Form.Item>
 
                                 <Form.Item
                                     label={t("purchases.fields.details.name")}
@@ -496,16 +522,23 @@ export const PurchaseDrawerForm = (props: Props) => {
                                                     name: selectedProduct?.label?.toString() || "",
                                                     productID: selectedProduct?.value || "",
                                                     quantity: formProps.form.getFieldValue("quantity"),
+                                                    category: selectedCategoryLabel,
                                                     unitPrice: formProps.form.getFieldValue("unitprice"),
                                                     totalPrice: Number((formProps.form.getFieldValue("unitprice") * formProps.form.getFieldValue("quantity")).toFixed(2)),
                                                 };
-
+                                                    console.log(newRow);
+                                                    
                                                 setTableData([...tableData, newRow]);
                                                 formProps.form.setFieldsValue({
+                                                    category:"",
                                                     proname: "",
                                                     quantity: "",
                                                     unitprice: "",
                                                 });
+
+                                                setSelectedCategory(null);
+                                                setSelectedCategoryLabel("");
+
                                             } else {
                                                 // Alert or handle the case where some fields are empty
                                                 // For example, show a message to the user
@@ -554,6 +587,7 @@ export const PurchaseDrawerForm = (props: Props) => {
                                             const code = formProps.form.getFieldValue("id");
                                             const supplier = formProps.form.getFieldValue("suppliername");
                                             const description = formProps.form.getFieldValue("description");
+                                            const createdDate = formProps.form.getFieldValue("createdDate");
 
                                             console.log(description);
                                             console.log(code);
@@ -577,6 +611,7 @@ export const PurchaseDrawerForm = (props: Props) => {
                                                         payment,
                                                         totalPrice,
                                                         description,
+                                                        createdAt:createdDate.format('YYYY-MM-DD'),
                                                         code
                                                     }),
                                                 });

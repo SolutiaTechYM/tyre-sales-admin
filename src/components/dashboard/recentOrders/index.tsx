@@ -1,7 +1,7 @@
 import { useNavigation } from "@refinedev/core";
 import { NumberField, useTable } from "@refinedev/antd";
-import { Typography, Table, theme, Space, Flex } from "antd";
-
+import { Typography, Table, theme, Space, Flex, Collapse } from "antd";
+import { CaretRightOutlined } from "@ant-design/icons";
 
 import { IOrder } from "../../../interfaces";
 import { useStyles } from "./styled";
@@ -20,13 +20,6 @@ export const RecentOrders: React.FC = () => {
       },
     ],
     initialPageSize: 10,
-    // permanentFilter: [
-    //   {
-    //     field: "status.text",
-    //     operator: "eq",
-    //     value: "Pending",
-    //   },
-    // ],
     syncWithLocation: false,
   });
 
@@ -50,13 +43,12 @@ export const RecentOrders: React.FC = () => {
         render={(_, record) => (
           <Typography.Link
             strong
-            // onClick={() => show("orders", record.id)}
             style={{
               whiteSpace: "nowrap",
               color: token.colorTextHeading,
             }}
           >
-            {record.id}
+            {record.code}
           </Typography.Link>
         )}
       />
@@ -105,26 +97,49 @@ export const RecentOrders: React.FC = () => {
           >({ list: products, field: "id" });
 
           return (
-            <Space
-              size={0}
-              direction="vertical"
-              style={{
-                maxWidth: "220px",
-              }}
-            >
-              {uniqueProducts.map((product) => (
-                <Flex key={product.id} gap={4}>
-                  <Typography.Text ellipsis>{product.name}</Typography.Text>
-                  <span
-                    style={{
-                      color: token.colorTextSecondary,
-                    }}
-                  >
-                    x{product.count}
-                  </span>
-                </Flex>
-              ))}
-            </Space>
+            <Collapse
+              ghost
+              size="small"
+              expandIcon={({ isActive }) => (
+                <CaretRightOutlined
+                  rotate={isActive ? 90 : 0}
+                  style={{ fontSize: '12px', color: token.colorTextSecondary }}
+                />
+              )}
+              items={[
+                {
+                  key: '1',
+                  label: (
+                    <Typography.Text style={{ fontSize: '14px' }}>
+                      {uniqueProducts.length} {uniqueProducts.length === 1 ? 'Product' : 'Products'}
+                    </Typography.Text>
+                  ),
+                  children: (
+                    <Space
+                      size={0}
+                      direction="vertical"
+                      style={{
+                        maxWidth: "220px",
+                        paddingLeft: "8px",
+                      }}
+                    >
+                      {uniqueProducts.map((product) => (
+                        <Flex key={product.id} gap={4}>
+                          <Typography.Text ellipsis>{product.name}</Typography.Text>
+                          <span
+                            style={{
+                              color: token.colorTextSecondary,
+                            }}
+                          >
+                            x{product.count}
+                          </span>
+                        </Flex>
+                      ))}
+                    </Space>
+                  ),
+                },
+              ]}
+            />
           );
         }}
       />
@@ -147,13 +162,6 @@ export const RecentOrders: React.FC = () => {
           );
         }}
       />
-      {/* <Table.Column<IOrder>
-        fixed="right"
-        key="actions"
-        className={styles.column}
-        align="end"
-        render={(_, record) => <OrderActions record={record} />}
-      /> */}
     </Table>
   );
 };

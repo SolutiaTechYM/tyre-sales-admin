@@ -208,10 +208,13 @@ export const PaymentDrawerForm = (props: Props) => {
     title="Total Price" 
     dataIndex="value" 
     key="value"  
+    align="right"
+
     render={(text) => <span style={{ color: 'blue',fontWeight:'bold' }}>{text}</span>}
   />
   <Table.Column 
     title="Due Amount" 
+    align="right"
     dataIndex="dueAmount" 
     key="dueAmount" 
     render={(text) => <span style={{ color: 'orange',fontWeight:'bold' }}>{text}</span>}
@@ -273,12 +276,15 @@ export const PaymentDrawerForm = (props: Props) => {
     title="Total Price" 
     dataIndex="value" 
     key="value"  
+    align="right"
     render={(text) => <span style={{ color: 'blue',fontWeight:'bold' }}>{text}</span>}
   />
   <Table.Column 
     title="Due Amount" 
     dataIndex="dueAmount" 
     key="dueAmount" 
+    align="right"
+
     render={(text) => <span style={{ color: 'orange',fontWeight:'bold' }}>{text}</span>}
   />
                   <Table.Column

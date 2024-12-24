@@ -12,7 +12,7 @@ export const CustomerOrderHistory = ({ customer }: Props) => {
   
   const columns = [
     {
-      title: "Purcase ID",
+      title: "Trade",
       dataIndex: "code",
       key: "code",
       render: (value: any) => (
@@ -21,8 +21,8 @@ export const CustomerOrderHistory = ({ customer }: Props) => {
     },
     {
       title: "Date",
-      dataIndex: "date",
-      key: "date",
+      dataIndex: "createdAt",
+      key: "createdAt",
       align:"center" as const,
       render: (value: any) => (
         <Typography.Text style={{ whiteSpace: "nowrap" }}>{value}</Typography.Text>
@@ -36,7 +36,7 @@ export const CustomerOrderHistory = ({ customer }: Props) => {
       render: (amount: any) => (
         <NumberField
           value={amount}
-          style={{ whiteSpace: "nowrap" }}
+          style={{ whiteSpace: "nowrap",fontWeight:'bold' }}
           options={{            minimumFractionDigits: 2,
             maximumFractionDigits: 2, }}
         />
@@ -50,7 +50,7 @@ export const CustomerOrderHistory = ({ customer }: Props) => {
       render: (amount: any) => (
         <NumberField
           value={amount}
-          style={{ whiteSpace: "nowrap" }}
+          style={{ whiteSpace: "nowrap",fontWeight:'bold' }}
           options={{            minimumFractionDigits: 2,
             maximumFractionDigits: 2, }}
         />

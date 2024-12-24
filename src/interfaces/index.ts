@@ -119,6 +119,7 @@ export interface IPurchaseProduct {
     categoryID?: number;
     quantity: number;
     unitPrice: number;
+    
     // totalAmount: number;
 }
 
@@ -133,13 +134,15 @@ export interface ISales {
 }
 
 export interface RowDatasale {
-    name: string;
+    name: string | number | true | React.ReactElement | Iterable<React.ReactNode>;
+//   stockLabel: string;
     productID: number;
     stockID: number; // Change the type to string | number
     quantity: number;
     unitBuyPrice: string | number;
     unitSellPrice: number;
     totalPrice: number;
+    stockLabel:string | number;
 }
 
 
@@ -396,6 +399,7 @@ export interface IOrder {
     // events: IEvent[];
     orderNumber: number;
     amount: number;
+    code:string;
 }
 
 // export interface ICustomer {

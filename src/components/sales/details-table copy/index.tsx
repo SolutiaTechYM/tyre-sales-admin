@@ -108,8 +108,8 @@ export const SaleDetailsEditableTable = ({
       />
       <Table.Column
         title={t("Stock")}
-        dataIndex="stockID"
-        key="stockID"
+        dataIndex="stockLabel"
+        key="stockLabel"
         // align="center"
 
         // sorter
