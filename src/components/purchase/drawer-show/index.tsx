@@ -23,6 +23,8 @@ import {
   theme,
   message,
 } from "antd";
+import {  TableColumnsType } from "antd";
+
 import { useSearchParams } from "react-router-dom";
 import { Drawer } from "../../drawer";
 import { ICategory, IProduct, IPurchase,IPurchaseProductshow } from "../../../interfaces";
@@ -32,6 +34,7 @@ import { DeleteOutlined, EditOutlined, FilePdfOutlined } from "@ant-design/icons
 import { PurchaseDetailsTable } from "../details-table";
 import { PdfLayout } from "../../../pages/purchases/PdfLayout";
 import { useState } from "react";
+import { ColumnsType } from "antd/es/table";
 
 type Props = {
   id?: BaseKey;
@@ -108,50 +111,109 @@ export const PurchaseDrawerShow = (props: Props) => {
     }
   };
 
-  const columns = [
-    // {
-    //   title: '',
-    //   dataIndex: 'productID',
-    //   key: 'productID',
-    // },
+  // const columns = [
+  //   // {
+  //   //   title: '',
+  //   //   dataIndex: 'productID',
+  //   //   key: 'productID',
+  //   // },
+  //   {
+  //     title: 'Product Code',
+  //     dataIndex: 'productCode',
+  //     key: 'productCode',
+  //   },
+  //   {
+  //     title: 'Category / Product Name',
+  //     dataIndex: 'categoryName', 
+  //     key: 'categoryName',
+  //     render: (categoryName: string, record: IPurchaseProductshow) => (
+  //       `${categoryName} - ${record.productName}`
+  //     ),
+  //   },
+  //   {
+  //     title: 'Unit Price',
+  //     dataIndex: 'unitPrice',
+      
+  //     key: 'unitPrice',
+  //     align: "right",
+  //     render: (value: number) => <NumberField value={value} options={{
+  //       minimumFractionDigits: 2,
+  //       maximumFractionDigits: 2,
+  //     }} />,
+  //   },
+  //   {
+  //     title: 'Quantity',
+  //     dataIndex: 'quantity',
+  //     key: 'quantity',
+  //   },
+  //   {
+  //     title: 'Total',
+  //     dataIndex: 'totalPrice',
+  //     key: 'totalPrice',
+  //     render: (value: number) => <NumberField value={value} options={{
+  //       minimumFractionDigits: 2,
+  //       maximumFractionDigits: 2,
+  //     }} />,
+  //   },
+  // ];
+
+
+
+  const columns: ColumnsType<IPurchaseProductshow> = [
     {
-      title: 'Product Code',
-      dataIndex: 'productCode',
-      key: 'productCode',
+      title: "Product Code",
+      dataIndex: "productCode",
+      key: "productCode",
     },
     {
-      title: 'Category / Product Name',
-      dataIndex: 'categoryName', 
-      key: 'categoryName',
+      title: "Category / Product Name",
+      dataIndex: "categoryName",
+      key: "categoryName",
       render: (categoryName: string, record: IPurchaseProductshow) => (
         `${categoryName} - ${record.productName}`
       ),
     },
     {
-      title: 'Unit Price',
-      dataIndex: 'unitPrice',
-      key: 'unitPrice',
-      render: (value: number) => <NumberField value={value} options={{
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }} />,
+      title: "Unit Price",
+      dataIndex: "unitPrice",
+      key: "unitPrice",
+      align: "right", 
+      render: (value: number) => (
+        <NumberField
+          value={value}
+          style={{
+            fontWeight: 'bold'}}
+          options={{
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }}
+        />
+      ),
     },
     {
-      title: 'Quantity',
-      dataIndex: 'quantity',
-      key: 'quantity',
+      title: "Quantity",
+      dataIndex: "quantity",
+      key: "quantity",
+      align: "right", 
     },
     {
-      title: 'Total',
-      dataIndex: 'totalPrice',
-      key: 'totalPrice',
-      render: (value: number) => <NumberField value={value} options={{
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }} />,
+      title: "Total",
+      dataIndex: "totalPrice",
+      key: "totalPrice",
+      align: "right", 
+
+      render: (value: number) => (
+        <NumberField
+          value={value}
+          options={{
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }}
+        />
+      ),
     },
   ];
-
+  
   return (
     <>
       <Drawer
