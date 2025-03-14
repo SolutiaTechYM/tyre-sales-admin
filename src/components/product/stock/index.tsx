@@ -43,7 +43,7 @@ export const ProductStock = ({ product }: Props) => {
       render: (amount: any) => (
         <NumberField
           value={amount}
-          style={{ whiteSpace: "nowrap" }}
+          style={{ whiteSpace: "nowrap" ,fontWeight: 'bold'}}
           options={{
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,

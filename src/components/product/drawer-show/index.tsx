@@ -180,13 +180,15 @@ const currentQuanitity=10
         align="center"
         justify="space-between"
         style={{
-          padding: "16px 16px 16px 0",
+          padding: "16px 16px 16px 16px",
         }}
       >
         <DeleteButton
           type="text"
           recordItemId={product?.id}
           resource="products"
+          style={{border:"1px solid"}}
+
           onSuccess={() => {
             handleDrawerClose();
           }}
