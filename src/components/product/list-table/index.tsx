@@ -191,6 +191,25 @@ export const ProductListTable = () => {
           );
         }}
       />
+                  <Table.Column
+        title={t("Remaining Quantity")}
+        dataIndex="quantityRemaining"
+        key="quantityRemaining"
+        align="center"
+
+        render={(value: string) => {
+          return (
+            <Typography.Text
+              style={{
+                whiteSpace: "nowrap",
+              }}
+            >
+              {value}
+            </Typography.Text>
+          );
+        }}
+      />
+
             <Table.Column
         title={t("products.fields.images.label")}
         dataIndex="images"
