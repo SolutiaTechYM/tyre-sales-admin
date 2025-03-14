@@ -5,7 +5,7 @@ interface RankIconProps extends SVGProps<SVGSVGElement> {
   rank: number;
 }
 
-export const Rank5Icon: React.FC<RankIconProps> = ({ rank, ...props }) => {
+export const RankIcon: React.FC<RankIconProps> = ({ rank, ...props }) => {
   const { mode } = useConfigProvider();
 
   return (

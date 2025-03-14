@@ -10,6 +10,7 @@ import {
 } from "../../icons";
 import { ReactNode } from "react";
 import { useList } from "@refinedev/core";
+// import { RankIcon } from "../../icons"; 
 
 
 type DateFilter = "lastWeek" | "lastMonth";
@@ -134,12 +135,20 @@ export const TrendingMenu: React.FC<{ dateFilter: DateFilter }> = ({ dateFilter 
   );
 };
 
-const RankIcons: Record<number, ReactNode> = {
-  1: <Rank1Icon />,
-  2: <Rank2Icon />,
-  3: <Rank3Icon />,
-  4: <Rank4Icon />,
-  5: <Rank5Icon />,
-  // For ranks 6-30, we'll use the same icon as rank 5
-  ...Object.fromEntries(Array.from({ length: 25 }, (_, i) => [i + 6, <Rank5Icon />])),
-};
+// const RankIcons: Record<number, ReactNode> = {
+//   1: <Rank1Icon />,
+//   2: <Rank2Icon />,
+//   3: <Rank3Icon />,
+//   4: <Rank4Icon />,
+//   // 5: <Rank5Icon />,
+//   // For ranks 6-30, we'll use the same icon as rank 5
+//   // ...Object.fromEntries(Array.from({ length: 25 }, (_, i) => [i + 6, <Rank5Icon />])),
+// };
+
+
+const RankIcons: Record<number, ReactNode> = {};
+
+// Create icons dynamically for ranks 1 to 30
+for (let i = 1; i <= 30; i++) {
+  RankIcons[i] = <Rank5Icon rank={i} />;
+}

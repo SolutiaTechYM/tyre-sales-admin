@@ -28,6 +28,7 @@ import { List, NumberField } from "@refinedev/antd";
 import { useApiUrl, useCustom } from "@refinedev/core";
 import dayjs from "dayjs";
 import { ISalesChart, ISummary } from "../../interfaces";
+import { bold } from '@uiw/react-md-editor';
 
 type DateFilter = "lastWeek" | "lastMonth";
 
@@ -311,24 +312,30 @@ export const DashboardPage: React.FC = () => {
   const renderCard = (title: string, value: number, type: "success" | "danger" | "warning" | "") => (
     <Col xs={24} sm={12} md={6} style={{ margin: 10 }}>
       <Card hoverable>
-        <Row align="middle">
-          <div>
-            <Text>{title}</Text>
-            <Divider type="vertical" />
+        <Row align="middle" justify="space-between">
+          {/* Title Section */}
+          <Text>{title}</Text>
+  
+          {/* Right-aligned NumberField */}
+          <div style={{ flexGrow: 1, textAlign: "right" }}>
+            <NumberField
+              value={formatValue(value)}
+              options={{
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              }}
+              style={{
+                fontWeight: "500",
+                fontSize: screens.sm ? "14px" : "12px",
+                color: type === "success" ? "#52c41a" : type === "danger" ? "#f5222d" : type === "warning" ? "#faad14" : "#1890ff",
+              }}
+            />
           </div>
-          <NumberField
-            // value={value}
-       value={formatValue(value)}
-            options={{
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            }}
-            style={{ fontSize: screens.sm ? "14px" : "12px", color: type === "success" ? "#52c41a" : type === "danger" ? "#f5222d" : type === "warning" ? "#faad14" : "#1890ff" }}
-          />
         </Row>
       </Card>
     </Col>
   );
+  
 
   return (
     <List
