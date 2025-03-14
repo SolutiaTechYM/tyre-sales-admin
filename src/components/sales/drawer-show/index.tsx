@@ -108,53 +108,6 @@ export const SalesDrawerShow = (props: Props) => {
     }
   };
 
-
-  const columns = [
-
-    {
-      title: 'Product Code',
-      dataIndex: 'productCode',
-      key: 'productCode',
-    },
-    {
-      title: 'Product Name',
-      dataIndex: 'productName',
-      key: 'productName',
-    },
-    {
-      title: 'Unit Buy Price',
-      dataIndex: 'unitBuyPrice',
-      key: 'unitBuyPrice',
-      render: (value: number) => <NumberField value={value} options={{
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }} />,
-    },
-    {
-      title: 'Unit Sell Price',
-      dataIndex: 'unitSellPrice',
-      key: 'unitSellPrice',
-      render: (value: number) => <NumberField value={value} options={{
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }} />,
-    },
-    {
-      title: 'Quantity',
-      dataIndex: 'quantity',
-      key: 'quantity',
-    },
-    {
-      title: 'Total',
-      dataIndex: 'totalPrice',
-      key: 'totalPrice',
-      render: (value: number) => <NumberField value={value} options={{
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }} />,
-    },
-  ];
-
   return (
     <>
       <Drawer
@@ -225,7 +178,6 @@ export const SalesDrawerShow = (props: Props) => {
                   }}
                   style={{
                     fontWeight: "bold"
-
                   }}
                 />
               </Typography.Text>
@@ -260,80 +212,124 @@ export const SalesDrawerShow = (props: Props) => {
             }}
           >
             <Table 
-  dataSource={sales?.saleDetails} 
-  columns={[
-    ...columns,
-    {
-      title: t("Profit"),
-      dataIndex: "profit",
-      key: "profit",
-      align: "right",
-      sorter: true,
-      render: (credit: number) => {
-        const formatOptions = {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        };
-      
-        if (credit > 0) {
-          const formattedValue = `${credit.toLocaleString('en-LK', formatOptions)}`;
-          return (
-            <span
-              style={{
-                width: "80px",
-                fontVariantNumeric: "tabular-nums",
-                whiteSpace: "nowrap",
-                color: "cyan",
-                fontWeight: "bold",
-              }}
-            >
-              <div style={{display:"flex",justifyContent:"space-between"}}>
-                <div>P</div>
-                <div>
-                  {formattedValue}
-                </div>
-              </div>
-            </span>
-          );
-        } else if(credit < 0) {
-          const formattedValue = `${Math.abs(credit).toLocaleString('en-LK', formatOptions)}`;
-          return (
-            <span
-              style={{
-                width: "80px",
-                fontVariantNumeric: "tabular-nums",
-                whiteSpace: "nowrap",
-                color: "orange",
-                fontWeight: "bold",
-              }}
-            >
-              <div style={{display:"flex",justifyContent:"space-between"}}>
-                <div>N</div>
-                <div>
-                  {formattedValue}
-                </div>
-              </div>
-            </span>
-          );
-        } else {
-          return (
-            <span
-              style={{
-                width: "80px",
-                fontVariantNumeric: "tabular-nums",
-                whiteSpace: "nowrap",
-                color: "white"
-              }}
-            >
-              -
-            </span>
-          );
-        }
-      }
-    }
-  ]} 
-/>
-
+              dataSource={sales?.saleDetails} 
+              columns={[
+                {
+                  title: 'Product Code',
+                  dataIndex: 'productCode',
+                  key: 'productCode',
+                },
+                {
+                  title: 'Product Name',
+                  dataIndex: 'productName',
+                  key: 'productName',
+                },
+                {
+                  title: 'Unit Buy Price',
+                  dataIndex: 'unitBuyPrice',
+                  key: 'unitBuyPrice',
+                  align: "right",
+                  render: (value: number) => <NumberField value={value} options={{
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }} />,
+                },
+                {
+                  title: 'Unit Sell Price',
+                  dataIndex: 'unitSellPrice',
+                  key: 'unitSellPrice',
+                  align: "right",
+                  render: (value: number) => <NumberField value={value} options={{
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }} />,
+                },
+                {
+                  title: 'Quantity',
+                  dataIndex: 'quantity',
+                  key: 'quantity',
+                  align: "right",
+                },
+                {
+                  title: 'Total',
+                  dataIndex: 'totalPrice',
+                  key: 'totalPrice',
+                  align: "right",
+                  render: (value: number) => <NumberField value={value} options={{
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }} />,
+                },
+                {
+                  title: t("Profit"),
+                  dataIndex: "profit",
+                  key: "profit",
+                  align: "right",
+                  sorter: true,
+                  render: (credit: number) => {
+                    const formatOptions = {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    };
+                  
+                    if (credit > 0) {
+                      const formattedValue = `${credit.toLocaleString('en-LK', formatOptions)}`;
+                      return (
+                        <span
+                          style={{
+                            width: "80px",
+                            fontVariantNumeric: "tabular-nums",
+                            whiteSpace: "nowrap",
+                            color: "cyan",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          <div style={{display:"flex",justifyContent:"space-between"}}>
+                            <div>P</div>
+                            <div>
+                              {formattedValue}
+                            </div>
+                          </div>
+                        </span>
+                      );
+                    } else if(credit < 0) {
+                      const formattedValue = `${Math.abs(credit).toLocaleString('en-LK', formatOptions)}`;
+                      return (
+                        <span
+                          style={{
+                            width: "80px",
+                            fontVariantNumeric: "tabular-nums",
+                            whiteSpace: "nowrap",
+                            color: "orange",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          <div style={{display:"flex",justifyContent:"space-between"}}>
+                            <div>N</div>
+                            <div>
+                              {formattedValue}
+                            </div>
+                          </div>
+                        </span>
+                      );
+                    } else {
+                      return (
+                        <span
+                          style={{
+                            width: "80px",
+                            fontVariantNumeric: "tabular-nums",
+                            whiteSpace: "nowrap",
+                            color: "white"
+                          }}
+                        >
+                          -
+                        </span>
+                      );
+                    }
+                  }
+                }
+              ]} 
+            />
 
             <Flex style={{ justifyContent: "flex-end" }}>
               <Button
@@ -347,8 +343,6 @@ export const SalesDrawerShow = (props: Props) => {
             </Flex>
           </Flex>
         </Flex>
-
-
       </Drawer>
       <Modal visible={visible} onCancel={close} width="80%" footer={null} zIndex={99999999}>
         <PdfLayout record={record} />

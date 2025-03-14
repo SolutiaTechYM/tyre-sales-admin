@@ -32,7 +32,7 @@ import {UploadOutlined} from "@ant-design/icons";
 import {useStyles} from "./styled";
 import {PurchaseDetailsEditableTable} from "../details-table copy";
 import {log} from "console";
-import { DatePicker } from "antd/lib";
+import { DatePicker } from "antd";
 import dayjs from "dayjs";
 
 type Props = {
