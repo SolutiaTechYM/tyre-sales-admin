@@ -19,7 +19,7 @@ export const RecentOrders: React.FC = () => {
         order: "desc",
       },
     ],
-    initialPageSize: 10,
+    initialPageSize: 15,
     syncWithLocation: false,
   });
 
