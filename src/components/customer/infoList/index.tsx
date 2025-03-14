@@ -57,7 +57,7 @@ export const CustomerInfoList = ({ customer }: Props) => {
       bordered={false}
       styles={{
         body: {
-          padding: "0 16px 0 16px",
+          padding: "0 16px 16px 16px",
         },
       }}
     >
@@ -107,7 +107,7 @@ export const CustomerInfoList = ({ customer }: Props) => {
         }}
       />
 
-       <div style={{ display:"flex",justifyContent:"space-between"}}>
+       <div style={{ display:"flex",justifyContent:"space-between",}}>
        <DeleteButton
           type="text"
           recordItemId={customer?.id}
@@ -115,8 +115,9 @@ export const CustomerInfoList = ({ customer }: Props) => {
           onSuccess={() => {
             handleDrawerClose();
           }}
+          style={{border:"1px solid"}}
         />
-      <EditButton
+             <EditButton
                   recordItemId={customer?.id}
                 />
                 </div>
