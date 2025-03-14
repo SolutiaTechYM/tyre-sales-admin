@@ -1,4 +1,4 @@
-import { useDrawerForm } from "@refinedev/antd";
+import { NumberField, useDrawerForm } from "@refinedev/antd";
 import { BaseKey, useApiUrl, useGetToPath, useGo, useTranslate } from "@refinedev/core";
 import { useSelect } from "@refinedev/antd";
 import { useForm } from "antd/lib/form/Form";
@@ -210,14 +210,24 @@ export const PaymentDrawerForm = (props: Props) => {
     key="value"  
     align="right"
 
-    render={(text) => <span style={{ color: 'blue',fontWeight:'bold' }}>{text}</span>}
+    render={(value:number) =>
+      <NumberField value={value} options={{ minimumFractionDigits: 2, maximumFractionDigits: 2 }} style={{ color: 'blue',fontWeight:'bold' }}/>
+
+      
+    }
   />
+
+
   <Table.Column 
     title="Due Amount" 
     align="right"
     dataIndex="dueAmount" 
     key="dueAmount" 
-    render={(text) => <span style={{ color: 'orange',fontWeight:'bold' }}>{text}</span>}
+    render={(value:number) =>
+      <NumberField value={value} options={{ minimumFractionDigits: 2, maximumFractionDigits: 2 }} style={{ color: 'orange',fontWeight:'bold' }}/>
+
+      
+    }
   />
                   <Table.Column
                     title="Payment"
@@ -277,7 +287,11 @@ export const PaymentDrawerForm = (props: Props) => {
     dataIndex="value" 
     key="value"  
     align="right"
-    render={(text) => <span style={{ color: 'blue',fontWeight:'bold' }}>{text}</span>}
+    render={(value:number) =>
+      <NumberField value={value} options={{ minimumFractionDigits: 2, maximumFractionDigits: 2 }} style={{ color: 'blue',fontWeight:'bold' }}/>
+
+      
+    }
   />
   <Table.Column 
     title="Due Amount" 
@@ -285,7 +299,11 @@ export const PaymentDrawerForm = (props: Props) => {
     key="dueAmount" 
     align="right"
 
-    render={(text) => <span style={{ color: 'orange',fontWeight:'bold' }}>{text}</span>}
+    render={(value:number) =>
+      <NumberField value={value} options={{ minimumFractionDigits: 2, maximumFractionDigits: 2 }} style={{ color: 'orange',fontWeight:'bold' }}/>
+
+      
+    }
   />
                   <Table.Column
                     title="Payment"
