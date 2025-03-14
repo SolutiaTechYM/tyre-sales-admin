@@ -206,6 +206,7 @@ export interface IProduct {
     description: string;
     images?: (IFile & { thumbnailUrl?: string })[];
     createdAt: string;
+    quantityRemaining:number;
     category: {
         id: number;
         title?: string;
