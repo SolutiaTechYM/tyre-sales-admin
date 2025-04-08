@@ -3,7 +3,7 @@ import { ProductDrawerForm } from "../../components/product/drawer-form";
 import { useSearchParams } from "react-router-dom";
 import { SupplierDrawerForm } from "../../components/supplier/drawer-form";
 
-export const SupplierCreate = () => {
+const SupplierCreate = () => {
   const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
   const go = useGo();
@@ -31,3 +31,5 @@ export const SupplierCreate = () => {
     />
   );
 };
+
+export default SupplierCreate;

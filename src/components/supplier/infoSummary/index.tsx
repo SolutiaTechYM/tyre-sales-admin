@@ -6,7 +6,7 @@ type Props = {
 };
 
 export const SupplierInfoSummary = ({ supplier }: Props) => {
-  console.log(supplier);
+  // console.log(supplier);
 
   return (
     <Flex align="center" gap={32}>

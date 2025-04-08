@@ -16,15 +16,13 @@ import { SupplierInfoList } from "../../components/supplier/infoList";
 import { SupplierOrderHistory } from "../../components/supplier/orderHistory";
 // import { SupplierOrderHistory } from "../../components/supplier/orderHistory";
 
-export const SupplierShow: React.FC<IResourceComponentsProps> = () => {
+const SupplierShow: React.FC<IResourceComponentsProps> = () => {
   const { list } = useNavigation();
   const breakpoint = Grid.useBreakpoint();
   const { queryResult } = useShow<ISupplier>();
 
   const { data } = queryResult;
   const user = data?.data;
-console.log(user);
-console.log(user);
 
   return (
     <Drawer
@@ -46,3 +44,5 @@ console.log(user);
     </Drawer>
   );
 };
+
+export default SupplierShow;

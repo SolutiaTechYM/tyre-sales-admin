@@ -28,12 +28,12 @@ import {
 } from "antd";
 
 import { ICustomer, ISupplier } from "../../interfaces";
-import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
+import { EyeOutlined, SearchOutlined, UploadOutlined } from "@ant-design/icons";
 import { PaginationTotal, UserStatus } from "../../components";
 import { PropsWithChildren } from "react";
 import { useLocation } from "react-router-dom";
 
-export const SupplierList = ({ children }: PropsWithChildren) => {
+const SupplierList = ({ children }: PropsWithChildren) => {
   const go = useGo();
   const { pathname } = useLocation();
   const { showUrl } = useNavigation();
@@ -76,19 +76,21 @@ export const SupplierList = ({ children }: PropsWithChildren) => {
 
 
     const { isLoading, triggerExport } = useExport<ISupplier>({
-      // sorters,
-      // filters,
-      // pageSize: 50,
-      // maxItemCount: 50,
+      sorters: [
+        {
+          field: "name",
+          order: "asc",
+        }
+      ],
       mapData: (item) => {
         return {
-          id: item.name,
-          date:item.createdAt,
-          // createdAt: item.createdAt,
-          Contact_Person: item.contact_person,
-          Due_Amount: item.dueAmount,
-          Last_Order_Date:item.lastOrderDate,
-          Phone:item.phone
+          'Name': item.name,
+          'Address': item.address,
+          'Contact Person': item.contact_person,
+          'Due Amount': item.dueAmount.toFixed(2),
+          'Phone':item.phone,
+          'Last Order Date':item.lastOrderDate,
+          'Added Date':item.createdAt,
         };
       },
     });
@@ -98,7 +100,7 @@ export const SupplierList = ({ children }: PropsWithChildren) => {
     <List
       breadcrumb={false}
       headerButtons={(props) => [
-        <ExportButton onClick={triggerExport} loading={isLoading} />,
+        <ExportButton key='export' onClick={triggerExport} loading={isLoading} icon={<UploadOutlined/>}/>,
 
         <CreateButton
           {...props.createButtonProps}
@@ -476,3 +478,5 @@ export const SupplierList = ({ children }: PropsWithChildren) => {
     </List>
   );
 };
+
+export default SupplierList;
