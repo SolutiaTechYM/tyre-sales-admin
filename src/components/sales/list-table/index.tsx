@@ -39,7 +39,7 @@ export const SaleListTable = () => {
         filters: {
             initial: [
                 {
-                    field: "description",
+                    field: "connection.name",
                     operator: "contains",
                     value: "",
                 },
@@ -59,7 +59,7 @@ export const SaleListTable = () => {
         },
     });
 
-    console.log(tableProps);
+    // console.log(tableProps);
 
     return (
         <Table
@@ -178,8 +178,8 @@ export const SaleListTable = () => {
             <Table.Column
                 title={t("Customer")}
                 dataIndex="customer"
-                key="connection.contact_person$is$contains"
-        // sorter
+                key="connection.contact_person"
+        sorter
 
                 filterIcon={(filtered) => (
                     <SearchOutlined

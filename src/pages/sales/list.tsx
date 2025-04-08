@@ -5,8 +5,9 @@ import { PropsWithChildren } from "react";
 import { useLocation } from "react-router-dom";
 import { IProduct, IPurchase, ISalesShow } from "../../interfaces";
 import { SaleListTable } from "../../components/sales";
+import { UploadOutlined } from "@ant-design/icons";
 
-export const SaleList = ({ children }: PropsWithChildren) => {
+const SaleList: React.FC<PropsWithChildren> = ({ children }) => {
   const go = useGo();
   const { replace } = useNavigation();
   const { pathname } = useLocation();
@@ -15,18 +16,21 @@ export const SaleList = ({ children }: PropsWithChildren) => {
   const t = useTranslate();
 
   const { isLoading, triggerExport } = useExport<ISalesShow>({
-    // sorters,
-    // filters,
-    // pageSize: 50,
-    // maxItemCount: 50,
+    sorters: [
+      {
+        field: "code",
+        order: "desc",
+      },
+    ],
     mapData: (item) => {
       return {
-        id: item.id,
-        date:item.createdAt,
-        // createdAt: item.createdAt,
-        description: item.note,
-        totalAmount: item.totalAmount,
-        customer:item.customer
+        'Code': item.code,
+        'Date': item.createdAt,
+        'Customer': item.customer,
+        'Note': item.note,
+        'Total Amount': item.totalAmount.toFixed(2),
+        'Due Amount': item.due_amount.toFixed(2),
+        'Total Profit': item.profit.toFixed(2)
       };
     },
   });
@@ -35,7 +39,7 @@ export const SaleList = ({ children }: PropsWithChildren) => {
     <List
       breadcrumb={false}
       headerButtons={(props) => [
-        <ExportButton onClick={triggerExport} loading={isLoading} />,
+        <ExportButton key='export' onClick={triggerExport} loading={isLoading} icon={<UploadOutlined/>}/>,
         <CreateButton
           {...props.createButtonProps}
           key="create"
@@ -62,3 +66,5 @@ export const SaleList = ({ children }: PropsWithChildren) => {
     </List>
   );
 };
+
+export default SaleList;

@@ -2,7 +2,7 @@ import { useGetToPath, useGo } from "@refinedev/core";
 import { useSearchParams } from "react-router-dom";
 import { SaleDrawerForm } from "../../components/sales/drawer-form";
 
-export const SaleCreate = () => {
+const SaleCreate = () => {
   const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
   const go = useGo();
@@ -30,3 +30,5 @@ export const SaleCreate = () => {
     />
   );
 };
+
+export default SaleCreate;

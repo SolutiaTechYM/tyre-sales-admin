@@ -181,7 +181,7 @@ export const SaleDrawerForm = (props: Props) => {
     // });
 
     useEffect(() => {
-        console.log(tableData.length);
+        // console.log(tableData.length);
         if (tableData.length === 0) {
             settotalPrice(0);
         } else {
@@ -730,7 +730,7 @@ export const SaleDrawerForm = (props: Props) => {
                                 type="primary"
                                 icon={null}
                                 onClick={async () => {
-                                    console.log(tableData.length);
+                                    // console.log(tableData.length);
 
                                     if (tableData.length !== 0) {
                                         try {

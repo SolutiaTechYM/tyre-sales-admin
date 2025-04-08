@@ -1,5 +1,7 @@
 import { SalesDrawerShow } from "../../components/sales/drawer-show";
 
-export const SalesShow = () => {
+const SalesShow: React.FC = () => {
   return <SalesDrawerShow />;
 };
+
+export default SalesShow;
