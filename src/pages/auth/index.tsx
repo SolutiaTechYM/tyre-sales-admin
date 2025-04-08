@@ -49,7 +49,7 @@ const renderAuthContent = (content: React.ReactNode) => {
   );
 };
 
-export const AuthPage: React.FC<AuthProps> = ({ type, formProps }) => {
+const AuthPage: React.FC<AuthProps> = ({ type, formProps }) => {
   return (
     <AntdAuthPage
       type={type}
@@ -59,3 +59,5 @@ export const AuthPage: React.FC<AuthProps> = ({ type, formProps }) => {
     />
   );
 };
+
+export default AuthPage;
