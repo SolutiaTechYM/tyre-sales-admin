@@ -12,7 +12,7 @@ import {
 } from "../../components";
 import { CustomerOrderHistory } from "../../components/customer/orderHistory";
 
-export const CustomerShow: React.FC<IResourceComponentsProps> = () => {
+const CustomerShow: React.FC<IResourceComponentsProps> = () => {
   const { list } = useNavigation();
   const breakpoint = Grid.useBreakpoint();
   const { queryResult } = useShow<ICustomer>();
@@ -40,3 +40,5 @@ export const CustomerShow: React.FC<IResourceComponentsProps> = () => {
     </Drawer>
   );
 };
+
+export default CustomerShow;

@@ -54,7 +54,7 @@ export const CustomerDrawerForm = (props: Props) => {
       action: props.action,
       redirect: false,
       onMutationSuccess: () => {
-        console.log("Form data:", form.getFieldsValue());
+        // console.log("Form data:", form.getFieldsValue());
         props.onMutationSuccess?.();
         // onDrawerCLose();
 
@@ -108,12 +108,12 @@ export const CustomerDrawerForm = (props: Props) => {
   };
 
   const images = Form.useWatch("avatar", formProps.form);
-  console.log(formProps.form);
-  console.log(images);
+  // console.log(formProps.form);
+  // console.log(images);
   
   const image = images?.[0] || null;
   const previewImageURL = image?.url || image?.response?.url;
-  console.log(images);
+  // console.log(images);
 
   
   const title = props.action === "edit" ? null : t("products.actions.add");

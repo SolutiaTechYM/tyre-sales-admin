@@ -28,12 +28,12 @@ import {
 } from "antd";
 
 import { ICustomer } from "../../interfaces";
-import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
+import { EyeOutlined, SearchOutlined, UploadOutlined } from "@ant-design/icons";
 import { PaginationTotal, UserStatus } from "../../components";
 import { PropsWithChildren } from "react";
 import { useLocation } from "react-router-dom";
 
-export const CustomerList = ({ children }: PropsWithChildren) => {
+const CustomerList: React.FC<PropsWithChildren> = ({ children }) => {
   const go = useGo();
   const { pathname } = useLocation();
   const { showUrl } = useNavigation();
@@ -100,19 +100,21 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
   // });
 
      const { isLoading, triggerExport } = useExport<ICustomer>({
-        // sorters,
-        // filters,
-        // pageSize: 50,
-        // maxItemCount: 50,
+      sorters: [
+        {
+          field: "contact_person",
+          order: "asc",
+        }
+      ],
         mapData: (item) => {
           return {
-            id: item.name,
-            date:item.createdAt,
-            // createdAt: item.createdAt,
-            Contact_Person: item.contact_person,
-            Due_Amount: item.dueAmount,
-            Last_Order_Date:item.lastOrderDate,
-            Phone:item.phone
+            'Name': item.contact_person,
+            'Address': item.address,
+            'Company': item.name,
+            'Phone':item.phone,
+            'Due Amount': item.dueAmount.toFixed(2),
+            'Last Order Date':item.lastOrderDate,
+            'Added Date':item.createdAt,
           };
         },
       });
@@ -122,7 +124,7 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
     <List
       breadcrumb={false}
       headerButtons={(props) => [
-        <ExportButton onClick={triggerExport} loading={isLoading} />,
+        <ExportButton key='export' onClick={triggerExport} loading={isLoading} icon={<UploadOutlined/>}/>,
 
         <CreateButton
           {...props.createButtonProps}
@@ -463,3 +465,5 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
     </List>
   );
 };
+
+export default CustomerList;
