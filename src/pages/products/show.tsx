@@ -1,5 +1,7 @@
 import { ProductDrawerShow } from "../../components/product/drawer-show";
 
-export const ProductShow = () => {
+const ProductShow = () => {
   return <ProductDrawerShow />;
 };
+
+export default ProductShow;

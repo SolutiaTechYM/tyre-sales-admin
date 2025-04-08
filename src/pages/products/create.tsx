@@ -2,7 +2,7 @@ import { useGetToPath, useGo } from "@refinedev/core";
 import { ProductDrawerForm } from "../../components/product/drawer-form";
 import { useSearchParams } from "react-router-dom";
 
-export const ProductCreate = () => {
+const ProductCreate: React.FC = () => {
   const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
   const go = useGo();
@@ -30,3 +30,5 @@ export const ProductCreate = () => {
     />
   );
 };
+
+export default ProductCreate;

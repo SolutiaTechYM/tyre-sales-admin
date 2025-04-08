@@ -1,18 +1,38 @@
 import { useGo, useNavigation, useTranslate } from "@refinedev/core";
-import { CreateButton, List } from "@refinedev/antd";
+import { CreateButton, ExportButton, List } from "@refinedev/antd";
 import { ProductListCard, ProductListTable } from "../../components";
 import { PropsWithChildren, useState } from "react";
-import { AppstoreOutlined, UnorderedListOutlined } from "@ant-design/icons";
+import { AppstoreOutlined, UnorderedListOutlined, UploadOutlined } from "@ant-design/icons";
 import { Segmented } from "antd";
 import { useLocation } from "react-router-dom";
+import { IProduct } from "../../interfaces";
+import { useExport } from "@refinedev/core";
 
 type View = "table" | "card";
 
-export const ProductList = ({ children }: PropsWithChildren) => {
+const ProductList = ({ children }: PropsWithChildren) => {
   const go = useGo();
   const { replace } = useNavigation();
   const { pathname } = useLocation();
   const { createUrl } = useNavigation();
+
+  const { isLoading, triggerExport } = useExport<IProduct>({
+    sorters: [
+      {
+        field: "name",
+        order: "asc",
+      }
+    ],
+      mapData: (item) => {
+        return {
+          'Code': item.code,
+          'Name': item.name,
+          'Category': item.category.title,
+          'Remaining Quantity': item.quantityRemaining,
+          'Added Date': item.createdAt,
+        };
+      },
+    });
 
   const [view, setView] = useState<View>(
     (localStorage.getItem("product-view") as View) || "table",
@@ -36,7 +56,7 @@ export const ProductList = ({ children }: PropsWithChildren) => {
         //   key="view"
         //   size="large"
         //   value={view}
-        //   style={{ marginRight: 24 }}
+        //   style={{ marginRight: 8 }}
         //   options={[
         //     {
         //       label: "",
@@ -51,6 +71,7 @@ export const ProductList = ({ children }: PropsWithChildren) => {
         //   ]}
         //   onChange={handleViewChange}
         // />,
+        <ExportButton key='export' onClick={triggerExport} loading={isLoading} icon={<UploadOutlined/>}/>,
         <CreateButton
           {...props.createButtonProps}
           key="create"
@@ -79,3 +100,5 @@ export const ProductList = ({ children }: PropsWithChildren) => {
     </List>
   );
 };
+
+export default ProductList;

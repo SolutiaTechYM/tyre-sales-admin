@@ -1,5 +1,7 @@
 import { ProductDrawerForm } from "../../components/product/drawer-form";
 
-export const ProductEdit = () => {
+const ProductEdit = () => {
   return <ProductDrawerForm action="edit" />;
 };
+
+export default ProductEdit;

@@ -27,7 +27,11 @@ import {
 } from "antd";
 import { ProductStatus } from "../status";
 import { PaginationTotal } from "../../paginationTotal";
-import { EyeOutlined, FilePdfOutlined, SearchOutlined } from "@ant-design/icons";
+import {
+  EyeOutlined,
+  FilePdfOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 
@@ -39,7 +43,6 @@ export const ProductListTable = () => {
   const { showUrl } = useNavigation();
   const { show, visible, close } = useModal();
 
-  
   const { tableProps, sorters, filters } = useTable<IProduct, HttpError>({
     filters: {
       initial: [
@@ -57,15 +60,10 @@ export const ProductListTable = () => {
           field: "category.id",
           operator: "in",
           value: [],
-        } 
-        
+        },
       ],
     },
   });
-
-  useEffect(() => {
-    console.log(tableProps);
-  }, [tableProps]);
 
   const { selectProps: categorySelectProps, queryResult } =
     useSelect<ICategory>({
@@ -89,6 +87,23 @@ export const ProductListTable = () => {
         ),
       }}
     >
+      <Table.Column
+        title={'Image'}
+        dataIndex="images"
+        key="images"
+        align="center"
+        render={(images: IProduct["images"]) => {
+          return (
+            <Avatar
+              shape="square"
+              // src={images?.url}
+              // alt={images?.name}
+              src={images?.[0]?.thumbnailUrl}
+              // alt={images?.[0].name} || images?.[0]?.url
+            />
+          );
+        }}
+      />
       {/* <Table.Column
         title={
           <Typography.Text
@@ -135,7 +150,6 @@ export const ProductListTable = () => {
         dataIndex="code"
         key="code"
         sorter
-
         filterIcon={(filtered) => (
           <SearchOutlined
             style={{
@@ -161,7 +175,7 @@ export const ProductListTable = () => {
           );
         }}
       />
-            <Table.Column
+      <Table.Column
         title={t("products.fields.name")}
         dataIndex="name"
         key="name"
@@ -191,43 +205,7 @@ export const ProductListTable = () => {
           );
         }}
       />
-                  <Table.Column
-        title={t("Remaining Quantity")}
-        dataIndex="quantityRemaining"
-        key="quantityRemaining"
-        align="center"
 
-        render={(value: string) => {
-          return (
-            <Typography.Text
-              style={{
-                whiteSpace: "nowrap",
-              }}
-            >
-              {value}
-            </Typography.Text>
-          );
-        }}
-      />
-
-            <Table.Column
-        title={t("products.fields.images.label")}
-        dataIndex="images"
-        key="images"
-        align="center"
-
-        render={(images: IProduct["images"]) => {
-          return (
-            <Avatar
-              shape="square"
-              // src={images?.url}
-              // alt={images?.name}
-              src={images?.[0]?.thumbnailUrl }
-              // alt={images?.[0].name} || images?.[0]?.url
-            />
-          );
-        }}
-      />
       {/* <Table.Column
         title={t("products.fields.description")}
         dataIndex="description"
@@ -273,15 +251,11 @@ export const ProductListTable = () => {
         defaultFilteredValue={getDefaultFilter("category.id", filters, "in")}
         filterDropdown={(props) => {
           return (
-            <FilterDropdown
-              {...props}
-         
-            >
+            <FilterDropdown {...props}>
               <Select
                 {...categorySelectProps}
                 style={{ width: "200px" }}
                 allowClear
-            
                 placeholder={t("products.filter.category.placeholder")}
               />
             </FilterDropdown>
@@ -304,7 +278,25 @@ export const ProductListTable = () => {
         }}
       />
 
-{/* <Table.Column
+<Table.Column
+        title={t("Remaining Quantity")}
+        dataIndex="quantityRemaining"
+        key="quantityRemaining"
+        align="right"
+        render={(value: string) => {
+          return (
+            <Typography.Text
+              style={{
+                whiteSpace: "nowrap",
+              }}
+            >
+              {value}
+            </Typography.Text>
+          );
+        }}
+      />
+
+      {/* <Table.Column
         title={t("Current Price")}
         dataIndex="current_price"
         key="current_price"
@@ -359,8 +351,7 @@ export const ProductListTable = () => {
         }}
       /> */}
 
-
-{/* <Table.Column
+      {/* <Table.Column
         title={"Quantity"}
         dataIndex="quantity"
         key="quantity"
