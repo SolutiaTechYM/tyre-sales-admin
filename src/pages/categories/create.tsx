@@ -3,7 +3,7 @@ import { ProductDrawerForm } from "../../components/product/drawer-form";
 import { useSearchParams } from "react-router-dom";
 import { CategoryDrawerForm } from "../../components/categories/drawer-form";
 
-export const CategoryCreate = () => {
+const CategoryCreate: React.FC = () => {
   const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
   const go = useGo();
@@ -31,3 +31,5 @@ export const CategoryCreate = () => {
     />
   );
 };
+
+export default CategoryCreate;

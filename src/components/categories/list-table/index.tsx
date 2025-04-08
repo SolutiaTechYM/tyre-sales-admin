@@ -35,13 +35,6 @@ export const CategoryTable: React.FC<IResourceComponentsProps> = () => {
                 operator: "contains",
                 value: "",
             },
-            
-            {
-                field: "quantity",
-                operator: "in",
-                value: [],
-            },
-
         ],
     },
 });
@@ -116,24 +109,7 @@ export const CategoryTable: React.FC<IResourceComponentsProps> = () => {
           key="quantity"
           dataIndex="quantity"
           title={t("Quantity")}
-          sorter
-          filterIcon={(filtered) => (
-            <SearchOutlined
-                style={{
-                    color: filtered ? token.colorPrimary : undefined,
-                }}
-            />
-        )}
-        defaultFilteredValue={getDefaultFilter(
-            "quantity",
-            filters,
-            "contains"
-        )}
-        filterDropdown={(props) => (
-            <FilterDropdown {...props}>
-                <Input placeholder={t("purchases.filter.note.placeholder")}/>
-            </FilterDropdown>
-        )}
+          align="right"
         render={(description: string) => {
             return (
                 <Typography.Paragraph
@@ -152,6 +128,7 @@ export const CategoryTable: React.FC<IResourceComponentsProps> = () => {
           <Table.Column<ICategory>
           fixed="right"
         width="100px"
+        align="center"
 
           title={t("table.actions")}
           render={(_, record) => (

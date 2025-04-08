@@ -9,7 +9,7 @@ import { CategoryTable } from "../../components/categories/list-table";
 
 type View = "table" | "card";
 
-export const CategoryList = ({ children }: PropsWithChildren) => {
+const CategoryList = ({ children }: PropsWithChildren) => {
   const go = useGo();
   const { replace } = useNavigation();
   const { pathname } = useLocation();
@@ -59,3 +59,5 @@ export const CategoryList = ({ children }: PropsWithChildren) => {
     </List>
   );
 };
+
+export default CategoryList;
