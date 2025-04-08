@@ -30,7 +30,7 @@ export const PaymentDrawerForm = (props: Props) => {
     action: props.action,
     redirect: false,
     onMutationSuccess: () => {
-      console.log("Form data:", form.getFieldsValue());
+      // console.log("Form data:", form.getFieldsValue());
       props.onMutationSuccess?.();
     },
   });

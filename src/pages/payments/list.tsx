@@ -1,9 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { useTranslate, HttpError, useExport, useGo, useNavigation, useList, CrudFilters } from "@refinedev/core";
-import { List, FilterDropdown, ExportButton, CreateButton, NumberField } from "@refinedev/antd";
-import { Table, Typography, theme, Input, Button } from "antd";
+import React, { useState, useEffect, ReactNode } from "react";
+import {
+  useTranslate,
+  HttpError,
+  useExport,
+  useGo,
+  useNavigation,
+  useList,
+  CrudFilters,
+} from "@refinedev/core";
+import {
+  List,
+  FilterDropdown,
+  ExportButton,
+  CreateButton,
+  NumberField,
+} from "@refinedev/antd";
+import { Table, Typography, theme, Input, Button, Flex } from "antd";
 import { ITransactionlist } from "../../interfaces";
-import { SearchOutlined } from "@ant-design/icons";
+import { ExportOutlined, SearchOutlined, UploadOutlined } from "@ant-design/icons";
 import { PaginationTotal } from "../../components";
 import { PropsWithChildren } from "react";
 import { useLocation } from "react-router-dom";
@@ -16,11 +30,30 @@ interface TableFilters {
 
 interface TableState {
   pagination: { current: number; pageSize: number };
-  sorter?: { field: string; order: 'asc' | 'desc' };
+  sorter?: { field: string; order: "asc" | "desc" };
   filters: TableFilters;
 }
 
-export const PaymentList = ({ children }: PropsWithChildren) => {
+interface TableHeaderBarProps {
+  title: string;
+  actions?: ReactNode[];
+}
+
+const TableHeaderBar = ({ title, actions }: TableHeaderBarProps) => {
+  return (
+    <Flex justify="space-between" align="center">
+      <Typography.Title level={5} style={{ margin: 0 }}>
+        {title}
+      </Typography.Title>
+      <Flex>
+        {!!actions &&
+          actions.map((action, index) => <div key={index}>{action}</div>)}
+      </Flex>
+    </Flex>
+  );
+};
+
+const PaymentList = ({ children }: PropsWithChildren) => {
   const go = useGo();
   const { pathname } = useLocation();
   const t = useTranslate();
@@ -29,12 +62,14 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
 
   const initialTableState: TableState = {
     pagination: { current: 1, pageSize: 10 },
-    filters: { code: '', supplier: '', note: '' }
+    filters: { code: "", supplier: "", note: "" },
   };
 
-  const [purchaseState, setPurchaseState] = useState<TableState>(initialTableState);
+  const [purchaseState, setPurchaseState] =
+    useState<TableState>(initialTableState);
   const [saleState, setSaleState] = useState<TableState>(initialTableState);
-  const [capitalState, setCapitalState] = useState<TableState>(initialTableState);
+  const [capitalState, setCapitalState] =
+    useState<TableState>(initialTableState);
 
   // New state for temporary filter values
   const [tempFilters, setTempFilters] = useState({
@@ -49,121 +84,194 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
     ];
 
     if (tableState.filters.code) {
-      filters.push({ field: "trade.code", operator: "eq", value: tableState.filters.code });
+      filters.push({
+        field: "trade.code",
+        operator: "eq",
+        value: tableState.filters.code,
+      });
     }
     if (tableState.filters.supplier) {
-      const supplierField = type === "PURCHASE" ? "trade.connection.name" : "trade.connection.contact_person";
-      filters.push({ field: supplierField, operator: "contains", value: tableState.filters.supplier });
+      const supplierField =
+        type === "PURCHASE"
+          ? "trade.connection.name"
+          : "trade.connection.contact_person";
+      filters.push({
+        field: supplierField,
+        operator: "contains",
+        value: tableState.filters.supplier,
+      });
     }
     if (tableState.filters.note) {
-      filters.push({ field: "trade.note", operator: "contains", value: tableState.filters.note });
+      filters.push({
+        field: "trade.note",
+        operator: "contains",
+        value: tableState.filters.note,
+      });
     }
 
     return filters;
   };
 
-  const { data: purchaseData, isLoading: isPurchaseLoading } = useList<ITransactionlist>({
-    resource: "transactions",
-    filters: getFilters("PURCHASE", purchaseState),
-    pagination: purchaseState.pagination,
-    sorters: purchaseState.sorter ? [purchaseState.sorter] : undefined,
-  });
+  const getExporter = (type: "PURCHASE" | "SALE" | "CAPITAL") => {
+    return useExport({
+      sorters:[
+        {
+          field: 'createdAt',
+          order:'desc'
+        }
+      ],
+      filters: [
+        { field: "trade.type", operator: "eq", value: type }
+      ],
+      exportOptions:{
+        filename: `${type}-transactions-${new Date().toLocaleString().replace(',','')}`,
+      },
+      mapData: (item) => {
+        const formattedItem = {
+          'Date': item.date,
+          'Code': item.code,
+          'Supplier': item.connection.name,
+          'Customer': item.connection.name,
+          'Amount': item.value,
+          'Note': item.note,
+        }
 
-  const { data: saleData, isLoading: isSaleLoading } = useList<ITransactionlist>({
-    resource: "transactions",
-    filters: getFilters("SALE", saleState),
-    pagination: saleState.pagination,
-    sorters: saleState.sorter ? [saleState.sorter] : undefined,
-  });
+        if (type === "CAPITAL") {
+          delete formattedItem['Code'];
+          delete formattedItem['Customer'];
+          delete formattedItem['Supplier'];
+        }
+        else{
+          delete formattedItem[type === 'PURCHASE' ? 'Customer':'Supplier']
+        }
 
-  const { data: capitalData, isLoading: isCapitalLoading } = useList<ITransactionlist>({
-    resource: "transactions",
-    filters: getFilters("CAPITAL", capitalState),
-    pagination: capitalState.pagination,
-    sorters: capitalState.sorter ? [capitalState.sorter] : undefined,
-  });
+        return formattedItem;
+      }
+    });
+  }
 
-  const { isLoading: exportLoading, triggerExport } = useExport<ITransactionlist>({
-    mapData: (item) => ({
-      id: item.id,
-      connection: item.connection?.name,
-      type: item.type,
-      date: item.date,
-      value: item.value,
-      description: item.note,
-      code: item.code,
-    }),
-  });
+  const { data: purchaseData, isLoading: isPurchaseLoading } =
+    useList<ITransactionlist>({
+      resource: "transactions",
+      filters: getFilters("PURCHASE", purchaseState),
+      pagination: purchaseState.pagination,
+      sorters: purchaseState.sorter ? [purchaseState.sorter] : undefined,
+    });
 
-  const renderTable = (type: 'PURCHASE' | 'SALE' | 'CAPITAL') => {
-    let data: any, 
-        isLoading: boolean, 
-        tableState: TableState, 
-        setTableState: React.Dispatch<React.SetStateAction<TableState>>,
-        tableName: string;
+  const { data: saleData, isLoading: isSaleLoading } =
+    useList<ITransactionlist>({
+      resource: "transactions",
+      filters: getFilters("SALE", saleState),
+      pagination: saleState.pagination,
+      sorters: saleState.sorter ? [saleState.sorter] : undefined,
+    });
+
+  const { data: capitalData, isLoading: isCapitalLoading } =
+    useList<ITransactionlist>({
+      resource: "transactions",
+      filters: getFilters("CAPITAL", capitalState),
+      pagination: capitalState.pagination,
+      sorters: capitalState.sorter ? [capitalState.sorter] : undefined,
+    });
+
+  const renderTable = (type: "PURCHASE" | "SALE" | "CAPITAL") => {
+    let data: any,
+      isLoading: boolean,
+      tableState: TableState,
+      setTableState: React.Dispatch<React.SetStateAction<TableState>>,
+      tableName: string,
+      exporter: {
+        isLoading: boolean;
+        triggerExport: () => Promise<string | undefined>;
+      };
 
     switch (type) {
-      case 'PURCHASE':
+      case "PURCHASE":
         data = purchaseData;
         isLoading = isPurchaseLoading;
         tableState = purchaseState;
         setTableState = setPurchaseState;
         tableName = "Purchase Transactions";
+        exporter = getExporter(type);
         break;
-      case 'SALE':
+      case "SALE":
         data = saleData;
         isLoading = isSaleLoading;
         tableState = saleState;
         setTableState = setSaleState;
         tableName = "Sale Transactions";
+        exporter = getExporter(type);
         break;
-      case 'CAPITAL':
+      case "CAPITAL":
         data = capitalData;
         isLoading = isCapitalLoading;
         tableState = capitalState;
         setTableState = setCapitalState;
         tableName = "Capital Transactions";
+        exporter = getExporter(type);
         break;
       default:
         return null;
     }
 
+    const handleSelectiveExport = (type: string) => {};
+
     const handleTableChange = (pagination: any, filters: any, sorter: any) => {
-      setTableState(prev => ({
+      setTableState((prev) => ({
         ...prev,
         pagination,
-        sorter: sorter.field && sorter.order 
-          ? { 
-              field: sorter.field === 'code' ? 'trade.code' : 
-                     sorter.field === 'connection.name' && type === 'PURCHASE' ? 'connection.contact_person' : sorter.field,
-              order: sorter.order === 'ascend' ? 'asc' : 'desc' 
-            }
-          : undefined
+        sorter:
+          sorter.field && sorter.order
+            ? {
+                field:
+                  sorter.field === "code"
+                    ? "trade.code"
+                    : sorter.field === "connection.name" && type === "PURCHASE"
+                    ? "connection.contact_person"
+                    : sorter.field,
+                order: sorter.order === "ascend" ? "asc" : "desc",
+              }
+            : undefined,
       }));
     };
 
-    const handleTempFilterChange = (field: keyof TableFilters, value: string) => {
-      setTempFilters(prev => ({
+    const handleTempFilterChange = (
+      field: keyof TableFilters,
+      value: string
+    ) => {
+      setTempFilters((prev) => ({
         ...prev,
         [type.toLowerCase()]: {
           ...prev[type.toLowerCase() as keyof typeof prev],
-          [field]: value
-        }
+          [field]: value,
+        },
       }));
     };
 
     const handleSearch = (field: keyof TableFilters) => {
-      const tempFilter = tempFilters[type.toLowerCase() as keyof typeof tempFilters][field];
-      setTableState(prev => ({
+      const tempFilter =
+        tempFilters[type.toLowerCase() as keyof typeof tempFilters][field];
+      setTableState((prev) => ({
         ...prev,
         pagination: { ...prev.pagination, current: 1 },
-        filters: { ...prev.filters, [field]: tempFilter }
+        filters: { ...prev.filters, [field]: tempFilter },
       }));
     };
 
     return (
       <Table
-        title={() => <Typography.Title level={5}>{tableName}</Typography.Title>}
+        title={() => (
+          <TableHeaderBar
+            title={tableName}
+            actions={[
+              <ExportButton
+                loading={exporter.isLoading}
+                onClick={exporter.triggerExport}
+                icon={<UploadOutlined/>}
+              />,
+            ]}
+          />
+        )}
         dataSource={data?.data}
         loading={isLoading}
         pagination={{
@@ -182,7 +290,7 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
         scroll={{ x: true }}
         style={{ marginBottom: 24 }}
       >
-        {type !== 'CAPITAL' && (
+        {type !== "CAPITAL" && (
           <Table.Column
             key="code"
             dataIndex="code"
@@ -192,12 +300,17 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
               <div style={{ padding: 8 }}>
                 <Input
                   placeholder="Search code"
-                  value={tempFilters[type.toLowerCase() as keyof typeof tempFilters].code}
-                  onChange={e => handleTempFilterChange('code', e.target.value)}
-                  style={{ width: 188, marginBottom: 8, display: 'block' }}
-                  onKeyDown={e => {
-                    if (e.key === 'Enter') {
-                      handleSearch('code');
+                  value={
+                    tempFilters[type.toLowerCase() as keyof typeof tempFilters]
+                      .code
+                  }
+                  onChange={(e) =>
+                    handleTempFilterChange("code", e.target.value)
+                  }
+                  style={{ width: 188, marginBottom: 8, display: "block" }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleSearch("code");
                       confirm();
                     }
                   }}
@@ -205,7 +318,7 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
                 <Button
                   type="primary"
                   onClick={() => {
-                    handleSearch('code');
+                    handleSearch("code");
                     confirm();
                   }}
                   icon={<SearchOutlined />}
@@ -217,27 +330,40 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
               </div>
             )}
             filterIcon={() => (
-              <SearchOutlined style={{ color: tableState.filters.code ? token.colorPrimary : undefined }} />
+              <SearchOutlined
+                style={{
+                  color: tableState.filters.code
+                    ? token.colorPrimary
+                    : undefined,
+                }}
+              />
             )}
           />
         )}
 
-        {type !== 'CAPITAL' && (
+        {type !== "CAPITAL" && (
           <Table.Column
             key="connection"
             dataIndex={["connection", "name"]}
-            title={type === 'PURCHASE' ? t("Supplier") : t("Customer")}
+            title={type === "PURCHASE" ? t("Supplier") : t("Customer")}
             sorter={true}
             filterDropdown={({ confirm }) => (
               <div style={{ padding: 8 }}>
                 <Input
-                  placeholder={`Search ${type === 'PURCHASE' ? 'supplier' : 'customer'}`}
-                  value={tempFilters[type.toLowerCase() as keyof typeof tempFilters].supplier}
-                  onChange={e => handleTempFilterChange('supplier', e.target.value)}
-                  style={{ width: 188, marginBottom: 8, display: 'block' }}
-                  onKeyDown={e => {
-                    if (e.key === 'Enter') {
-                      handleSearch('supplier');
+                  placeholder={`Search ${
+                    type === "PURCHASE" ? "supplier" : "customer"
+                  }`}
+                  value={
+                    tempFilters[type.toLowerCase() as keyof typeof tempFilters]
+                      .supplier
+                  }
+                  onChange={(e) =>
+                    handleTempFilterChange("supplier", e.target.value)
+                  }
+                  style={{ width: 188, marginBottom: 8, display: "block" }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleSearch("supplier");
                       confirm();
                     }
                   }}
@@ -245,7 +371,7 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
                 <Button
                   type="primary"
                   onClick={() => {
-                    handleSearch('supplier');
+                    handleSearch("supplier");
                     confirm();
                   }}
                   icon={<SearchOutlined />}
@@ -257,7 +383,13 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
               </div>
             )}
             filterIcon={() => (
-              <SearchOutlined style={{ color: tableState.filters.supplier ? token.colorPrimary : undefined }} />
+              <SearchOutlined
+                style={{
+                  color: tableState.filters.supplier
+                    ? token.colorPrimary
+                    : undefined,
+                }}
+              />
             )}
           />
         )}
@@ -300,12 +432,15 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
             <div style={{ padding: 8 }}>
               <Input
                 placeholder="Search note"
-                value={tempFilters[type.toLowerCase() as keyof typeof tempFilters].note}
-                onChange={e => handleTempFilterChange('note', e.target.value)}
-                style={{ width: 188, marginBottom: 8, display: 'block' }}
-                onKeyDown={e => {
-                  if (e.key === 'Enter') {
-                    handleSearch('note');
+                value={
+                  tempFilters[type.toLowerCase() as keyof typeof tempFilters]
+                    .note
+                }
+                onChange={(e) => handleTempFilterChange("note", e.target.value)}
+                style={{ width: 188, marginBottom: 8, display: "block" }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleSearch("note");
                     confirm();
                   }
                 }}
@@ -313,7 +448,7 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
               <Button
                 type="primary"
                 onClick={() => {
-                  handleSearch('note');
+                  handleSearch("note");
                   confirm();
                 }}
                 icon={<SearchOutlined />}
@@ -325,7 +460,11 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
             </div>
           )}
           filterIcon={() => (
-            <SearchOutlined style={{ color: tableState.filters.note ? token.colorPrimary : undefined }} />
+            <SearchOutlined
+              style={{
+                color: tableState.filters.note ? token.colorPrimary : undefined,
+              }}
+            />
           )}
         />
       </Table>
@@ -336,7 +475,6 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
     <List
       breadcrumb={false}
       headerButtons={(props) => [
-        <ExportButton onClick={triggerExport} loading={exportLoading} />,
         <CreateButton
           {...props.createButtonProps}
           key="create"
@@ -358,10 +496,12 @@ export const PaymentList = ({ children }: PropsWithChildren) => {
         </CreateButton>,
       ]}
     >
-      {renderTable('PURCHASE')}
-      {renderTable('SALE')}
-      {renderTable('CAPITAL')}
+      {renderTable("PURCHASE")}
+      {renderTable("SALE")}
+      {renderTable("CAPITAL")}
       {children}
     </List>
   );
 };
+
+export default PaymentList;

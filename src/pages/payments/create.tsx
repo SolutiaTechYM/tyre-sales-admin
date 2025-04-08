@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import {  PaymentDrawerForm } from "../../components/payment/drawer-form";
 // import { AccountsDrawerForm } from "../../components/payment/drawer-form";
 
-export const PaymentCreate = () => {
+const PaymentCreate = () => {
   const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
   const go = useGo();
@@ -31,3 +31,5 @@ export const PaymentCreate = () => {
     />
   );
 };
+
+export default PaymentCreate;
