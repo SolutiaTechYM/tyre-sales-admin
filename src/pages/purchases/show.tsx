@@ -1,5 +1,7 @@
 import { PurchaseDrawerShow } from "../../components/purchase/drawer-show";
 
-export const PurchaseShow = () => {
+const PurchaseShow: React.FC = () => {
   return <PurchaseDrawerShow />;
 };
+
+export default PurchaseShow;

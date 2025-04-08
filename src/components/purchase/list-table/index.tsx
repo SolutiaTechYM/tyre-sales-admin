@@ -39,7 +39,7 @@ export const PurchaseListTable = () => {
     filters: {
       initial: [
         {
-          field: "description",
+          field: "connection.name",
           operator: "contains",
           value: "",
         },
@@ -179,8 +179,8 @@ export const PurchaseListTable = () => {
       <Table.Column
         title={t("purchases.fields.supplier")}
         dataIndex="supplier"
-        key="connection.name$is$contains"
-        // sorter
+        key="connection.name"
+        sorter
 
         filterIcon={(filtered) => (
           <SearchOutlined
@@ -189,7 +189,7 @@ export const PurchaseListTable = () => {
             }}
           />
         )}
-        defaultFilteredValue={getDefaultFilter("connection.name$is$contains", filters, "contains")}
+        defaultFilteredValue={getDefaultFilter("connection.name", filters, "contains")}
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
             <Input placeholder={t("purchases.filter.supplier.placeholder")} />

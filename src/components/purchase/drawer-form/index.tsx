@@ -526,7 +526,7 @@ export const PurchaseDrawerForm = (props: Props) => {
                                                     unitPrice: formProps.form.getFieldValue("unitprice"),
                                                     totalPrice: Number((formProps.form.getFieldValue("unitprice") * formProps.form.getFieldValue("quantity")).toFixed(2)),
                                                 };
-                                                    console.log(newRow);
+                                                    // console.log(newRow);
                                                     
                                                 setTableData([...tableData, newRow]);
                                                 formProps.form.setFieldsValue({
@@ -579,7 +579,7 @@ export const PurchaseDrawerForm = (props: Props) => {
                                 type="primary"
                                 icon={null}
                                 onClick={async () => {
-                                    console.log(tableData.length);
+                                    // console.log(tableData.length);
 
                                     if (tableData.length !== 0) {
                                         try {
@@ -589,8 +589,8 @@ export const PurchaseDrawerForm = (props: Props) => {
                                             const description = formProps.form.getFieldValue("description");
                                             const createdDate = formProps.form.getFieldValue("createdDate");
 
-                                            console.log(description);
-                                            console.log(code);
+                                            // console.log(description);
+                                            // console.log(code);
 
 
                                             if (!supplier) {
