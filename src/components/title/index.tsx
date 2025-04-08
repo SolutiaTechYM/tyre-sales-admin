@@ -8,7 +8,7 @@ type TitleProps = {
   collapsed: boolean;
 };
 
-export const Title: React.FC<TitleProps> = ({ collapsed }) => {
+const Title: React.FC<TitleProps> = ({ collapsed }) => {
   const { token } = theme.useToken();
   const Link = useLink();
 
@@ -38,3 +38,5 @@ export const Title: React.FC<TitleProps> = ({ collapsed }) => {
     </Logo>
   );
 };
+
+export default Title;

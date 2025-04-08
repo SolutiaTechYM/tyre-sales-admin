@@ -58,7 +58,7 @@ interface IOptions {
   options: IOptionGroup[];
 }
 
-export const Header: React.FC = () => {
+const Header: React.FC = () => {
   const { token } = useToken();
   const { styles } = useStyles();
   const { mode, setMode } = useConfigProvider();
@@ -290,3 +290,5 @@ export const Header: React.FC = () => {
     </AntdHeader>
   );
 };
+
+export default Header;
