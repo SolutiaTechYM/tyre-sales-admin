@@ -36,3 +36,16 @@ html[data-theme="dark"] {
         background-color: #000;
     }
 }
+
+body{
+    margin: 0;
+    background: #000;
+}
+
+.refine-pageHeader-title{
+    margin: 0;
+}
+
+.ant-page-header-heading{
+    padding: 4px 0 8px;
+}

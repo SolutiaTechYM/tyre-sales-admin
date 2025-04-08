@@ -27,7 +27,7 @@ type ConfigProviderProps = {
   theme?: ThemeConfig;
 };
 
-export const ConfigProvider = ({
+const ConfigProvider = ({
   theme: themeFromProps,
   children,
 }: PropsWithChildren<ConfigProviderProps>) => {
@@ -71,3 +71,5 @@ export const useConfigProvider = () => {
 
   return context;
 };
+
+export default ConfigProvider;
