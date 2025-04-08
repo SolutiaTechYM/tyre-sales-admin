@@ -1,8 +1,18 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState } from "react";
 import {
-  Row, Col, theme, Dropdown, MenuProps, Button, Flex, Typography, Grid, Card, Divider,
+  Row,
+  Col,
+  theme,
+  Dropdown,
+  MenuProps,
+  Button,
+  Flex,
+  Typography,
+  Grid,
+  Card,
+  Divider,
   DatePicker,
-  Space
+  Space,
 } from "antd";
 import { useTranslation } from "react-i18next";
 import {
@@ -28,7 +38,7 @@ import { List, NumberField } from "@refinedev/antd";
 import { useApiUrl, useCustom } from "@refinedev/core";
 import dayjs from "dayjs";
 import { ISalesChart, ISummary } from "../../interfaces";
-import { bold } from '@uiw/react-md-editor';
+import { bold } from "@uiw/react-md-editor";
 
 type DateFilter = "lastWeek" | "lastMonth";
 
@@ -52,14 +62,14 @@ const DATE_FILTERS: Record<
   },
 };
 
-export const DashboardPage: React.FC = () => {
+const DashboardPage: React.FC = () => {
   const { token } = theme.useToken();
   const { t } = useTranslation();
   const API_URL = useApiUrl();
   const screens = useBreakpoint();
 
   const [selectedDateFilter, setSelectedDateFilter] = useState<DateFilter>(
-    DATE_FILTERS.lastWeek.value,
+    DATE_FILTERS.lastWeek.value
   );
 
   const dateFilters: MenuProps["items"] = useMemo(() => {
@@ -74,7 +84,7 @@ export const DashboardPage: React.FC = () => {
     }));
   }, [t]);
 
-  const dateFilterQuery = useMemo(() => { 
+  const dateFilterQuery = useMemo(() => {
     const now = dayjs();
     switch (selectedDateFilter) {
       case "lastWeek":
@@ -153,7 +163,6 @@ export const DashboardPage: React.FC = () => {
   //   method: "get",
   // });
 
-
   interface IDailySummary {
     income: number;
     expense: number;
@@ -163,7 +172,6 @@ export const DashboardPage: React.FC = () => {
     billPorfit: number;
   }
 
-  
   const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs>(dayjs());
 
   // Separate API call for today's data
@@ -179,7 +187,6 @@ export const DashboardPage: React.FC = () => {
   //   },
   // });
 
-
   //   // Separate API call for monthly data
   //   const { data: monthOverviewData } = useCustom<{
   //     data: IDailySummary;
@@ -193,37 +200,35 @@ export const DashboardPage: React.FC = () => {
   //     // },
   //   });
 
-
-
-    const { data: todayOverviewData } = useCustom<{
-      today: {
-        income: number;
-        expense: number;
-        dueamountPurchase: number;
-        dueamountSale: number;
-        profit: number;
-        billProfit: number;
-      };
-      thisMonth: {
-        income: number;
-        expense: number;
-        dueamountPurchase: number;
-        dueamountSale: number;
-        profit: number;
-        billProfit: number;
-      };
-    }>({
-      url: `${API_URL}/misc/summary`,
-      method: "get",
-      config: {
-        query: {
-          date: selectedDate.format('YYYY-MM-DD')
-        },
+  const { data: todayOverviewData } = useCustom<{
+    today: {
+      income: number;
+      expense: number;
+      dueamountPurchase: number;
+      dueamountSale: number;
+      profit: number;
+      billProfit: number;
+    };
+    thisMonth: {
+      income: number;
+      expense: number;
+      dueamountPurchase: number;
+      dueamountSale: number;
+      profit: number;
+      billProfit: number;
+    };
+  }>({
+    url: `${API_URL}/misc/summary`,
+    method: "get",
+    config: {
+      query: {
+        date: selectedDate.format("YYYY-MM-DD"),
       },
-    });
+    },
+  });
 
-    const todayData = todayOverviewData?.data?.today;
-    const thisMonthData = todayOverviewData?.data?.thisMonth;
+  const todayData = todayOverviewData?.data?.today;
+  const thisMonthData = todayOverviewData?.data?.thisMonth;
 
   const revenue = useMemo(() => {
     const data = dailyRevenueData?.data?.data;
@@ -249,20 +254,19 @@ export const DashboardPage: React.FC = () => {
     };
   }, [dailyRevenueData]);
 
+  // // Custom header component for Today Overview
+  // const TodayOverviewHeader: React.FC = () => (
+  //   <Space size="middle">
+  //     <DollarCircleOutlined
+  //       style={{
+  //         fontSize: 14,
+  //         color: token.colorPrimary,
+  //       }}
+  //     />
+  //     {t("Today Overview")}
 
-    // // Custom header component for Today Overview
-    // const TodayOverviewHeader: React.FC = () => (
-    //   <Space size="middle">
-    //     <DollarCircleOutlined
-    //       style={{
-    //         fontSize: 14,
-    //         color: token.colorPrimary,
-    //       }}
-    //     />
-    //     {t("Today Overview")}
-        
-    //   </Space>
-    // );
+  //   </Space>
+  // );
 
   const orders = useMemo(() => {
     const data = dailyOrdersData?.data?.data;
@@ -308,16 +312,23 @@ export const DashboardPage: React.FC = () => {
     return parseFloat((value || 0).toFixed(2));
   };
 
-
-  const renderCard = (title: string, value: number, type: "success" | "danger" | "warning" | "") => (
+  const renderCard = (
+    title: string,
+    value: number,
+    type: "success" | "danger" | "warning" | ""
+  ) => (
     <Col xs={24} sm={12} md={6} style={{ margin: 10 }}>
-      <Card hoverable>
-        <Row align="middle" justify="space-between">
+      <Card hoverable styles={{
+        body:{
+          padding:'10px 15px'
+        }
+      }}>
+        {/* <Row align="top"> */}
           {/* Title Section */}
           <Text>{title}</Text>
-  
+
           {/* Right-aligned NumberField */}
-          <div style={{ flexGrow: 1, textAlign: "right" }}>
+          <div style={{ textAlign: "right" }}>
             <NumberField
               value={formatValue(value)}
               options={{
@@ -326,34 +337,135 @@ export const DashboardPage: React.FC = () => {
               }}
               style={{
                 fontWeight: "500",
-                fontSize: screens.sm ? "14px" : "12px",
-                color: type === "success" ? "#52c41a" : type === "danger" ? "#f5222d" : type === "warning" ? "#faad14" : "#1890ff",
+                fontSize: 20,
+                color:
+                  type === "success"
+                    ? "#52c41a"
+                    : type === "danger"
+                    ? "#f5222d"
+                    : type === "warning"
+                    ? "#faad14"
+                    : "#1890ff",
               }}
             />
           </div>
-        </Row>
+        {/* </Row> */}
       </Card>
     </Col>
   );
-  
 
   return (
     <List
-      title={t("dashboard.overview.title")}
+      title={"Summary"}
       headerButtons={() => (
-        <Dropdown menu={{ items: dateFilters }}>
-          <Button>
-            {t(
-              `dashboard.filter.date.${DATE_FILTERS[selectedDateFilter].text}`,
-            )}
-            <DownOutlined />
-          </Button>
-        </Dropdown>
+        <DatePicker
+          disabledDate={(current) => current && current > dayjs().endOf("day")}
+          value={selectedDate}
+          onChange={(date) => date && setSelectedDate(date)}
+          allowClear={false}
+        />
       )}
     >
       <Row gutter={[16, 16]}>
+        <Col xl={24} lg={24} md={24} sm={24} xs={24}>
+          <CardWithContent
+            bodyStyles={{
+              padding: "1px 0px 0px 0px",
+            }}
+            icon={
+              <DollarCircleOutlined
+                style={{
+                  fontSize: 14,
+                  color: token.colorPrimary,
+                }}
+              />
+            }
+            title={t("Daily Summary")}
+          >
+            <Row justify={screens.md ? "center" : "center"} style={{padding:10}}>
+              {renderCard("Income", todayData?.income || 0.0, "success")}
+              {renderCard("Expense", todayData?.expense || 0.0, "danger")}
+              {renderCard("Profit", todayData?.profit || 0.0, "")}
+              {renderCard(
+                "Due Amount (Purchase)",
+                todayData?.dueamountPurchase || 0.0,
+                "warning"
+              )}
+              {renderCard(
+                "Due Amount (Sale)",
+                todayData?.dueamountSale || 0.0,
+                "warning"
+              )}
+              {renderCard(
+                "Bill Profit",
+                todayData?.billProfit || 0.0,
+                "warning"
+              )}
+            </Row>
+          </CardWithContent>
+        </Col>
+
+        <Col xl={24} lg={24} md={24} sm={24} xs={24}>
+          <CardWithContent
+            bodyStyles={{
+              padding: "1px 0px 0px 0px",
+            }}
+            icon={
+              <DollarCircleOutlined
+                style={{
+                  fontSize: 14,
+                  color: token.colorPrimary,
+                }}
+              />
+            }
+            title={t("Monthly Summary")}
+          >
+            <Row justify={screens.md ? "center" : "center"} style={{padding:10}}>
+              {renderCard("Income", thisMonthData?.income || 0.0, "success")}
+              {renderCard("Expense", thisMonthData?.expense || 0.0, "danger")}
+              {renderCard("Profit", thisMonthData?.profit || 0.0, "")}
+              {renderCard(
+                "Due Amount (Purchase)",
+                thisMonthData?.dueamountPurchase || 0.0,
+                "warning"
+              )}
+              {renderCard(
+                "Due Amount (Sale)",
+                thisMonthData?.dueamountSale || 0.0,
+                "warning"
+              )}
+              {renderCard(
+                "Bill Profit",
+                thisMonthData?.billProfit || 0.0,
+                "warning"
+              )}
+            </Row>
+          </CardWithContent>
+        </Col>
+
+        {/* Overview section */}
         <Col md={24}>
           <Row gutter={[16, 16]}>
+            <Col style={{ width: "100%" }}>
+              <Row
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "baseline",
+                }}
+              >
+                <Typography.Title level={4}>Overview</Typography.Title>
+
+                <Dropdown menu={{ items: dateFilters }} trigger={["click"]}>
+                  <Button>
+                    {t(
+                      `dashboard.filter.date.${DATE_FILTERS[selectedDateFilter].text}`
+                    )}
+                    <DownOutlined />
+                  </Button>
+                </Dropdown>
+              </Row>
+            </Col>
             <Col xl={{ span: 10 }} lg={24} md={24} sm={24} xs={24}>
               <CardWithPlot
                 icon={
@@ -436,76 +548,6 @@ export const DashboardPage: React.FC = () => {
             </Col>
           </Row>
         </Col>
-        <Col style={{width:"100%"}}>
-  <Row justify="space-between" align="middle" style={{width:"100%"}}>
-    <Text style={{ 
-      fontSize: 22,
-      fontWeight: 500,
-   
-    }}>
-      Summary
-    </Text>
-    <DatePicker
-      disabledDate={(current) => current && current > dayjs().endOf('day')}
-      value={selectedDate}
-      onChange={(date) => date && setSelectedDate(date)}
-      allowClear={false}
-    />
-  </Row>
-</Col>
-      
-        <Col xl={24} lg={24} md={24} sm={24} xs={24}>
-        <CardWithContent
-            bodyStyles={{
-              padding: "1px 0px 0px 0px",
-            }}
-            icon={
-              <DollarCircleOutlined
-                style={{
-                  fontSize: 14,
-                  color: token.colorPrimary,
-                }}
-              />
-            }
-            title={t("Day Overview")}
-          >
-       
-            <Row justify={screens.md ? "center" : "center"}>
-              {renderCard("Income", todayData?.income || 0.00, "success")}
-              {renderCard("Expense", todayData?.expense || 0.00, "danger")}
-              {renderCard("Profit", todayData?.profit || 0.00, "")}
-              {renderCard("Due Amount (Purchase)", todayData?.dueamountPurchase || 0.00, "warning")}
-              {renderCard("Due Amount (Sale)", todayData?.dueamountSale || 0.00, "warning")}
-              {renderCard("Bill Profit", todayData?.billProfit || 0.00, "warning")}
-            </Row>
-          </CardWithContent>
-        </Col>
-
-        <Col xl={24} lg={24} md={24} sm={24} xs={24}>
-          <CardWithContent
-            bodyStyles={{
-              padding: "1px 0px 0px 0px",
-            }}
-            icon={
-              <DollarCircleOutlined
-                style={{
-                  fontSize: 14,
-                  color: token.colorPrimary,
-                }}
-              />
-            }
-            title={t("Month Overview")}
-          >
-             <Row justify={screens.md ? "center" : "center"}>
-              {renderCard("Income", thisMonthData?.income || 0.00, "success")}
-              {renderCard("Expense", thisMonthData?.expense || 0.00, "danger")}
-              {renderCard("Profit", thisMonthData?.profit || 0.00, "")}
-              {renderCard("Due Amount (Purchase)", thisMonthData?.dueamountPurchase || 0.00, "warning")}
-              {renderCard("Due Amount (Sale)", thisMonthData?.dueamountSale || 0.00, "warning")}
-              {renderCard("Bill Profit", thisMonthData?.billProfit || 0.00, "warning")}
-            </Row>
-          </CardWithContent>
-        </Col>
 
         <Col xl={15} lg={15} md={24} sm={24} xs={24}>
           <CardWithContent
@@ -540,10 +582,12 @@ export const DashboardPage: React.FC = () => {
             }
             title={t("dashboard.trendingProducts.title")}
           >
-         <TrendingMenu dateFilter={selectedDateFilter} />
+            <TrendingMenu dateFilter={selectedDateFilter} />
           </CardWithContent>
         </Col>
       </Row>
     </List>
   );
 };
+
+export default DashboardPage;
