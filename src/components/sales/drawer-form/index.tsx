@@ -10,6 +10,7 @@ import {
 import {notification} from "antd";
 import {useEffect, useState} from "react";
 import {AutoComplete} from "antd";
+import axiosInstance from "../../../utils/axios-instance";
 import {getValueFromEvent, useSelect} from "@refinedev/antd";
 import {
     Form,
@@ -143,12 +144,11 @@ export const SaleDrawerForm = (props: Props) => {
 
     const fetchStockData = async (productid: number) => {
         try {
-            const response = await fetch(`${apiUrl}/products/${productid}`, {
-                method: "GET",
-            });
+            // Use axiosInstance for GET request
+            const response = await axiosInstance.get(`${apiUrl}/products/${productid}`);
 
-            const data = await response.json();
-            const jsonStockData = data['stocks'];
+            // Axios automatically parses JSON response, access data directly
+            const jsonStockData = response.data['stocks'];
 
             // Store the stock data for the selected product
             setSelectedProductStocks((prevStocks) => ({
@@ -753,25 +753,21 @@ export const SaleDrawerForm = (props: Props) => {
                                             if (payment > -1) {
                                                 const customerId =
                                                     formProps.form.getFieldValue("customername");
-                                                const response = await fetch(`${apiUrl}/sales`, {
-                                                    method: "POST",
-                                                    headers: {
-                                                        "Content-Type": "application/json",
-                                                    },
-                                                    body: JSON.stringify({
-                                                        salesDetails: tableData,
-                                                        customerId,
-                                                        payment,
-                                                        totalPrice,
-                                                        note,
-                                                        createdAt:createdDate.format('YYYY-MM-DD'),
-                                                        code
-                                                    }),
+                                                // Use axiosInstance for POST request
+                                                const response = await axiosInstance.post(`${apiUrl}/sales`, {
+                                                    salesDetails: tableData,
+                                                    customerId,
+                                                    payment,
+                                                    totalPrice,
+                                                    note,
+                                                    createdAt: createdDate.format('YYYY-MM-DD'),
+                                                    code
                                                 });
 
-                                                if (response.ok) {
+                                                // Axios response status check (2xx indicates success)
+                                                if (response.status >= 200 && response.status < 300) {
                                                     // Handle successful response
-                                                    console.log("Purchase details saved successfully");
+                                                    console.log("Sales details saved successfully");
                                                     showsuccessNotification("Purchase details saved successfully");
                                                     formProps.form.resetFields();
                                                     setTableData([]);
@@ -792,10 +788,11 @@ export const SaleDrawerForm = (props: Props) => {
                                                     // onDrawerCLose(); // Close the drawer
 
                                                 } else {
-                                                    // Handle error response
-                                                    console.error("Failed to save purchase details");
-                                                    showError("Failed to save purchase details");
-                                                }
+                                                    // Handle error response from axios interceptor or catch block
+                                                    console.error("Failed to save sales details", response);
+                                                    // Assuming error handling is managed by axios interceptor or catch block
+                                                    // showError("Failed to save sales details"); // Error might already be shown by interceptor
+                                                } // Removed the 'else' block as axios throws errors for non-2xx responses
                                             } else {
                                                 showError("Please Enter Payment Amount");
                                             }

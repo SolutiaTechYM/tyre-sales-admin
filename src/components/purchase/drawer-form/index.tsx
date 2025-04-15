@@ -11,6 +11,7 @@ import {
 import {notification} from "antd";
 import {useEffect, useState} from "react";
 import {AutoComplete} from "antd";
+import axiosInstance from "../../../utils/axios-instance";
 import {getValueFromEvent, useSelect} from "@refinedev/antd";
 import {
     Form,
@@ -600,23 +601,19 @@ export const PurchaseDrawerForm = (props: Props) => {
                                             if (payment > -1) {
                                                 const supplierId =
                                                     formProps.form.getFieldValue("suppliername");
-                                                const response = await fetch(`${apiUrl}/purchases`, {
-                                                    method: "POST",
-                                                    headers: {
-                                                        "Content-Type": "application/json",
-                                                    },
-                                                    body: JSON.stringify({
-                                                        purchaseDetails: tableData,
-                                                        supplierId,
-                                                        payment,
-                                                        totalPrice,
-                                                        description,
-                                                        createdAt:createdDate.format('YYYY-MM-DD'),
-                                                        code
-                                                    }),
+                                                // Use axiosInstance for POST request
+                                                const response = await axiosInstance.post(`${apiUrl}/purchases`, {
+                                                    purchaseDetails: tableData,
+                                                    supplierId,
+                                                    payment,
+                                                    totalPrice,
+                                                    note: description, // Use the 'description' variable for the 'note' field
+                                                    createdAt: createdDate.format('YYYY-MM-DD'),
+                                                    code
                                                 });
 
-                                                if (response.ok) {
+                                                // Axios response status check (2xx indicates success)
+                                                if (response.status >= 200 && response.status < 300) {
                                                     // Handle successful response
                                                     console.log("Purchase details saved successfully");
                                                     showsuccessNotification("Purchase details saved successfully");
@@ -647,10 +644,11 @@ export const PurchaseDrawerForm = (props: Props) => {
 
 
                                                 } else {
-                                                    // Handle error response
-                                                    console.error("Failed to save purchase details");
-                                                    showError("Failed to save purchase details");
-                                                }
+                                                    // Handle error response from axios interceptor or catch block
+                                                    console.error("Failed to save purchase details", response);
+                                                    // Assuming error handling is managed by axios interceptor or catch block
+                                                    // showError("Failed to save purchase details"); // Error might already be shown by interceptor
+                                                } // Removed the 'else' block as axios throws errors for non-2xx responses
                                             } else {
                                                 showError("Please Enter Payment Amount");
                                             }

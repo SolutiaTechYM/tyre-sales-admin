@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const API_URL = "https://geocode.maps.co";
 const API_KEY = "65caa5869275c294478503twc82c790";
 
@@ -32,8 +34,10 @@ export type Place = {
 export const getAddressWithLatLng = async ({ lat, lng }: LatLng) => {
   try {
     const query = `lat=${lat}&lon=${lng}&api_key=${API_KEY}`;
-    const response = await fetch(`${API_URL}/reverse?${query}`);
-    const data: Place = await response.json();
+    // Use axios.get instead of fetch
+    const response = await axios.get(`${API_URL}/reverse?${query}`);
+    // Access data directly from response.data
+    const data: Place = response.data;
     if (!data) return null;
 
     return {
@@ -47,8 +51,10 @@ export const getAddressWithLatLng = async ({ lat, lng }: LatLng) => {
 export const getLatLngWithAddress = async (address: string) => {
   try {
     const query = `q=${address}&api_key=${API_KEY}`;
-    const response = await fetch(`${API_URL}/search?${query}`);
-    const data: Place[] = await response.json();
+    // Use axios.get instead of fetch
+    const response = await axios.get(`${API_URL}/search?${query}`);
+    // Access data directly from response.data
+    const data: Place[] = response.data;
     const lat = data?.[0]?.lat || null;
     const lng = data?.[0]?.lon || null;
 
