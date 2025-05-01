@@ -1,0 +1,362 @@
+import {
+  BaseKey,
+  HttpError,
+  useDelete,
+  useGetToPath,
+  useGo,
+  useModal,
+  useNavigation,
+  useOne,
+  useShow,
+  useTranslate,
+} from "@refinedev/core";
+import {
+  Avatar,
+  Button,
+  Divider,
+  Flex,
+  Grid,
+  List,
+  Modal,
+  Table,
+  Typography,
+  message,
+  theme,
+} from "antd";
+import { useSearchParams } from "react-router-dom";
+import { Drawer } from "../../drawer";
+import { ICategory, IProduct, IPurchase, ISalesShow } from "../../../interfaces";
+import { DeleteButton, NumberField } from "@refinedev/antd";
+import { PurchaseStatus } from "../status";
+import { DeleteOutlined, EditOutlined, FilePdfOutlined } from "@ant-design/icons";
+import { PurchaseDetailsTable } from "../details-table";
+import { PdfLayout } from "../../../pages/sales/PdfLayout";
+import { useState } from "react";
+
+type Props = {
+  id?: BaseKey;
+  onClose?: () => void;
+  onEdit?: () => void;
+};
+
+export const SalesDrawerShow = (props: Props) => {
+  const getToPath = useGetToPath();
+  const [searchParams] = useSearchParams();
+  const go = useGo();
+  const { editUrl } = useNavigation();
+  const t = useTranslate();
+  const { token } = theme.useToken();
+  const breakpoint = Grid.useBreakpoint();
+  const [record, setRecord] = useState<ISalesShow>();
+
+  const { show, visible, close } = useModal();
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+
+  const { mutate: deletesales } = useDelete();
+
+  const { queryResult } = useShow<ISalesShow, HttpError>({
+    resource: "sales",
+    id: props?.id, // when undefined, id will be read from the URL.
+  });
+  const sales = queryResult.data?.data;
+
+  const handleDrawerClose = () => {
+    if (props?.onClose) {
+      props.onClose();
+      return;
+    }
+
+    go({
+      to:
+        searchParams.get("to") ??
+        getToPath({
+          action: "list",
+        }) ??
+        "",
+      query: {
+        to: undefined,
+      },
+      options: {
+        keepQuery: true,
+      },
+      type: "replace",
+    });
+  };
+
+  const handleDeleteConfirm = () => {
+    if (sales?.id) {    
+      deletesales(
+        {
+          resource: "sales",
+          id: sales.id,
+        },
+        {
+          onSuccess: () => {
+            setDeleteModalVisible(false);
+            handleDrawerClose();
+            message.success("sales deleted successfully");
+          },
+          onError: (error: { message: string; }) => {
+            setDeleteModalVisible(false);
+            message.error("Error deleting sales: " + error.message);
+          },
+        }
+      );
+    } else {
+      message.error("Cannot delete sales: Invalid ID");
+      setDeleteModalVisible(false);
+    }
+  };
+
+  return (
+    <>
+      <Drawer
+        open={true}
+        width={breakpoint.sm ? "1134px" : "100%"}
+        zIndex={1001}
+        onClose={handleDrawerClose}
+      >
+        <Flex
+          vertical
+          style={{
+            backgroundColor: token.colorBgContainer,
+          }}
+        >
+          <Flex style={{ padding: "16px", justifyContent: "space-between" }}>
+            <Flex vertical>
+              <Typography.Title level={5}>
+                Sale Code : {sales?.code}
+              </Typography.Title>
+              <Typography.Text type="secondary">
+                {sales?.note}
+              </Typography.Text>
+              <Typography.Text>
+                Due Amount:{" "}
+                {sales?.due_amount !== undefined ? (
+                  sales.due_amount < 0 ? (
+                    <span
+                      style={{
+                        color: "red",
+                        fontVariantNumeric: "tabular-nums",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      D{" "}
+                      {Math.abs(sales.due_amount).toLocaleString("en-US", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </span>
+                  ) : sales.due_amount > 0 ? (
+                    <span
+                      style={{
+                        color: "lightgreen",
+                        fontVariantNumeric: "tabular-nums",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      C{" "}
+                      {sales.due_amount.toLocaleString("en-US", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </span>
+                  ) : (
+                    "-"
+                  )
+                ) : (
+                  <NumberField value={0} options={{ style: "currency", currency: "USD" }} />
+                )}
+              </Typography.Text>
+              <Typography.Text>
+                Total Price:{" "}
+                <NumberField
+                  value={sales?.totalAmount || 0}
+                  options={{
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }}
+                  style={{
+                    fontWeight: "bold"
+                  }}
+                />
+              </Typography.Text>
+            </Flex >
+            <Flex vertical>
+              <Typography.Title level={5} style={{ color: "green" }}>
+                Print Invoice
+              </Typography.Title>
+
+              <Button
+                style={{ alignSelf: "center", borderColor: "green" }}
+                size="large"
+                icon={<FilePdfOutlined style={{ color: "green" }} />}
+                onClick={() => {
+                  setRecord(sales);
+                  show();
+                }}
+              />
+            </Flex>
+          </Flex>
+          <Divider
+            style={{
+              margin: 0,
+              padding: 0,
+            }}
+          />
+          <Flex
+            vertical
+            gap={32}
+            style={{
+              padding: "32px",
+            }}
+          >
+            <Table 
+              dataSource={sales?.saleDetails} 
+              columns={[
+                {
+                  title: 'Product Code',
+                  dataIndex: 'productCode',
+                  key: 'productCode',
+                },
+                {
+                  title: 'Product Name',
+                  dataIndex: 'productName',
+                  key: 'productName',
+                },
+                {
+                  title: 'Unit Buy Price',
+                  dataIndex: 'unitBuyPrice',
+                  key: 'unitBuyPrice',
+                  align: "right",
+                  render: (value: number) => <NumberField value={value} options={{
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }} />,
+                },
+                {
+                  title: 'Unit Sell Price',
+                  dataIndex: 'unitSellPrice',
+                  key: 'unitSellPrice',
+                  align: "right",
+                  render: (value: number) => <NumberField value={value} options={{
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }} />,
+                },
+                {
+                  title: 'Quantity',
+                  dataIndex: 'quantity',
+                  key: 'quantity',
+                  align: "right",
+                },
+                {
+                  title: 'Total',
+                  dataIndex: 'totalPrice',
+                  key: 'totalPrice',
+                  align: "right",
+                  render: (value: number) => <NumberField value={value} options={{
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }} />,
+                },
+                {
+                  title: t("Profit"),
+                  dataIndex: "profit",
+                  key: "profit",
+                  align: "right",
+                  sorter: true,
+                  render: (credit: number) => {
+                    const formatOptions = {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    };
+                  
+                    if (credit > 0) {
+                      const formattedValue = `${credit.toLocaleString('en-LK', formatOptions)}`;
+                      return (
+                        <span
+                          style={{
+                            width: "80px",
+                            fontVariantNumeric: "tabular-nums",
+                            whiteSpace: "nowrap",
+                            color: "cyan",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          <div style={{display:"flex",justifyContent:"space-between"}}>
+                            <div>P</div>
+                            <div>
+                              {formattedValue}
+                            </div>
+                          </div>
+                        </span>
+                      );
+                    } else if(credit < 0) {
+                      const formattedValue = `${Math.abs(credit).toLocaleString('en-LK', formatOptions)}`;
+                      return (
+                        <span
+                          style={{
+                            width: "80px",
+                            fontVariantNumeric: "tabular-nums",
+                            whiteSpace: "nowrap",
+                            color: "orange",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          <div style={{display:"flex",justifyContent:"space-between"}}>
+                            <div>N</div>
+                            <div>
+                              {formattedValue}
+                            </div>
+                          </div>
+                        </span>
+                      );
+                    } else {
+                      return (
+                        <span
+                          style={{
+                            width: "80px",
+                            fontVariantNumeric: "tabular-nums",
+                            whiteSpace: "nowrap",
+                            color: "white"
+                          }}
+                        >
+                          -
+                        </span>
+                      );
+                    }
+                  }
+                }
+              ]} 
+            />
+
+            <Flex style={{ justifyContent: "flex-end" }}>
+              <Button
+                style={{ alignSelf: "center", borderColor: "red" }}
+                size="large"
+                icon={<DeleteOutlined style={{ color: "red" }} />}
+                onClick={() => setDeleteModalVisible(true)}
+              >
+                Delete Sale
+              </Button>
+            </Flex>
+          </Flex>
+        </Flex>
+      </Drawer>
+      <Modal visible={visible} onCancel={close} width="80%" footer={null} zIndex={99999999}>
+        <PdfLayout record={record} />
+      </Modal>
+
+      <Modal
+        title="Confirm Delete"
+        visible={deleteModalVisible}
+        onOk={handleDeleteConfirm}
+        onCancel={() => setDeleteModalVisible(false)}
+        zIndex={2147483647} 
+      >
+        <p>Are you sure you want to delete this sale?</p>
+      </Modal>
+    </>
+  );
+};
